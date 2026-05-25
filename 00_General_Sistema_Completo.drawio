@@ -1,0 +1,124 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="OaewSe8HbMWia8UrBEHz" name="Página-1">
+    <mxGraphModel dx="1225" dy="807" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3" parent="1" style="label;startSize=28;fontStyle=1;fontSize=14;rounded=1;arcSize=2;" value="                                                                                                                                    Sistema Smar&#xa;" vertex="1">
+          <mxGeometry height="396" width="1150" x="238" y="60" as="geometry">
+            <mxRectangle height="30" width="190" x="230" y="70" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" parent="3" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Ver estado&lt;br&gt;en tiempo&lt;br&gt;real&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="46" width="158" x="380" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="16" parent="3" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Enviar&lt;br&gt;solicitud&lt;br&gt;&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="46" width="158" x="260" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="19" parent="3" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Monitoreo&#xa;IoT continuo&#xa;(RF-09)" vertex="1">
+          <mxGeometry height="46" width="158" x="510" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="37" edge="1" parent="3" source="16" style="endArrow=none;html=1;strokeWidth=1.5;" target="19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="3" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Registrarse&lt;br&gt;y autenticarse&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="46" width="158" x="30" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="3" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Validar&lt;br&gt;elegibilidad&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="46" width="158" x="940" y="137" as="geometry" />
+        </mxCell>
+        <mxCell id="24" parent="3" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Derivar&lt;br&gt;emergencia&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="46" width="158" x="850" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="22" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Teleconsulta&#xa;con IA&#xa;(RF-12)" vertex="1">
+          <mxGeometry height="46" width="158" x="1040" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="23" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Emitir receta&#xa;digital&#xa;(RF-13)" vertex="1">
+          <mxGeometry height="46" width="158" x="1040" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="25" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Intercambio&lt;br&gt;de datos&amp;nbsp;" vertex="1">
+          <mxGeometry height="46" width="158" x="1230" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="33" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="12" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="102.00000000000023" y="205.09583528966323" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="35" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="16" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="102.00000000000023" y="207.45854230602527" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="36" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="18" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="102.00000000000023" y="216.86812672231645" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="22" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="344.43616431997066" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="42" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="23" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="346.253416462873" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="43" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="24" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="348.27260618906416" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="46" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="18" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="122.00000000000023" y="443.2273824590286" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="49" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="13" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1510" y="205.3236233549228" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="50" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="25" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1510" y="197.2335540265924" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="58" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="25" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1510" y="359.31081081081084" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="62" edge="1" parent="1" source="22" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#2E75B6;" target="23" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="63" edge="1" parent="1" source="22" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#2E75B6;" target="24" value="«extend»">
+          <mxGeometry relative="1" x="0.5833" y="31" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KldJ5xX9aRejoui5dg2s-67" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=1.5;" target="16" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="102.00000000000023" y="207.45854230602527" as="sourcePoint" />
+            <mxPoint x="855" y="131" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KldJ5xX9aRejoui5dg2s-69" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Paciente&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="80" y="176" as="geometry" />
+        </mxCell>
+        <mxCell id="KldJ5xX9aRejoui5dg2s-71" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="personal Medico&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="80" y="309" as="geometry" />
+        </mxCell>
+        <mxCell id="KldJ5xX9aRejoui5dg2s-72" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Perosnal Administrativo&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="80" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="KldJ5xX9aRejoui5dg2s-74" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="MSP&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="1510" y="176" as="geometry" />
+        </mxCell>
+        <mxCell id="KldJ5xX9aRejoui5dg2s-75" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Consoricio Medico&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="1510" y="336" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
