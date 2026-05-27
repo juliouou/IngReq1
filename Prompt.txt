@@ -1,0 +1,177 @@
+Actúa como un arquitecto de software senior, analista de requisitos y desarrollador full stack experto en construcción de prototipos verticales.
+
+Voy a adjuntar varios documentos correspondientes al análisis y especificación de un proyecto de software. Tu tarea es analizar completamente toda la documentación y construir un prototipo vertical funcional basado estrictamente en los requerimientos definidos.
+
+OBJETIVO GENERAL DEL PROYECTO:
+El prototipo vertical debe "sumergirse en los detalles" de una funcionalidad crítica para demostrar la factibilidad técnica, la usabilidad y otros atributos de calidad, permitiendo validar que los requerimientos identificados realmente satisfacen al usuario.
+TIPO DE SISTEMA:
+Sistema web de gestión hospitalaria 
+
+DOCUMENTOS ADJUNTOS
+Analiza cuidadosamente todos los archivos adjuntos, incluyendo:
+
+- Documento de visión
+- Matriz de stakeholders
+- Casos de uso
+- Requerimientos funcionales
+- Requerimientos no funcionales
+- Diagramas UML
+- Diagramas de contexto
+- Modelos de análisis
+- Reglas de negocio
+No inventes funcionalidades que no estén respaldadas por la documentación.
+
+
+OBJETIVO DEL PROTOTIPO VERTICAL
+
+Construir un prototipo vertical funcional que represente fielmente el negocio definido en la documentación.
+
+El prototipo debe permitir validar:
+
+- Factibilidad técnica
+- Usabilidad
+- Flujo de negocio
+- Exactitud de procesos
+- Cumplimiento de requisitos funcionales
+- Cumplimiento de requisitos no funcionales
+- Experiencia del usuario
+- Validación de reglas de negocio
+El sistema debe simular un comportamiento realista utilizando datos cercanos a la realidad.
+
+
+INSTRUCCIONES IMPORTANTES
+1. Analiza primero toda la documentación antes de generar código.
+2. Identifica:
+   - Stakeholders principales
+   - Roles del sistema
+   - Casos de uso críticos
+   - Procesos principales del negocio
+   - Restricciones del sistema
+   - Requisitos de calidad
+3. Construye el prototipo basándote estrictamente en los casos de uso definidos.
+4. Implementa:
+   - Interfaces modernas y fáciles de usar
+   - Navegación clara
+   - Validaciones de formularios
+   - Mensajes de error comprensibles
+   - Flujos coherentes
+   - Simulación de persistencia de datos
+   - Datos de prueba realistas
+5. Prioriza:
+   - Usabilidad
+   - Claridad visual
+   - Exactitud de cálculos
+   - Consistencia
+   - Facilidad de validación académica
+
+
+REQUISITOS UX/UI Y ACCESIBILIDAD
+
+La interfaz del sistema debe cumplir con principios de experiencia de usuario (UX) y accesibilidad siguiendo las guías WCAG 2.1 nivel AA.
+
+Implementa buenas prácticas de accesibilidad digital, incluyendo:
+
+- Contraste adecuado entre texto y fondo
+- Tipografías legibles
+- Navegación clara e intuitiva
+- Diseño responsive
+- Etiquetas descriptivas en formularios
+- Inputs accesibles
+- Botones claramente identificables
+- Retroalimentación visual ante errores
+- Mensajes de validación comprensibles
+- Navegación compatible con teclado
+- Jerarquía visual correcta
+- Uso semántico de componentes HTML
+- Indicadores visuales de foco
+- Textos alternativos en imágenes o íconos importantes
+- Evitar dependencia exclusiva del color para transmitir información
+- Interfaces simples y comprensibles para distintos tipos de usuarios
+
+La experiencia del usuario debe priorizar:
+
+- Facilidad de aprendizaje
+- Eficiencia de uso
+- Prevención de errores
+- Claridad visual
+- Consistencia en navegación
+- Accesibilidad para diferentes perfiles de usuarios identificados en los stakeholders
+
+Aplica principios modernos de diseño UX/UI:
+- Diseño limpio
+- Espaciado adecuado
+- Componentes visuales consistentes
+- Organización clara de información
+- Feedback inmediato en acciones del usuario
+- Diseño profesional y realista
+
+
+REQUISITOS FUNCIONALES
+
+Implementa todos los módulos definidos en la documentación.
+
+Cada funcionalidad debe seguir exactamente:
+- flujo principal,
+- flujos alternativos,
+- reglas de negocio,
+- restricciones,
+- validaciones,
+descritas en los casos de uso.
+
+
+REQUISITOS NO FUNCIONALES
+
+
+El prototipo debe reflejar:
+
+- Facilidad de uso
+- Rendimiento adecuado
+- Consistencia visual
+- Seguridad básica
+- Exactitud de información
+- Validación de entradas
+- Organización modular
+- Mantenibilidad del código
+
+
+VALIDACIÓN
+
+Al finalizar:
+
+1. Explica qué requisitos fueron implementados.
+2. Indica qué stakeholders se benefician de cada módulo.
+3. Describe cómo el prototipo valida los requerimientos.
+4. Señala posibles mejoras futuras.
+5. Identifica cualquier inconsistencia encontrada en la documentación.
+
+
+ENTREGABLES ESPERADOS
+
+Genera:
+
+- Código del prototipo
+- Explicación de arquitectura
+- Explicación de módulos
+- Flujo de navegación
+- Datos de prueba
+- Explicación de validaciones
+- Explicación de decisiones de diseño
+
+
+TECNOLOGÍA
+
+Puedes seleccionar la tecnología más adecuada para el prototipo, priorizando facilidad de demostración y claridad visual.
+
+Preferiblemente usa las que se indica en el documento:
+- Frontend moderno
+- Componentes reutilizables
+- Código organizado
+- Arquitectura limpia
+
+
+IMPORTANTE
+
+No simplifiques el negocio.
+No elimines funcionalidades críticas.
+No inventes procesos fuera de la documentación.
+El prototipo debe representar fielmente el sistema definido en los documentos adjuntos.
