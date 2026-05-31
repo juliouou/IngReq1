@@ -1,0 +1,115 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="Jeaw6u7yVkv1KM0njudm" name="Página-1">
+    <mxGraphModel dx="1196" dy="807" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="860" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=15;" value="M2 — Triaje Inteligente y Gestión de Solicitudes (Med-Gemini)" vertex="1">
+          <mxGeometry height="32" width="1000" x="50" y="12" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=9;fontStyle=1;" value="Usuarios Internos" vertex="1">
+          <mxGeometry height="22" width="130" x="30" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=9;fontStyle=1;" value="Sistemas / Externos" vertex="1">
+          <mxGeometry height="22" width="140" x="860" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="swimlane;startSize=24;fontStyle=1;fontSize=11;rounded=0;" value="Sistema SAMR — M2" vertex="1">
+          <mxGeometry height="720" width="610" x="210" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="18" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Ver estado&#xa;en panel&#xa;en tiempo real" vertex="1">
+          <mxGeometry height="52" width="175" x="125" y="577" as="geometry" />
+        </mxCell>
+        <mxCell id="16" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Ejecutar matching&#xa;inteligente" vertex="1">
+          <mxGeometry height="48" width="175" x="282" y="347" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Paciente&#xa;(ST01)" vertex="1">
+          <mxGeometry height="62" width="42" x="44" y="181" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Personal&#xa;Médico&#xa;(ST02)" vertex="1">
+          <mxGeometry height="62" width="42" x="65" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Personal&#xa;Administ.&#xa;(ST03)" vertex="1">
+          <mxGeometry height="62" width="42" x="65" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Bot /&#xa;Voicebot&#xa;(Sistema)" vertex="1">
+          <mxGeometry height="62" width="42" x="870" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Med-Gemini&#xa;(Sistema)" vertex="1">
+          <mxGeometry height="62" width="42" x="884" y="413" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Centro&#xa;Asistencia&#xa;(ST04)" vertex="1">
+          <mxGeometry height="62" width="42" x="870" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Reportar síntomas&#xa;vía bot / voz" vertex="1">
+          <mxGeometry height="48" width="175" x="230" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Clasificar riesgo&#xa;con Med-Gemini&#xa;+ XAI" vertex="1">
+          <mxGeometry height="56" width="175" x="455" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Escalar&#xa;bot → médico" vertex="1">
+          <mxGeometry height="48" width="175" x="230" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="15" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Generar solicitud&#xa;asíncrona" vertex="1">
+          <mxGeometry height="48" width="175" x="455" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="17" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Asignar centro&#xa;y médico" vertex="1">
+          <mxGeometry height="48" width="175" x="230" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="19" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="20" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="21" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="22" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="18" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="23" edge="1" parent="1" source="7" style="endArrow=none;html=1;strokeWidth=1;" target="17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="24" edge="1" parent="1" source="7" style="endArrow=none;html=1;strokeWidth=1;" target="18" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" edge="1" parent="1" source="8" style="endArrow=none;html=1;strokeWidth=1;" target="17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="26" edge="1" parent="1" source="8" style="endArrow=none;html=1;strokeWidth=1;" target="18" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27" edge="1" parent="1" source="9" style="endArrow=none;html=1;strokeWidth=1;" target="12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28" edge="1" parent="1" source="10" style="endArrow=none;html=1;strokeWidth=1;" target="13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="29" edge="1" parent="1" source="10" style="endArrow=none;html=1;strokeWidth=1;" target="16" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="30" edge="1" parent="1" source="11" style="endArrow=none;html=1;strokeWidth=1;" target="17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="31" edge="1" parent="1" source="12" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="13" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="32" edge="1" parent="1" source="12" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="14" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="33" edge="1" parent="1" source="13" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="15" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="34" edge="1" parent="1" source="15" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="16" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="35" edge="1" parent="1" source="16" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="17" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="36" edge="1" parent="1" source="15" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="18" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

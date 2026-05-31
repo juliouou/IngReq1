@@ -1,0 +1,97 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="BLXu4lLd28YWgDpE_CDt" name="Página-1">
+    <mxGraphModel dx="1136" dy="767" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=15;" value="M1 — Gestión de Usuarios y Acceso" vertex="1">
+          <mxGeometry height="32" width="900" x="30" y="23" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=9;fontStyle=1;" value="Usuarios Internos" vertex="1">
+          <mxGeometry height="22" width="130" x="22" y="79" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=9;fontStyle=1;" value="Usuarios Externos" vertex="1">
+          <mxGeometry height="22" width="130" x="815" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="swimlane;startSize=24;fontStyle=1;fontSize=11;rounded=0;" value="Sistema SAMR — M1" vertex="1">
+          <mxGeometry height="640" width="560" x="210" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Paciente&#xa;(ST01)" vertex="1">
+          <mxGeometry height="62" width="42" x="70" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Personal&#xa;Médico&#xa;(ST02)" vertex="1">
+          <mxGeometry height="62" width="42" x="70" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Personal&#xa;Administ.&#xa;(ST03)" vertex="1">
+          <mxGeometry height="62" width="42" x="70" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="API IESS&#xa;(Externo)" vertex="1">
+          <mxGeometry height="62" width="42" x="840" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="DPO&#xa;(ST06)" vertex="1">
+          <mxGeometry height="62" width="42" x="840" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Registrarse en&#xa;el sistema" vertex="1">
+          <mxGeometry height="48" width="160" x="250" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Iniciar sesión&#xa;con MFA" vertex="1">
+          <mxGeometry height="48" width="160" x="490" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Seleccionar&#xa;perfil y rol" vertex="1">
+          <mxGeometry height="48" width="160" x="250" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Validar&#xa;elegibilidad&#xa;IESS" vertex="1">
+          <mxGeometry height="52" width="160" x="490" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="15" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Registrar&#xa;consentimiento&#xa;LOPDP" vertex="1">
+          <mxGeometry height="52" width="160" x="370" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="16" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Activar&#xa;servicios&#xa;domiciliarios" vertex="1">
+          <mxGeometry height="48" width="160" x="490" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="17" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="11" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="18" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="19" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="20" edge="1" parent="1" source="7" style="endArrow=none;html=1;strokeWidth=1;" target="11" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="21" edge="1" parent="1" source="7" style="endArrow=none;html=1;strokeWidth=1;" target="13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="22" edge="1" parent="1" source="8" style="endArrow=none;html=1;strokeWidth=1;" target="11" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="23" edge="1" parent="1" source="8" style="endArrow=none;html=1;strokeWidth=1;" target="13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="24" edge="1" parent="1" source="9" style="endArrow=none;html=1;strokeWidth=1;" target="14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" edge="1" parent="1" source="10" style="endArrow=none;html=1;strokeWidth=1;" target="15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="26" edge="1" parent="1" source="11" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="12" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27" edge="1" parent="1" source="11" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="13" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28" edge="1" parent="1" source="13" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="14" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="29" edge="1" parent="1" source="14" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="15" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="30" edge="1" parent="1" source="15" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="16" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
