@@ -1,0 +1,94 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="M3_Edited" name="M3 — Monitoreo Biométrico">
+    <mxGraphModel dx="1262" dy="852" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1270" pageHeight="880" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" value="M3 — Monitoreo Biométrico Predictivo" vertex="1">
+          <mxGeometry height="30" width="1200" x="80" y="12" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="text;html=1;align=center;fontSize=9;fontStyle=1;" value="Actores Internos" vertex="1">
+          <mxGeometry height="18" width="110" x="30" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="text;html=1;align=center;fontSize=9;fontStyle=1;dashed=1;strokeColor=#000000;" value="Actores Externos" vertex="1">
+          <mxGeometry height="18" width="110" x="1070" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="swimlane;startSize=26;fontStyle=1;fontSize=11;rounded=0;" value="Sistema SAMR — M3" vertex="1">
+          <mxGeometry height="780" width="820" x="185" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="15" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;strokeWidth=2;" value="Recibir lectura&#xa;del dispositivo" vertex="1">
+          <mxGeometry height="60" width="180" x="509" y="89" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Capturar flujos&#xa;biométricos IoT&#xa;(M03-C01)" vertex="1">
+          <mxGeometry height="65" width="180" x="284" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="24" edge="1" parent="5" source="11" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="15" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="16" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;strokeWidth=2;" value="Invocar&#xa;Med-Gemini&#xa;detección" vertex="1">
+          <mxGeometry height="65" width="180" x="529" y="323" as="geometry" />
+        </mxCell>
+        <mxCell id="25" edge="1" parent="5" source="15" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="16" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Detectar anomalía&#xa;predictiva&#xa;(M03-C02)" vertex="1">
+          <mxGeometry height="65" width="180" x="277" y="313" as="geometry" />
+        </mxCell>
+        <mxCell id="26" edge="1" parent="5" source="16" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="12" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Generar alerta&#xa;proactiva con&#xa;datos IoT&#xa;(M03-C03)" vertex="1">
+          <mxGeometry height="70" width="180" x="59" y="64" as="geometry" />
+        </mxCell>
+        <mxCell id="27" edge="1" parent="5" source="12" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="13" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="17" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;strokeWidth=2;" value="Invocar&#xa;Bot para&#xa;comunicar" vertex="1">
+          <mxGeometry height="65" width="180" x="54" y="483" as="geometry" />
+        </mxCell>
+        <mxCell id="28" edge="1" parent="5" source="13" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="17" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Explicar alerta&#xa;al paciente&#xa;vía bot&#xa;(M03-C04)" vertex="1">
+          <mxGeometry height="70" width="180" x="309" y="419" as="geometry" />
+        </mxCell>
+        <mxCell id="29" edge="1" parent="5" source="17" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="14" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=none;" value="Paciente&#xa;(ST01)" vertex="1">
+          <mxGeometry height="60" width="40" x="65" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Personal&#xa;Médico&#xa;(ST02)" vertex="1">
+          <mxGeometry height="60" width="40" x="65" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;fontStyle=0;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Dispositivo IoT&#xa;(EKG/EEG/O₂)" vertex="1">
+          <mxGeometry height="60" width="40" x="1085" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;fontStyle=0;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Med-Gemini&#xa;(Sistema)" vertex="1">
+          <mxGeometry height="60" width="40" x="1085" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;fontStyle=0;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Bot&#xa;(Sistema)" vertex="1">
+          <mxGeometry height="60" width="40" x="1085" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="18" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="19" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="20" edge="1" parent="1" source="7" style="endArrow=none;html=1;strokeWidth=1;" target="13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="21" edge="1" parent="1" source="8" style="endArrow=none;html=1;strokeWidth=1;dashed=1;" target="15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="22" edge="1" parent="1" source="9" style="endArrow=none;html=1;strokeWidth=1;dashed=1;" target="16" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="23" edge="1" parent="1" source="10" style="endArrow=none;html=1;strokeWidth=1;dashed=1;" target="17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
