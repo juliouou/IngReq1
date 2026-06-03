@@ -1,0 +1,139 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="KkLJJeOgWF-URNmPA-hB" name="Página-1">
+    <mxGraphModel dx="1262" dy="852" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1430" pageHeight="1040" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" value="M4 — Teleconsulta y Atención Médica" vertex="1">
+          <mxGeometry height="30" width="1350" x="80" y="12" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="text;html=1;align=center;fontSize=9;fontStyle=1;" value="Actores Internos" vertex="1">
+          <mxGeometry height="18" width="110" x="30" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="text;html=1;align=center;fontSize=9;fontStyle=1;dashed=1;strokeColor=#000000;" value="Actores Externos" vertex="1">
+          <mxGeometry height="18" width="110" x="1200" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="swimlane;startSize=26;fontStyle=1;fontSize=11;rounded=0;" value="Sistema SAMR — M4" vertex="1">
+          <mxGeometry height="960" width="950" x="200" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Validar sugerencia&#xa;de Med-Gemini" vertex="1">
+          <mxGeometry height="60" width="180" x="312" y="261" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Consultar historial&#xa;clínico completo" vertex="1">
+          <mxGeometry height="60" width="180" x="283" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="20" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;strokeWidth=2;" value="Invocar&#xa;Med-Gemini&#xa;diagnóstico" vertex="1">
+          <mxGeometry height="65" width="180" x="579" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="40" edge="1" parent="5" source="20" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="14" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="16" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Derivar emergencia&#xa;presencial&#xa;(M04-C03)" vertex="1">
+          <mxGeometry height="60" width="180" x="312" y="402" as="geometry" />
+        </mxCell>
+        <mxCell id="42" edge="1" parent="5" source="14" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="16" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="17" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Rechazar solicitud&#xa;de emergencia&#xa;(M04-C04)" vertex="1">
+          <mxGeometry height="65" width="180" x="41" y="578" as="geometry" />
+        </mxCell>
+        <mxCell id="47" edge="1" parent="5" source="16" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="17" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="18" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Seleccionar motivo&#xa;de rechazo&#xa;(obligatorio)" vertex="1">
+          <mxGeometry height="65" width="180" x="298" y="571" as="geometry" />
+        </mxCell>
+        <mxCell id="44" edge="1" parent="5" source="17" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="18" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="22" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;strokeWidth=2;" value="Invocar&#xa;Reasignación&#xa;Inteligente" vertex="1">
+          <mxGeometry height="65" width="180" x="563" y="567" as="geometry" />
+        </mxCell>
+        <mxCell id="45" edge="1" parent="5" source="18" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="22" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="19" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Notificar paciente&#xa;nuevo tiempo&#xa;de atención" vertex="1">
+          <mxGeometry height="65" width="180" x="98" y="673" as="geometry" />
+        </mxCell>
+        <mxCell id="46" edge="1" parent="5" source="22" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="19" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Personal&#xa;Médico&#xa;(ST02)" vertex="1">
+          <mxGeometry height="60" width="40" x="65" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Paciente&#xa;(ST01)" vertex="1">
+          <mxGeometry height="60" width="40" x="65" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="shape=umlActor;fontStyle=0;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Med-Gemini&#xa;(Sistema)" vertex="1">
+          <mxGeometry height="60" width="40" x="1225" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="shape=umlActor;fontStyle=0;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Sistema&#xa;Emergencias" vertex="1">
+          <mxGeometry height="60" width="40" x="1225" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="shape=mxgraph.uml2.actor;fontStyle=0;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Centro&#xa;Asistencia&#xa;(ST04)" vertex="1">
+          <mxGeometry height="60" width="40" x="1225" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="1" style="shape=umlActor;fontStyle=0;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Sistema de&#xa;Reasignación&#xa;Inteligente" vertex="1">
+          <mxGeometry height="60" width="40" x="1225" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Realizar&#xa;teleconsulta&#xa;(M04-C01)" vertex="1">
+          <mxGeometry height="60" width="180" x="220" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="21" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;strokeWidth=2;" value="Notificar&#xa;Sistema&#xa;Emergencias" vertex="1">
+          <mxGeometry height="65" width="180" x="750" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="23" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="24" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="16" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="29" edge="1" parent="1" source="6" style="endArrow=none;html=1;strokeWidth=1;" target="18" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="30" edge="1" parent="1" source="7" style="endArrow=none;html=1;strokeWidth=1;" target="12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="31" edge="1" parent="1" source="7" style="endArrow=none;html=1;strokeWidth=1;" target="13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="32" edge="1" parent="1" source="7" style="endArrow=none;html=1;strokeWidth=1;" target="19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="33" edge="1" parent="1" source="8" style="endArrow=none;html=1;strokeWidth=1;dashed=1;" target="20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="34" edge="1" parent="1" source="9" style="endArrow=none;html=1;strokeWidth=1;dashed=1;" target="21" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="35" edge="1" parent="1" source="10" style="endArrow=none;html=1;strokeWidth=1;dashed=1;" target="21" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="36" edge="1" parent="1" source="10" style="endArrow=none;html=1;strokeWidth=1;dashed=1;" target="22" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="37" edge="1" parent="1" source="11" style="endArrow=none;html=1;strokeWidth=1;dashed=1;" target="22" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="38" edge="1" parent="1" source="12" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="13" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="39" edge="1" parent="1" source="12" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="20" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="43" edge="1" parent="1" source="16" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=9;fontStyle=2;fontColor=#000000;" target="21" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
