@@ -1,0 +1,170 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="Dmo9S07Q-whltBGqhvRz" name="Página-1">
+    <mxGraphModel dx="871" dy="453" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="101" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" value="SAMR — Diagrama de Contexto Especifico — M3 Monitoreo Biométrico Predictivo" vertex="1">
+          <mxGeometry height="28" width="1300" x="50" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="103" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2.5;fontStyle=1;fontSize=15;fontColor=#000000;" value="SAMR&lt;br&gt;M3" vertex="1">
+          <mxGeometry height="260" width="260" x="570" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="103s" parent="1" style="text;html=1;align=center;fontSize=9;fontColor=#595959;strokeColor=none;fillColor=none;" value="Monitoreo Biométrico Predictivo&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="250" x="575" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="104" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Paciente&#xa;(ST01)" vertex="1">
+          <mxGeometry height="50" width="145" x="341" y="117" as="geometry" />
+        </mxCell>
+        <mxCell id="105" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Personal&#xa;Médico (ST02)" vertex="1">
+          <mxGeometry height="50" width="145" x="83" y="376" as="geometry" />
+        </mxCell>
+        <mxCell id="106" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Centro de Asistencia (ST04)" vertex="1">
+          <mxGeometry height="50" width="145" x="252" y="691" as="geometry" />
+        </mxCell>
+        <mxCell id="107" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Bot Conversacional" vertex="1">
+          <mxGeometry height="50" width="160" x="1114" y="259" as="geometry" />
+        </mxCell>
+        <mxCell id="108" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Dispositivo IoT" vertex="1">
+          <mxGeometry height="50" width="140" x="1003" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="109" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Med-Gemini" vertex="1">
+          <mxGeometry height="50" width="130" x="831" y="89" as="geometry" />
+        </mxCell>
+        <mxCell id="110" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="487" y="357" />
+            </Array>
+            <mxPoint x="405" y="187" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="110L" connectable="0" parent="110" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="Datos biométricos capturados desde dispositivos IoT" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-9" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="111" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="104" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="547" y="298" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="111L" connectable="0" parent="111" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="&lt;p data-start=&quot;594&quot; data-end=&quot;626&quot;&gt;&lt;span data-start=&quot;594&quot; data-end=&quot;626&quot;&gt;Alerta biométrica predictiva&lt;/span&gt;&lt;/p&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td data-start=&quot;3067&quot; data-end=&quot;3078&quot; data-col-size=&quot;sm&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td data-col-size=&quot;md&quot; data-start=&quot;3078&quot; data-end=&quot;3127&quot;&gt;Explicación de alerta y acciones recomendadas&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3" y="-58" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="112" edge="1" parent="1" source="105" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="440" y="474" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="112L" connectable="0" parent="112" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="Consulta y evaluación clínica" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-3" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="113" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" target="105" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="407" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="113L" connectable="0" parent="113" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="&lt;p data-start=&quot;1343&quot; data-end=&quot;1377&quot;&gt;&lt;span data-start=&quot;1343&quot; data-end=&quot;1377&quot;&gt;Notificación de alerta crítica&lt;/span&gt;&lt;/p&gt;&lt;p data-start=&quot;1379&quot; data-end=&quot;1416&quot;&gt;&lt;span data-start=&quot;1379&quot; data-end=&quot;1416&quot;&gt;Historial biométrico del paciente&lt;/span&gt;&lt;/p&gt;&lt;p data-start=&quot;1418&quot; data-end=&quot;1450&quot;&gt;&lt;span data-start=&quot;1418&quot; data-end=&quot;1450&quot;&gt;Predicción de evento clínico&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-12" y="-30" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="114" edge="1" parent="1" source="106" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="351.03" y="575.6078771661099" as="sourcePoint" />
+            <mxPoint x="575.0036412670747" y="535.9966007539709" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="114L" connectable="0" parent="114" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="Confirmación de atención del caso" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="115" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;exitX=0.018;exitY=0.568;exitDx=0;exitDy=0;exitPerimeter=0;" target="106" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="444" y="561" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="115L" connectable="0" parent="115" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="Solicitud de atención de emergencia" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="116" edge="1" parent="1" source="107" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;entryX=0.89;entryY=0.211;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.551;exitY=0.98;exitDx=0;exitDy=0;exitPerimeter=0;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="919" y="397" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="116L" connectable="0" parent="116" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="estado de afiliación / historial HL7/FHIR" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-11" y="5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="117" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="107" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="864" y="348" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="117L" connectable="0" parent="117" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="consulta de elegibilidad del paciente" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="39" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="118" edge="1" parent="1" source="108" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;entryX=1.004;entryY=0.481;entryDx=0;entryDy=0;entryPerimeter=0;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="908" y="493" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="118L" connectable="0" parent="118" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="Lecturas biométricas continuas" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="120" edge="1" parent="1" source="109" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;exitX=0.143;exitY=0.997;exitDx=0;exitDy=0;exitPerimeter=0;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="698" y="276" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="120L" connectable="0" parent="120" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="&lt;p data-start=&quot;1095&quot; data-end=&quot;1142&quot;&gt;&lt;span data-start=&quot;1095&quot; data-end=&quot;1142&quot;&gt;Nivel de riesgo y explicación clínica (XAI)&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-6" y="-45" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="121" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;rounded=1;entryX=0.798;entryY=0.986;entryDx=0;entryDy=0;entryPerimeter=0;" target="109" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="769" y="300" />
+            </Array>
+            <mxPoint x="723" y="368" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="121L" connectable="0" parent="121" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="Datos biométricos para análisis predictivo" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="8" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
