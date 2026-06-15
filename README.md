@@ -61,6 +61,7 @@ Cambio a una aprte del docuemtno de vision no creo qeu sea tan relevante como pa
 
 * **Carpeta requisotsFuncionalesxModulo:** pues ahi estan todos tanto requsitos funcionales como no funcionales.
 * **Lo relevante:** es que ya esta todo con trazabiliad.
+> la antonella hizo la carpeta es todo su aporte con tal de faltar dos semanas mas 🗣️ 
 
 ---
 
