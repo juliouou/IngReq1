@@ -1,0 +1,174 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="VmgjxEtQdB2ym3tMqpPl" name="Página-1">
+    <mxGraphModel dx="1440" dy="914" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1420" pageHeight="980" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="101" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" value="SAMR — Diagrama de Contexto Especializado — M5 Seguridad, Auditoría y Cumplimiento" vertex="1">
+          <mxGeometry height="28" width="1400" x="50" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="103" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2.5;fontStyle=1;fontSize=15;fontColor=#000000;" value="SAMR&#xa;M5" vertex="1">
+          <mxGeometry height="226" width="234" x="583" y="407" as="geometry" />
+        </mxCell>
+        <mxCell id="103s" parent="1" style="text;html=1;align=center;fontSize=9;fontColor=#595959;strokeColor=none;fillColor=none;" value="Seguridad, Auditoría&#xa;y Cumplimiento" vertex="1">
+          <mxGeometry height="28" width="250" x="575" y="538" as="geometry" />
+        </mxCell>
+        <mxCell id="104" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Paciente&#xa;(ST01)" vertex="1">
+          <mxGeometry height="50" width="155" x="291" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="105" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="MLOps /&#xa;Med-Gemini (ST07)" vertex="1">
+          <mxGeometry height="50" width="155" x="209" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="106" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="MSP&#xa;(ST05)" vertex="1">
+          <mxGeometry height="50" width="155" x="1078" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="107" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="DPO&#xa;(ST06)" vertex="1">
+          <mxGeometry height="50" width="155" x="1123" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="108" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Cloud GCP&#xa;(Infraestructura)" vertex="1">
+          <mxGeometry height="50" width="155" x="622.5" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="109" edge="1" parent="1" source="104" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="457" y="382" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="109L" connectable="0" parent="109" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="consentimiento explicito LOPDP" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="110" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="104" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="552" y="308" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="110L" connectable="0" parent="110" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="confirmacion de consentimiento registrado" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="111" edge="1" parent="1" source="105" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="474" y="548" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="111L" connectable="0" parent="111" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="auditoria de equidad de Med-Gemini" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="112" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="105" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="467" y="498" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="112L" connectable="0" parent="112" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="metricas de precision y versiones del modelo" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="113" edge="1" parent="1" source="106" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="978" y="385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="113L" connectable="0" parent="113" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="inspeccion de logs de auditoria" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="114" edge="1" parent="1" source="106" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="414" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="114L" connectable="0" parent="114" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="normativas regulatorias LOPDP / MSP" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="115" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="106" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="907" y="342" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="115L" connectable="0" parent="115" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="logs&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="116" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="106" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="878" y="318" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="116L" connectable="0" parent="116" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="informe de auditoria exportado" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="117" edge="1" parent="1" source="107" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="117L" connectable="0" parent="117" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="supervision cumplimiento LOPDP" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="119" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="107" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="990" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="119L" connectable="0" parent="119" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="consentimientos registrados / logs cumplimiento" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="120" edge="1" parent="1" source="108" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="644" y="730" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="120L" connectable="0" parent="120" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="infraestructura de almacenamiento seguro" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2" y="-28" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="121" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="108" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="740" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="121L" connectable="0" parent="121" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="datos cifrados AES-256&amp;nbsp;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

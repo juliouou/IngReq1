@@ -1,0 +1,209 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="d4Vj_fEKwmhSgcEb4vK9" name="Página-1">
+    <mxGraphModel dx="997" dy="633" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1420" pageHeight="960" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="101" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" value="SAMR — Diagrama de Contexto Especializado — M4 Teleconsulta y Atención Médica" vertex="1">
+          <mxGeometry height="28" width="1400" x="50" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="103" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2.5;fontStyle=1;fontSize=15;fontColor=#000000;" value="SAMR&#xa;M4" vertex="1">
+          <mxGeometry height="260" width="260" x="570" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="103s" parent="1" style="text;html=1;align=center;fontSize=9;fontColor=#595959;strokeColor=none;fillColor=none;" value="Teleconsulta y&#xa;Atención Médica" vertex="1">
+          <mxGeometry height="28" width="250" x="575" y="538" as="geometry" />
+        </mxCell>
+        <mxCell id="104" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Paciente&#xa;(ST01)" vertex="1">
+          <mxGeometry height="50" width="155" x="179" y="284" as="geometry" />
+        </mxCell>
+        <mxCell id="105" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Personal&#xa;Médico (ST02)" vertex="1">
+          <mxGeometry height="50" width="155" x="114" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="106" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Med-Gemini&#xa;(Sistema)" vertex="1">
+          <mxGeometry height="50" width="155" x="1085" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="107" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Sistema de&#xa;Emergencias" vertex="1">
+          <mxGeometry height="50" width="155" x="1124" y="437" as="geometry" />
+        </mxCell>
+        <mxCell id="108" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Centro de&#xa;Asistencia (ST04)" vertex="1">
+          <mxGeometry height="50" width="155" x="1085" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="109" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#000000;verticalAlign=middle;align=center;" value="Sistema de&#xa;Recetas Digitales" vertex="1">
+          <mxGeometry height="50" width="165" x="621" y="101" as="geometry" />
+        </mxCell>
+        <mxCell id="110" edge="1" parent="1" source="104" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;exitX=1;exitY=1;exitDx=0;exitDy=0;" target="103" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="110L" connectable="0" parent="110" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="participacion en teleconsulta" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="111" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="104" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="546" y="309" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="111L" connectable="0" parent="111" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="receta digital firmada electronicamente" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="112" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="104" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="487" y="346" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="112L" connectable="0" parent="112" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="indicaciones medicas y seguimiento" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="113" edge="1" parent="1" source="105" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="428" y="561" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="113L" connectable="0" parent="113" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="diagnostico / validacion sugerencia Med-Gemini" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="114" edge="1" parent="1" source="105" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="419" y="606" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="114L" connectable="0" parent="114" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="rechazo de solicitud con motivo (M04-C04)" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="115" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="105" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="428" y="505" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="115L" connectable="0" parent="115" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="historial clinico completo del paciente" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="116" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="105" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="427" y="464" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="116L" connectable="0" parent="116" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="sugerencias diagnosticas XAI de Med-Gemini" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="117" edge="1" parent="1" source="106" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="973" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="117L" connectable="0" parent="117" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="sugerencias diagnosticas + razonamiento XAI" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="118" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="106" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="906" y="337" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="118L" connectable="0" parent="118" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="contexto clinico del caso para analisis" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="119" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="107" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="973" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="119L" connectable="0" parent="119" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="solicitud de derivacion presencial" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="120" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="107" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="975" y="456" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="120L" connectable="0" parent="120" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="datos clinicos urgentes del paciente" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="121" edge="1" parent="1" source="108" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="121L" connectable="0" parent="121" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="confirmacion / reasignacion de solicitud" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="122" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="108" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="914" y="662" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="122L" connectable="0" parent="122" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="solicitud reasignada con motivo (M04-C04)" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="123" edge="1" parent="1" source="103" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="109" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="242" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="123L" connectable="0" parent="123" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="datos de receta para firma electronica" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="124" edge="1" parent="1" source="109" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;" target="103" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="764" y="254" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="124L" connectable="0" parent="124" style="edgeLabel;html=1;align=center;fontSize=8;fontColor=#000000;resizable=0;" value="receta firmada y validada" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-4" y="22" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
