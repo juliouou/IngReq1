@@ -1,16 +1,68 @@
-# IngReq1
-##CAMBIOSSS NUEVOSS AQUI
+# # IngReq1
 
-###1.0 en donde estan los nuevos archivosw w
-###2.0 Cambios  los modulos tipo 10 Ahora tenemos 10 modulos para programaar qu risa xddddd
-###2.1 Revison del Ingeniero e hicimos los cambios, DONDE: Ahora apliacamos las normas Iso(who?),cambios en ls modulos ahora son solo 8, Cambios en lo stakeholder, ahora el Ingeniero es patrocinador y y que mas? nada mas e   sla peor actualizacion de contenido akdjadka(alguien lee esto(?
-###2.2 Revison y cambios en las dependencias y caracteristicas wwww
-###2.3 Cambios en el BOT (Main problem)(que?) Bueno ahora Transformación con IA y bots conversacionales, la ia se apodera de nosotos (I am Ia) wtfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+---
+
+## CAMBIOSSS NUEVOSS AQUI
+
+### 1.0 en donde estan los nuevos archivosw w
+
+### 2.0 Cambios  los modulos tipo 10
+> Ahora tenemos 10 modulos para programaar qu risa xddddd
+
+### 2.1 Revison del Ingeniero e hicimos los cambios
+**DONDE:**
+* Ahora apliacamos las normas Iso(who?)
+* cambios en ls modulos ahora son solo 8
+* Cambios en lo stakeholder, ahora el Ingeniero es patrocinador
+* ¿y que mas? nada mas e   sla peor actualizacion de contenido akdjadka(alguien lee esto(?
+
+### 2.2 Revison y cambios en las dependencias y caracteristicas wwww
+
+### 2.3 Cambios en el BOT (Main problem)
+> (que?) Bueno ahora Transformación con IA y bots conversacionales, la ia se apodera de nosotos (I am Ia) wtfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
 <img width="1169" height="841" alt="image" src="https://github.com/user-attachments/assets/acebf5ee-4c64-4c83-82f0-c4d8877b19b1" />
-###3.0 Esta mal todo, akdjadk mentira pasasmos de 8 modulos a tan solo 5 modulos donde esta mejor estrucutras y una mejor forma de comprenderos el cambio era necesario? si yo creo qeu si, pues aprte de eso un cambio gigante a todo el documento de vison por eso salto de 2.3 a 3.0 como el geomtry dash no? pues asi.
-###3.1 cambios importantes? Reducción a 8 stakeholders esenciales. Actualización en cascada de RF, RNF, riesgos, criterios de éxito y trazabilidad, mmm aparte de eso modificamos un poco los modulos dandole mas presencia al sistema. ACTULIAZCOON IMPORTANTE
-### 3.2Incorporación de Med-Gemini como motor clínico de IA. Importante igual. la "Ia: I always come back"
-###3.3 Rediseño de M2 y M3: separación del bot, dos tipos de solicitud (síntomas y alerta IoT). RF actualizados en cascada. Revison final con el ingeniero ojaal le guste si no pues ya me mato hoy 
+
+---
+
+### 3.0 Esta mal todo
+> akdjadk mentira
+
+Pasasmos de 8 modulos a tan solo **5 modulos** donde esta mejor estrucutras y una mejor forma de comprenderos. 
+
+**¿el cambio era necesario?** si yo creo qeu si, pues aprte de eso un cambio gigante a todo el documento de vison por eso salto de 2.3 a 3.0 como el geomtry dash no? pues asi.
+
+### 3.1 cambios importantes?
+* **Reducción a 8 stakeholders esenciales.**
+* **Actualización en cascada** de RF, RNF, riesgos, criterios de éxito y trazabilidad.
+* Modificamos un poco los modulos dandole mas presencia al sistema. 
+
+*ACTULIAZCOON IMPORTANTE*
+
+### 3.2 Incorporación de Med-Gemini
+* Incorporación de Med-Gemini como motor clínico de IA. Importante igual.
+> la "Ia: I always come back"
+
+### 3.3 Rediseño de M2 y M3
+* **separación del bot.**
+* **dos tipos de solicitud** (síntomas y alerta IoT).
+* RF actualizados en cascada.
+
+> Revison final con el ingeniero ojaal le guste si no pues ya me mato hoy 
+
 <img width="277" height="128" alt="{6B4131CD-3AC0-410E-A8B3-B1CC99F8CCAE}" src="https://github.com/user-attachments/assets/9aa7773f-6c57-46c4-8f29-3ec04fed006b" />
+
+---
+
 # Segundo Bimestre
-3.4 El mejor cambio, Cambio a una aprte del docuemtno de vision no creo qeu sea tan relevante como para un salto ya que no cambia mucho la estructura sin embaego hace modificaciones con los diagrmas en especifico y diagraa de contexto, La caprte requisotsFuncionalesxModulo pues ahi estan todos tanto requsitos funcionales como no funcionales, Asi que lo relevante es que ya esta todo con trazabiliad, me gustaria que actualizen ustdes tambien el git pero identifiquense tipo ejemplo (Julio cambio 3.2/3.3/3.4 y asi) para ver mejor pq creo qeu solo yo actualizo esto, igual si lo ve el ingniero borro este readme o QUE UNA ia me humanize ajdhajdajbjadjakhdaldkaklJDLAJfoijfosifjifojfisjfsifsniufhsufhiei.fsfjesoifhuesijfseifsef Juliouuuu
+
+### 3.4 El mejor cambio
+Cambio a una aprte del docuemtno de vision no creo qeu sea tan relevante como para un salto ya que no cambia mucho la estructura sin embaego hace modificaciones con los diagrmas en especifico y diagraa de contexto.
+
+* **Carpeta requisotsFuncionalesxModulo:** pues ahi estan todos tanto requsitos funcionales como no funcionales.
+* **Lo relevante:** es que ya esta todo con trazabiliad.
+
+---
+
+### Notas de Control de Versiones y Colaboración:
+> me gustaria que actualizen ustdes tambien el git pero identifiquense tipo ejemplo (Julio cambio 3.2/3.3/3.4 y asi) para ver mejor pq creo qeu solo yo actualizo esto, igual si lo ve el ingniero borro este readme o QUE UNA ia me humanize ajdhajdajbjadjakhdaldkaklJDLAJfoijfosifjifojfisjfsifsniufhsufhiei.fsfjesoifhuesijfseifsef Juliouuuu
