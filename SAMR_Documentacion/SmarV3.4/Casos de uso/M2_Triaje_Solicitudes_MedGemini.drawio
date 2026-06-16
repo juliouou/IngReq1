@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram id="Jeaw6u7yVkv1KM0njudm" name="Página-1">
-    <mxGraphModel dx="1196" dy="807" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="860" math="0" shadow="0">
+    <mxGraphModel dx="1296" dy="823" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="860" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -21,6 +21,9 @@
         </mxCell>
         <mxCell id="16" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Ejecutar matching&#xa;inteligente" vertex="1">
           <mxGeometry height="48" width="175" x="282" y="347" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="5" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Escalar&lt;br&gt;bot a medico&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="48" width="175" x="25" y="214" as="geometry" />
         </mxCell>
         <mxCell id="6" parent="1" style="shape=umlActor;fontStyle=1;fontSize=10;verticalLabelPosition=bottom;verticalAlign=top;" value="Paciente&#xa;(ST01)" vertex="1">
           <mxGeometry height="62" width="42" x="44" y="181" as="geometry" />
@@ -45,9 +48,6 @@
         </mxCell>
         <mxCell id="13" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Clasificar riesgo&#xa;con Med-Gemini&#xa;+ XAI" vertex="1">
           <mxGeometry height="56" width="175" x="455" y="100" as="geometry" />
-        </mxCell>
-        <mxCell id="14" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Escalar&#xa;bot → médico" vertex="1">
-          <mxGeometry height="48" width="175" x="230" y="250" as="geometry" />
         </mxCell>
         <mxCell id="15" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;" value="Generar solicitud&#xa;asíncrona" vertex="1">
           <mxGeometry height="48" width="175" x="455" y="260" as="geometry" />
