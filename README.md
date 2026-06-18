@@ -69,6 +69,6 @@ Cambio a una aprte del docuemtno de vision no creo qeu sea tan relevante como pa
 > me gustaria que actualizen ustdes tambien el git pero identifiquense tipo ejemplo (Julio cambio 3.2/3.3/3.4 y asi) para ver mejor pq creo qeu solo yo actualizo esto, igual si lo ve el ingniero borro este readme o QUE UNA ia me humanize ajdhajdajbjadjakhdaldkaklJDLAJfoijfosifjifojfisjfsifsniufhsufhiei.fsfjesoifhuesijfseifsef Juliouuuu
 
 
-### 4 Cambios realizados en el documento de requisitos:
+### 4. Cambios realizados en el documento de requisitos:
 Se corrigui lo identación de los nombres de cada requisito, se cambio el color de las tablas, el Requerimiento no funcional de "Explicabilidad" se lo corriguio, y ya eso gracias,
 > Cambio hecho por Lady Robalino, EL ONE PIECE ES REAL. 
