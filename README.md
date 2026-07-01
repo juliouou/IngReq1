@@ -72,3 +72,11 @@ Cambio a una aprte del docuemtno de vision no creo qeu sea tan relevante como pa
 ### 4. Cambios realizados en el documento de requisitos:
 Se corrigui lo identación de los nombres de cada requisito, se cambio el color de las tablas, el Requerimiento no funcional de "Explicabilidad" se lo corriguio, y ya eso gracias,
 > Cambio hecho por Lady Robalino, EL ONE PIECE ES REAL. 
+
+
+# Segundo Bimestrre PARTEEEEE2 LA IMPORTANTE AMAZING
+### 3.5 El mEJOR CAMBIO DIRIA YO 
+### LA IA AVANZA
+Ahora la ia tien implemteado el RAG Y EL LLM Y TAMBIEN MEJORE LA DOCUEMNTACIN Y LA ADPARTE DE MEJORES FORMAS PARA QUE Y NO USEN LOS IJJUPUTAS CASOS DE USO DEL MES PASADO Y USEN LOS ACTUALES
+
+
