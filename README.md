@@ -87,4 +87,8 @@ Ahora la ia tien implemteado el RAG Y EL LLM Y TAMBIEN MEJORE LA DOCUEMNTACIN Y 
 
 ### FE
 
+## CAMBIOS hechos por Lady y Pau
+Se subio el documentos de ·ESP_HS_M2_Triaje_v1.0· que son las historias de usuario del modulo 2 
+
+
 
