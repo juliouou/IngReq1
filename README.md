@@ -79,4 +79,16 @@ Se corrigui lo identación de los nombres de cada requisito, se cambio el color 
 ### LA IA AVANZA
 Ahora la ia tien implemteado el RAG Y EL LLM Y TAMBIEN MEJORE LA DOCUEMNTACIN Y LA ADPARTE DE MEJORES FORMAS PARA QUE Y NO USEN LOS IJJUPUTAS CASOS DE USO DEL MES PASADO Y USEN LOS ACTUALES
 
+# # IngReq1 PARTE 3
+
+---
+
+## CAMBIOSSS NUEVOSS AQUI
+
+### FE
+
+## CAMBIOS hechos por Lady y Pau
+Se subio el documentos de ·ESP_HS_M2_Triaje_v1.0· que son las historias de usuario del modulo 2 
+
+
 
