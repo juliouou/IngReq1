@@ -1,0 +1,88 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="gen1" name="Página-1">
+    <mxGraphModel dx="1837" dy="921" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1780" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="101" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" value="Diagrama de Secuencia — UC-04 Teleconsulta y Atención Médica" vertex="1">
+          <mxGeometry height="28" width="1300" x="50" y="10" as="geometry" /></mxCell>
+        <mxCell id="102" parent="1" style="text;html=1;align=center;fontSize=10;fontColor=#555555;strokeColor=none;fillColor=none;" value="Trazabilidad: RF-13, RF-14, RF-15, RF-16 | Modulo M4-Teleconsulta | SAMR v4.1 | Equipo LLdE — UTPL | Camino Feliz (flujo de rechazo/reasignacion en diagrama aparte)" vertex="1">
+          <mxGeometry height="18" width="1300" x="50" y="40" as="geometry" /></mxCell>
+        <mxCell id="201" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="46" width="30" x="75" y="80" as="geometry" /></mxCell>
+        <mxCell id="202" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=10;strokeColor=none;fillColor=none;" value="PersonalMedico" vertex="1">
+          <mxGeometry height="18" width="120" x="30" y="126" as="geometry" /></mxCell>
+        <mxCell id="203" edge="1" parent="1" style="html=1;strokeColor=#000000;dashed=1;endArrow=none;startArrow=none;" value="">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="146" as="sourcePoint" /><mxPoint x="90" y="760" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="204" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;fontSize=10;align=center;" value=":Teleconsulta" vertex="1">
+          <mxGeometry height="38" width="140" x="280" y="80" as="geometry" /></mxCell>
+        <mxCell id="205" edge="1" parent="1" style="html=1;strokeColor=#000000;dashed=1;endArrow=none;startArrow=none;" value="">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="350" y="118" as="sourcePoint" /><mxPoint x="350" y="760" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="206" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;fontSize=10;align=center;" value=":MedGeminiEngine" vertex="1">
+          <mxGeometry height="38" width="140" x="490" y="80" as="geometry" /></mxCell>
+        <mxCell id="207" edge="1" parent="1" style="html=1;strokeColor=#000000;dashed=1;endArrow=none;startArrow=none;" value="">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="560" y="118" as="sourcePoint" /><mxPoint x="560" y="760" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="208" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;fontSize=10;align=center;" value=":RecetaDigital" vertex="1">
+          <mxGeometry height="38" width="140" x="700" y="80" as="geometry" /></mxCell>
+        <mxCell id="209" edge="1" parent="1" style="html=1;strokeColor=#000000;dashed=1;endArrow=none;startArrow=none;" value="">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="770" y="118" as="sourcePoint" /><mxPoint x="770" y="760" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="210" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="46" width="30" x="955" y="80" as="geometry" /></mxCell>
+        <mxCell id="211" parent="1" style="text;html=1;align=center;fontStyle=1;fontSize=10;strokeColor=none;fillColor=none;" value="Paciente" vertex="1">
+          <mxGeometry height="18" width="120" x="910" y="126" as="geometry" /></mxCell>
+        <mxCell id="212" edge="1" parent="1" style="html=1;strokeColor=#000000;dashed=1;endArrow=none;startArrow=none;" value="">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="970" y="146" as="sourcePoint" /><mxPoint x="970" y="760" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="213" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;fontSize=10;align=center;" value=":CentroAsistencia" vertex="1">
+          <mxGeometry height="38" width="140" x="1150" y="80" as="geometry" /></mxCell>
+        <mxCell id="214" edge="1" parent="1" style="html=1;strokeColor=#000000;dashed=1;endArrow=none;startArrow=none;" value="">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1220" y="118" as="sourcePoint" /><mxPoint x="1220" y="760" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="215" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;fontSize=10;align=center;" value=":LogAuditoria" vertex="1">
+          <mxGeometry height="38" width="140" x="1420" y="80" as="geometry" /></mxCell>
+        <mxCell id="216" edge="1" parent="1" style="html=1;strokeColor=#000000;dashed=1;endArrow=none;startArrow=none;" value="">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1490" y="118" as="sourcePoint" /><mxPoint x="1490" y="760" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="217" parent="1" style="html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="560" width="12" x="84" y="160" as="geometry" /></mxCell>
+        <mxCell id="218" parent="1" style="html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="160" width="12" x="344" y="180" as="geometry" /></mxCell>
+        <mxCell id="219" parent="1" style="html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="60" width="12" x="344" y="640" as="geometry" /></mxCell>
+        <mxCell id="220" parent="1" style="html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="320" width="12" x="964" y="220" as="geometry" /></mxCell>
+        <mxCell id="221" parent="1" style="html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="12" x="554" y="380" as="geometry" /></mxCell>
+        <mxCell id="222" parent="1" style="html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="80" width="12" x="764" y="460" as="geometry" /></mxCell>
+        <mxCell id="223" parent="1" style="html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="12" x="1214" y="560" as="geometry" /></mxCell>
+        <mxCell id="224" parent="1" style="html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="12" x="1484" y="640" as="geometry" /></mxCell>
+        <mxCell id="225" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;fontSize=9;" value="1. iniciar(pacienteId)">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="180" as="sourcePoint" /><mxPoint x="350" y="180" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="226" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;fontSize=9;" value="2. establecerTransmision(latencia&lt;=200ms)">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="350" y="220" as="sourcePoint" /><mxPoint x="970" y="220" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="227" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;fontSize=9;" value="3. obtenerHistorialClinico()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="415" y="260" /><mxPoint x="415" y="300" /></Array>
+            <mxPoint x="350" y="260" as="sourcePoint" /><mxPoint x="350" y="300" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="228" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1;fontSize=9;" value="graficasEKG_EEG_SpO2()">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="350" y="340" as="sourcePoint" /><mxPoint x="90" y="340" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="229" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;fontSize=9;" value="4. solicitarSugerenciaXAI(contexto)">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="380" as="sourcePoint" /><mxPoint x="560" y="380" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="230" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1;fontSize=9;" value="diagnosticoSugerido + justificacionXAI">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="560" y="420" as="sourcePoint" /><mxPoint x="90" y="420" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="231" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;fontSize=9;" value="5. generarOrden(medicamento, dosis)">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="460" as="sourcePoint" /><mxPoint x="770" y="460" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="232" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;fontSize=9;" value="6. emitirFirmada(recetaDigital)">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="770" y="500" as="sourcePoint" /><mxPoint x="970" y="500" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="233" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;fontSize=9;" value="7 [alt: caso critico]. activarDerivacion(datosUrgentes)">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="560" as="sourcePoint" /><mxPoint x="1220" y="560" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="234" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1;fontSize=9;" value="recepcionConfirmada(recursosMovilizados)">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1220" y="600" as="sourcePoint" /><mxPoint x="90" y="600" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="235" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.2;fontSize=9;" value="8. registrar(diagnostico, versionMedGemini)">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="350" y="640" as="sourcePoint" /><mxPoint x="1490" y="640" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="236" edge="1" parent="1" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1;fontSize=9;" value="hashSHA256: String">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1490" y="680" as="sourcePoint" /><mxPoint x="350" y="680" as="targetPoint" /></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
