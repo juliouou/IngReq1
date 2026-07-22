@@ -8,4 +8,5 @@ app_name = "biometria"
 urlpatterns = [
     path("", views.dashboard_biometrico, name="dashboard"),
     path("alertas/<int:alerta_id>/atender/", views.atender_alerta, name="atender_alerta"),
+    path("registrar/", views.registrar_lectura, name="registrar"),
 ]
