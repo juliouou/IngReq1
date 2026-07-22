@@ -74,10 +74,6 @@ Enviar en cada peticion protegida el encabezado:
 
     Authorization: Bearer <access_token>
 
-## Docker
-
-    docker-compose up --build
-
 ## Roles
 
 - ADMIN: acceso total.
