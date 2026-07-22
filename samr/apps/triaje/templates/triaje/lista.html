@@ -2,9 +2,15 @@
 {% block titulo %}Mis solicitudes{% endblock %}
 {% block contenido %}
 <div class="max-w-2xl w-full">
-  <div class="flex items-center justify-between mb-4">
+  <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
     <h1 class="text-xl font-bold text-navy">Mis solicitudes de atención</h1>
-    <a href="{% url 'triaje:nueva' %}" class="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-teal-700">+ Nueva solicitud</a>
+    <div class="flex flex-wrap gap-2">
+      <a href="{% url 'triaje:nueva' %}" class="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-teal-700">+ Nueva solicitud</a>
+      <a href="{% url 'triaje:emergencia_manual' %}" class="bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-red-700">🚨 Emergencia ahora</a>
+      {% if request.user.dispositivos.exists %}
+        <a href="{% url 'triaje:alerta_iot' %}" class="bg-orange-500 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-orange-600">📡 Alertar con mis datos IoT</a>
+      {% endif %}
+    </div>
   </div>
 
   {% if solicitudes %}
@@ -14,7 +20,24 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="font-semibold text-navy">{{ s.motivo }}</p>
-            <p class="text-xs text-slate-400">{{ s.codigo }} · {{ s.creado_en|date:"d/m/Y H:i" }}</p>
+            <p class="text-xs text-slate-400">
+              {{ s.codigo }} · {{ s.creado_en|date:"d/m/Y H:i" }} · 
+              <span class="inline-flex items-center gap-1 font-medium
+                {% if s.tipo_origen == 'CHAT_IA' %} text-teal-600
+                {% elif s.tipo_origen == 'EMERGENCIA_MANUAL' %} text-red-600
+                {% elif s.tipo_origen == 'ALERTA_IOT' %} text-orange-500
+                {% endif %}">
+                {% if s.tipo_origen == 'CHAT_IA' %}
+                  💬 Chat con IA
+                {% elif s.tipo_origen == 'EMERGENCIA_MANUAL' %}
+                  🚨 Emergencia Manual
+                {% elif s.tipo_origen == 'ALERTA_IOT' %}
+                  📡 Dispositivo IoT
+                {% else %}
+                  {{ s.tipo_origen }}
+                {% endif %}
+              </span>
+            </p>
           </div>
           <span class="text-xs font-semibold px-2.5 py-1 rounded-full
             {% if s.estado == 'PENDIENTE' %} bg-slate-100 text-slate-600

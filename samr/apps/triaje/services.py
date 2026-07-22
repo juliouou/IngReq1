@@ -4,7 +4,7 @@ from django.db import transaction
 from core.exceptions import ConflictoEstado
 from core.services import BaseService
 from core.utils import generar_codigo
-from apps.triaje.models import EstadoSolicitud, EvaluacionTriaje
+from apps.triaje.models import EstadoSolicitud, EvaluacionTriaje, TipoOrigenSolicitud
 from apps.triaje.repositories import SolicitudRepository
 
 
@@ -12,13 +12,14 @@ class SolicitudService(BaseService):
     repository_class = SolicitudRepository
 
     @transaction.atomic
-    def crear_solicitud(self, paciente, motivo, sintomas):
+    def crear_solicitud(self, paciente, motivo, sintomas, tipo_origen=TipoOrigenSolicitud.CHAT_IA):
         return self.repository.crear(
             codigo=generar_codigo("SOL-", 8),
             paciente=paciente,
             motivo=motivo,
             sintomas=sintomas,
             estado=EstadoSolicitud.PENDIENTE,
+            tipo_origen=tipo_origen,
         )
 
     @transaction.atomic

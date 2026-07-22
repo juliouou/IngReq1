@@ -12,4 +12,6 @@ urlpatterns = [
     path("chat/<int:solicitud_id>/", views.chat_ver, name="chat_ver"),
     path("<int:solicitud_id>/", views.detalle_solicitud, name="detalle"),
     path("<int:solicitud_id>/escalar/", views.escalar_a_humano, name="escalar"),
+    path("emergencia/", views.solicitar_emergencia_manual, name="emergencia_manual"),
+    path("alerta-iot/", views.solicitar_alerta_iot, name="alerta_iot"),
 ]

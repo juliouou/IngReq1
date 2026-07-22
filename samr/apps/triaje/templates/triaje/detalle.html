@@ -3,7 +3,24 @@
 {% block contenido %}
 <div class="max-w-xl w-full">
   <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-    <p class="text-xs uppercase tracking-wide text-teal-600 font-semibold mb-1">{{ solicitud.codigo }}</p>
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-xs uppercase tracking-wide text-teal-600 font-semibold">{{ solicitud.codigo }}</p>
+      <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full
+        {% if solicitud.tipo_origen == 'CHAT_IA' %} bg-teal-50 text-teal-700
+        {% elif solicitud.tipo_origen == 'EMERGENCIA_MANUAL' %} bg-red-50 text-red-700
+        {% elif solicitud.tipo_origen == 'ALERTA_IOT' %} bg-orange-50 text-orange-700
+        {% endif %}">
+        {% if solicitud.tipo_origen == 'CHAT_IA' %}
+          💬 Chat con IA
+        {% elif solicitud.tipo_origen == 'EMERGENCIA_MANUAL' %}
+          🚨 Emergencia Manual
+        {% elif solicitud.tipo_origen == 'ALERTA_IOT' %}
+          📡 Dispositivo IoT
+        {% else %}
+          {{ solicitud.tipo_origen }}
+        {% endif %}
+      </span>
+    </div>
     <h1 class="text-xl font-bold text-navy mb-4">{{ solicitud.motivo }}</h1>
 
     <div class="bg-slate-50 rounded-lg p-4 mb-4">
@@ -16,7 +33,15 @@
         {% if solicitud.evaluacion.es_critica %} bg-red-50 border border-red-200 {% else %} bg-teal-50 border border-teal-100 {% endif %}">
         <p class="text-xs uppercase tracking-wide font-semibold
           {% if solicitud.evaluacion.es_critica %} text-red-700 {% else %} text-teal-700 {% endif %}">
-          Clasificación Med-Gemini (XAI)
+          {% if solicitud.tipo_origen == 'CHAT_IA' %}
+            Clasificación Med-Gemini (XAI)
+          {% elif solicitud.tipo_origen == 'EMERGENCIA_MANUAL' %}
+            Clasificación de Emergencia Directa
+          {% elif solicitud.tipo_origen == 'ALERTA_IOT' %}
+            Clasificación Automática IoT
+          {% else %}
+            Clasificación de Solicitud
+          {% endif %}
         </p>
         <p class="font-semibold mt-1
           {% if solicitud.evaluacion.es_critica %} text-red-800 {% else %} text-teal-800 {% endif %}">
