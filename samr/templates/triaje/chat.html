@@ -126,11 +126,37 @@
         </div>
 
         <!-- Botón de Envío Principal -->
-        <div class="mt-auto pt-4">
-            <button class="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-colors">
+        <div id="submit-container" class="mt-auto pt-4">
+            <button id="submit-request-btn" class="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-colors">
                 <i data-lucide="send-to-back" class="w-5 h-5"></i>
                 Confirmar y Enviar Solicitud
             </button>
+        </div>
+
+        <!-- Estado de la Solicitud (Oculto inicialmente) -->
+        <div id="status-container" class="hidden mt-auto pt-4 border-t border-gray-200">
+            <h4 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-blue-500"></i> Progreso de Solicitud</h4>
+            <div class="space-y-0">
+                <div class="flex items-center gap-3 relative" id="state-recibido">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 flex flex-shrink-0 items-center justify-center text-white state-icon relative z-10"></div>
+                    <span class="text-sm text-gray-500 font-medium state-text">Recibido</span>
+                </div>
+                <div class="w-0.5 h-6 bg-gray-200 ml-3 my-1"></div>
+                <div class="flex items-center gap-3 relative" id="state-asignado">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 flex flex-shrink-0 items-center justify-center text-white state-icon relative z-10"></div>
+                    <span class="text-sm text-gray-500 font-medium state-text">Asignado</span>
+                </div>
+                <div class="w-0.5 h-6 bg-gray-200 ml-3 my-1"></div>
+                <div class="flex items-center gap-3 relative" id="state-atencion">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 flex flex-shrink-0 items-center justify-center text-white state-icon relative z-10"></div>
+                    <span class="text-sm text-gray-500 font-medium state-text">En Atención</span>
+                </div>
+                <div class="w-0.5 h-6 bg-gray-200 ml-3 my-1"></div>
+                <div class="flex items-center gap-3 relative" id="state-atendido">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 flex flex-shrink-0 items-center justify-center text-white state-icon relative z-10"></div>
+                    <span class="text-sm text-gray-500 font-medium state-text">Atendido</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -246,6 +272,42 @@ document.addEventListener("DOMContentLoaded", function() {
     chatInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') handleSend();
     });
+
+    // Lógica para el progreso de la solicitud
+    const submitBtn = document.getElementById('submit-request-btn');
+    const statusContainer = document.getElementById('status-container');
+    const submitContainer = document.getElementById('submit-container');
+
+    if(submitBtn) {
+        submitBtn.addEventListener('click', function() {
+            submitContainer.classList.add('hidden');
+            statusContainer.classList.remove('hidden');
+            
+            const states = ['state-recibido', 'state-asignado', 'state-atencion', 'state-atendido'];
+            let currentState = 0;
+
+            function updateState() {
+                if(currentState < states.length) {
+                    const el = document.getElementById(states[currentState]);
+                    const icon = el.querySelector('.state-icon');
+                    const text = el.querySelector('.state-text');
+                    
+                    icon.classList.remove('bg-gray-200');
+                    icon.classList.add('bg-green-500');
+                    icon.innerHTML = createLucideIcon('check', 'w-4 h-4');
+                    text.classList.remove('text-gray-500');
+                    text.classList.add('text-green-600', 'font-bold');
+                    
+                    lucide.createIcons();
+                    currentState++;
+                    if(currentState < states.length) {
+                        setTimeout(updateState, 2000); // 2 segundos entre cada estado simulado
+                    }
+                }
+            }
+            updateState(); // Iniciar animación
+        });
+    }
 });
 </script>
 {% endblock %}
