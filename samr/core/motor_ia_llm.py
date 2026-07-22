@@ -36,12 +36,19 @@ def clasificar_sintomas_llm(texto_sintomas):
     Usa el LLM para clasificar síntomas. Retorna dict con nivel_urgencia,
     explicacion_xai, etc. o None si falla.
     """
-    prompt = f"""Eres un asistente de triaje médico experto (Med-Gemini).
-Analiza los siguientes síntomas y responde ÚNICAMENTE en formato JSON con esta estructura exacta, sin texto adicional ni antes ni después:
+    prompt = f"""Eres un asistente de TRIAJE (no de diagnóstico). Tu única función es evaluar qué tan urgente es que el paciente sea visto por un médico, según la escala Manchester (1=emergencia inmediata, 5=no urgente).
+
+REGLAS ESTRICTAS:
+- NUNCA menciones el nombre de una enfermedad, condición médica o diagnóstico específico (prohibido decir cosas como 'es probable que tengas X', 'parece ser Y', nombres de enfermedades)
+- Tu explicación debe describir SOLO qué síntomas identificaste y por qué ameritan ese nivel de urgencia, en lenguaje simple
+- Nunca dés consejos de tratamiento (medicamentos, remedios)
+- Si no estás seguro del nivel, sé conservador (asigna mayor urgencia, no menor)
+
+Responde ÚNICAMENTE en JSON con esta estructura exacta, sin texto adicional ni antes ni después:
 {{
-    "nivel_urgencia": <1-5, donde 1 es emergencia vital y 5 es no urgente (escala Manchester)>,
+    "nivel_urgencia": <1-5>,
     "sintomas_detectados": ["sintoma1", "sintoma2"],
-    "explicacion": "Explicación médica breve y clara orientada al paciente del porqué de esta urgencia"
+    "explicacion": "Explicación médica breve y clara orientada al paciente de los síntomas y urgencia"
 }}
 
 Síntomas del paciente: {texto_sintomas}"""
@@ -49,6 +56,8 @@ Síntomas del paciente: {texto_sintomas}"""
     respuesta = llamar_ollama(prompt)
     if not respuesta:
         return None
+
+    logger.info(f"Ollama raw response: {respuesta}")
 
     try:
         match = re.search(r'\{.*\}', respuesta, re.DOTALL)
@@ -63,6 +72,10 @@ Síntomas del paciente: {texto_sintomas}"""
             nivel_urgencia = 5
             
         explicacion = str(data.get("explicacion", "Evaluación procesada correctamente."))
+        disclaimer = " Esta es una evaluación preliminar de urgencia, no un diagnóstico — el médico asignado confirmará tu condición."
+        if disclaimer not in explicacion:
+            explicacion += disclaimer
+            
         sintomas = data.get("sintomas_detectados", [])
         
         return {
@@ -80,8 +93,13 @@ def responder_chat_llm(historial_previo, nuevo_mensaje, turno):
     """
     Genera una respuesta conversacional basada en el contexto previo.
     """
-    prompt = f"""Eres un asistente médico virtual empático. 
+    prompt = f"""Eres un asistente médico virtual empático encargado exclusivamente de TRIAJE.
 Tu objetivo es recopilar información del paciente haciendo máximo una o dos preguntas claras y breves a la vez. No diagnostiques, solo indaga para clasificar.
+
+REGLAS ESTRICTAS:
+- NUNCA diagnostiques ni menciones posibles enfermedades.
+- Nunca dés consejos de tratamiento (medicamentos, remedios).
+
 Debes responder en formato JSON exactamente con esta estructura:
 {{
     "texto_respuesta": "Tu respuesta conversacional y empática aquí",
