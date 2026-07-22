@@ -5,10 +5,10 @@
   <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
     <h1 class="text-xl font-bold text-navy">Mis solicitudes de atención</h1>
     <div class="flex flex-wrap gap-2">
-      <a href="{% url 'triaje:chat' %}" class="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-teal-700">+ Nueva solicitud</a>
-      <a href="{% url 'triaje:emergencia_manual' %}" class="bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-red-700">🚨 Emergencia ahora</a>
+      <a href="{% url 'triaje:formulario' %}" class="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-indigo-700">📋 Formulario de síntomas</a>
+      <a href="{% url 'triaje:chat' %}" class="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-teal-700">💬 Hablar con el asistente</a>
       {% if request.user.dispositivos.exists %}
-        <a href="{% url 'triaje:alerta_iot' %}" class="bg-orange-500 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-orange-600">📡 Alertar con mis datos IoT</a>
+        <a href="{% url 'triaje:alerta_iot' %}" class="bg-orange-500 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-orange-600">📡 Alerta con mis datos IoT</a>
       {% endif %}
     </div>
   </div>
@@ -24,13 +24,13 @@
               {{ s.codigo }} · {{ s.creado_en|date:"d/m/Y H:i" }} · 
               <span class="inline-flex items-center gap-1 font-medium
                 {% if s.tipo_origen == 'CHAT_IA' %} text-teal-600
-                {% elif s.tipo_origen == 'EMERGENCIA_MANUAL' %} text-red-600
+                {% elif s.tipo_origen == 'FORMULARIO_MANUAL' %} text-indigo-600
                 {% elif s.tipo_origen == 'ALERTA_IOT' %} text-orange-500
                 {% endif %}">
                 {% if s.tipo_origen == 'CHAT_IA' %}
                   💬 Chat con IA
-                {% elif s.tipo_origen == 'EMERGENCIA_MANUAL' %}
-                  🚨 Emergencia Manual
+                {% elif s.tipo_origen == 'FORMULARIO_MANUAL' %}
+                  📋 Formulario de síntomas
                 {% elif s.tipo_origen == 'ALERTA_IOT' %}
                   📡 Dispositivo IoT
                 {% else %}

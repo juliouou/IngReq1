@@ -42,14 +42,14 @@ class NivelUrgencia:
 class TipoOrigenSolicitud:
     """Origenes posibles de una solicitud de atencion."""
 
+    FORMULARIO_MANUAL = "FORMULARIO_MANUAL"
     CHAT_IA = "CHAT_IA"
-    EMERGENCIA_MANUAL = "EMERGENCIA_MANUAL"
     ALERTA_IOT = "ALERTA_IOT"
 
     CHOICES = (
-        (CHAT_IA, "Chat con IA"),
-        (EMERGENCIA_MANUAL, "Emergencia solicitada manualmente"),
-        (ALERTA_IOT, "Alerta generada por dispositivo IoT"),
+        (FORMULARIO_MANUAL, "Formulario de síntomas"),
+        (CHAT_IA, "Chat conversacional con IA"),
+        (ALERTA_IOT, "Alerta por dispositivo IoT"),
     )
 
 

@@ -7,13 +7,13 @@
       <p class="text-xs uppercase tracking-wide text-teal-600 font-semibold">{{ solicitud.codigo }}</p>
       <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full
         {% if solicitud.tipo_origen == 'CHAT_IA' %} bg-teal-50 text-teal-700
-        {% elif solicitud.tipo_origen == 'EMERGENCIA_MANUAL' %} bg-red-50 text-red-700
+        {% elif solicitud.tipo_origen == 'FORMULARIO_MANUAL' %} bg-indigo-50 text-indigo-700
         {% elif solicitud.tipo_origen == 'ALERTA_IOT' %} bg-orange-50 text-orange-700
         {% endif %}">
         {% if solicitud.tipo_origen == 'CHAT_IA' %}
           💬 Chat con IA
-        {% elif solicitud.tipo_origen == 'EMERGENCIA_MANUAL' %}
-          🚨 Emergencia Manual
+        {% elif solicitud.tipo_origen == 'FORMULARIO_MANUAL' %}
+          📋 Formulario de síntomas
         {% elif solicitud.tipo_origen == 'ALERTA_IOT' %}
           📡 Dispositivo IoT
         {% else %}
@@ -35,10 +35,10 @@
           {% if solicitud.evaluacion.es_critica %} text-red-700 {% else %} text-teal-700 {% endif %}">
           {% if solicitud.tipo_origen == 'CHAT_IA' %}
             Clasificación Med-Gemini (XAI)
-          {% elif solicitud.tipo_origen == 'EMERGENCIA_MANUAL' %}
-            Clasificación de Emergencia Directa
+          {% elif solicitud.tipo_origen == 'FORMULARIO_MANUAL' %}
+            Clasificación Med-Gemini (Formulario)
           {% elif solicitud.tipo_origen == 'ALERTA_IOT' %}
-            Clasificación Automática IoT
+            Clasificación Med-Gemini (Biometría IoT)
           {% else %}
             Clasificación de Solicitud
           {% endif %}
