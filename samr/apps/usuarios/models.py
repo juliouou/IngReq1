@@ -28,6 +28,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin, ModeloBase):
         "Cedula", max_length=10, unique=True, null=True, blank=True
     )
     telefono = models.CharField("Telefono", max_length=15, blank=True)
+    afiliacion_iess = models.CharField(
+        "Afiliacion IESS", max_length=50, blank=True,
+        help_text="Numero de afiliacion validado contra el IESS/MSP (RF-02).",
+    )
     rol = models.CharField(
         "Rol", max_length=20, choices=Roles.CHOICES, default=Roles.PACIENTE
     )

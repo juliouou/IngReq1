@@ -1,4 +1,4 @@
-.PHONY: install makemigrations migrate seed superuser run test docker-up docker-down clean
+.PHONY: install makemigrations migrate seed superuser run test clean
 
 install:
 	pip install -r requirements.txt
@@ -21,11 +21,6 @@ run:
 test:
 	python manage.py test
 
-docker-up:
-	docker-compose up --build
-
-docker-down:
-	docker-compose down
 
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true

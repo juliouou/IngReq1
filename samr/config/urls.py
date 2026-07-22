@@ -18,6 +18,13 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
 
+    # Portal web (Pantalla 1: login, registro, MFA, dashboard) + resto de modulos
+    path("", include("apps.portal.urls")),
+    path("triaje/", include("apps.triaje.web_urls")),
+    path("biometria/", include("apps.biometria.web_urls")),
+    path("teleconsulta/", include("apps.teleconsulta.web_urls")),
+    path("auditoria-panel/", include("apps.auditoria.web_urls")),
+
     # Autenticacion JWT
     path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

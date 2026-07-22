@@ -64,6 +64,7 @@ LOCAL_APPS = [
     "apps.biometria",
     "apps.teleconsulta",
     "apps.auditoria",
+    "apps.portal",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -136,6 +137,10 @@ CHANNEL_LAYERS = {
 # ---------------------------------------------------------------------------
 
 AUTH_USER_MODEL = "usuarios.Usuario"
+
+LOGIN_URL = "portal:login"
+LOGIN_REDIRECT_URL = "portal:dashboard"
+LOGOUT_REDIRECT_URL = "portal:login"
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

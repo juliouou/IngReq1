@@ -1,0 +1,40 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Solicitud {{ solicitud.codigo }}{% endblock %}
+{% block contenido %}
+<div class="max-w-xl w-full">
+  <div class="bg-white rounded-2xl shadow-samr border border-surface-100 p-8">
+    <p class="text-xs uppercase tracking-wide text-brand-600 font-semibold mb-1">{{ solicitud.codigo }}</p>
+    <h1 class="text-xl font-bold text-surface-900 mb-4">{{ solicitud.motivo }}</h1>
+
+    <div class="bg-surface-50 rounded-lg p-4 mb-4">
+      <p class="text-sm text-surface-500 mb-1">Síntomas reportados</p>
+      <p class="text-surface-700">{{ solicitud.sintomas }}</p>
+    </div>
+
+    {% if solicitud.evaluacion %}
+      <div class="rounded-lg p-4 mb-4
+        {% if solicitud.evaluacion.es_critica %} bg-red-50 border border-red-200 {% else %} bg-brand-50 border border-brand-100 {% endif %}">
+        <p class="text-xs uppercase tracking-wide font-semibold
+          {% if solicitud.evaluacion.es_critica %} text-red-700 {% else %} text-brand-700 {% endif %}">
+          Clasificación Med-Gemini (XAI)
+        </p>
+        <p class="font-semibold mt-1
+          {% if solicitud.evaluacion.es_critica %} text-red-800 {% else %} text-brand-800 {% endif %}">
+          Nivel: {{ solicitud.evaluacion.get_nivel_urgencia_display }}
+        </p>
+        <p class="text-sm mt-1
+          {% if solicitud.evaluacion.es_critica %} text-red-700 {% else %} text-brand-700 {% endif %}">
+          {{ solicitud.evaluacion.observaciones }}
+        </p>
+      </div>
+    {% endif %}
+
+    <div class="flex items-center justify-between text-sm">
+      <span class="text-surface-400">Estado actual</span>
+      <span class="font-semibold text-surface-900">{{ solicitud.get_estado_display }}</span>
+    </div>
+  </div>
+
+  <a href="{% url 'triaje:lista' %}" class="block mt-4 text-sm text-surface-400 hover:underline">← Ver mis solicitudes</a>
+</div>
+{% endblock %}
