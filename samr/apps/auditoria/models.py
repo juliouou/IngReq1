@@ -20,7 +20,7 @@ class RegistroAuditoria(ModeloBase):
         blank=True,
         related_name="registros_auditoria",
     )
-    accion = models.CharField("Accion (metodo HTTP)", max_length=10)
+    accion = models.CharField("Accion / Evento", max_length=100)
     ruta = models.CharField("Ruta", max_length=255)
     codigo_estado = models.PositiveIntegerField("Codigo de estado HTTP")
     request_id = models.CharField("ID de peticion", max_length=40, blank=True)
