@@ -4,27 +4,82 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block titulo %}SAMR{% endblock %} — Sistema de Atención Médica Remota</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { theme: { extend: { colors: {
-      navy: '#0F2A4A', teal: '#14B8A6'
-    } } } }
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a', 950: '#042f2e' },
+            surface: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          boxShadow: {
+            'samr': '0 10px 25px -5px rgba(13, 148, 136, 0.08), 0 4px 10px -5px rgba(13, 148, 136, 0.04)',
+          }
+        }
+      }
+    }
   </script>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col">
-  <header class="bg-navy text-white px-6 py-4 flex items-center justify-between">
-    <a href="{% url 'portal:login' %}" class="font-bold text-lg tracking-tight">SAMR</a>
-    <span class="text-xs text-slate-300">Sistema de Atención Médica Remota — Equipo LLdE</span>
+<body class="bg-surface-50 font-sans min-h-screen flex flex-col text-surface-900">
+  
+  {% if user.is_authenticated %}
+  <header class="bg-white border-b border-surface-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <a href="{% url 'portal:dashboard' %}" class="font-bold text-2xl tracking-tight text-brand-700">SAMR</a>
+          <nav class="ml-8 flex space-x-8 h-full">
+            {% url 'triaje:lista' as url_triaje %}
+            {% url 'biometria:dashboard' as url_biometria %}
+            {% url 'teleconsulta:lista' as url_teleconsulta %}
+            {% url 'auditoria:panel' as url_auditoria %}
+            
+            <a href="{{ url_triaje }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {% if request.path == url_triaje %}border-brand-500 text-brand-700{% else %}border-transparent text-surface-500 hover:border-surface-300 hover:text-surface-700{% endif %}">Triaje</a>
+            
+            <a href="{{ url_biometria }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {% if request.path == url_biometria %}border-brand-500 text-brand-700{% else %}border-transparent text-surface-500 hover:border-surface-300 hover:text-surface-700{% endif %}">Monitoreo</a>
+            
+            <a href="{{ url_teleconsulta }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {% if request.path == url_teleconsulta %}border-brand-500 text-brand-700{% else %}border-transparent text-surface-500 hover:border-surface-300 hover:text-surface-700{% endif %}">Teleconsulta</a>
+            
+            {% if user.es_admin %}
+            <a href="{{ url_auditoria }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {% if request.path == url_auditoria %}border-brand-500 text-brand-700{% else %}border-transparent text-surface-500 hover:border-surface-300 hover:text-surface-700{% endif %}">Auditoría</a>
+            {% endif %}
+          </nav>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-surface-500">{{ user.nombre_completo }}</span>
+          <form method="post" action="{% url 'portal:logout' %}">
+            {% csrf_token %}
+            <button class="text-sm font-medium text-surface-500 hover:text-surface-700">Salir</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </header>
+  {% else %}
+  <header class="bg-brand-900 text-white px-6 py-4 flex items-center justify-between shadow-md">
+    <a href="{% url 'portal:login' %}" class="font-bold text-xl tracking-tight">SAMR</a>
+    <span class="text-xs text-brand-100 opacity-80">Sistema de Atención Médica Remota</span>
+  </header>
+  {% endif %}
 
-  <main class="flex-1 flex justify-center px-4 py-10">
+  <main class="flex-1 flex justify-center px-4 py-10 w-full">
     <div class="w-full">
       {% if messages %}
-        <div class="mb-4 space-y-2 max-w-2xl mx-auto">
+        <div class="mb-6 space-y-2 max-w-2xl mx-auto">
           {% for message in messages %}
-            <div class="rounded-lg px-4 py-3 text-sm
+            <div class="rounded-lg px-4 py-3 text-sm flex items-center shadow-sm
               {% if message.tags == 'error' %} bg-red-50 text-red-700 border border-red-200
-              {% elif message.tags == 'success' %} bg-teal-50 text-teal-700 border border-teal-200
+              {% elif message.tags == 'success' %} bg-brand-50 text-brand-700 border border-brand-200
               {% else %} bg-blue-50 text-blue-700 border border-blue-200 {% endif %}">
               {{ message }}
             </div>
@@ -32,13 +87,13 @@
         </div>
       {% endif %}
 
-      <div class="flex justify-center">
+      <div class="flex justify-center w-full">
         {% block contenido %}{% endblock %}
       </div>
     </div>
   </main>
 
-  <footer class="text-center text-xs text-slate-400 py-4">
+  <footer class="text-center text-xs text-surface-400 py-6 mt-auto">
     SAMR — Equipo LLdE — UTPL
   </footer>
 </body>

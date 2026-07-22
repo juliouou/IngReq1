@@ -2,14 +2,14 @@
 {% block titulo %}Auditoría{% endblock %}
 {% block contenido %}
 <div class="max-w-3xl w-full">
-  <h1 class="text-xl font-bold text-navy mb-1">Registros de auditoría</h1>
-  <p class="text-sm text-slate-500 mb-4">
+  <h1 class="text-xl font-bold text-surface-900 mb-1">Registros de auditoría</h1>
+  <p class="text-sm text-surface-500 mb-4">
     {% if es_auditor %}Vista de administrador — todos los eventos del sistema (RF-20).{% else %}Tus eventos registrados.{% endif %}
   </p>
 
-  <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+  <div class="bg-white rounded-xl border border-surface-200 overflow-hidden">
     <table class="w-full text-sm">
-      <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+      <thead class="bg-surface-50 text-surface-500 text-xs uppercase">
         <tr>
           <th class="text-left px-4 py-2">Fecha</th>
           {% if es_auditor %}<th class="text-left px-4 py-2">Usuario</th>{% endif %}
@@ -21,19 +21,19 @@
       <tbody class="divide-y divide-slate-100">
         {% for r in pagina %}
         <tr>
-          <td class="px-4 py-2 text-slate-500">{{ r.creado_en|date:"d/m/Y H:i:s" }}</td>
+          <td class="px-4 py-2 text-surface-500">{{ r.creado_en|date:"d/m/Y H:i:s" }}</td>
           {% if es_auditor %}<td class="px-4 py-2">{{ r.usuario.email|default:"anónimo" }}</td>{% endif %}
-          <td class="px-4 py-2 font-medium text-navy">{{ r.accion }}</td>
-          <td class="px-4 py-2 text-slate-500 font-mono text-xs">{{ r.ruta }}</td>
+          <td class="px-4 py-2 font-medium text-surface-900">{{ r.accion }}</td>
+          <td class="px-4 py-2 text-surface-500 font-mono text-xs">{{ r.ruta }}</td>
           <td class="px-4 py-2">
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full
-              {% if r.codigo_estado < 300 %} bg-teal-50 text-teal-700 {% else %} bg-red-50 text-red-600 {% endif %}">
+              {% if r.codigo_estado < 300 %} bg-brand-50 text-brand-700 {% else %} bg-red-50 text-red-600 {% endif %}">
               {{ r.codigo_estado }}
             </span>
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="5" class="px-4 py-6 text-center text-slate-400">Sin registros todavía.</td></tr>
+        <tr><td colspan="5" class="px-4 py-6 text-center text-surface-400">Sin registros todavía.</td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -41,12 +41,12 @@
 
   {% if pagina.has_other_pages %}
   <div class="flex gap-2 mt-4 text-sm">
-    {% if pagina.has_previous %}<a href="?pagina={{ pagina.previous_page_number }}" class="text-teal-600 hover:underline">← Anterior</a>{% endif %}
-    <span class="text-slate-400">Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
-    {% if pagina.has_next %}<a href="?pagina={{ pagina.next_page_number }}" class="text-teal-600 hover:underline">Siguiente →</a>{% endif %}
+    {% if pagina.has_previous %}<a href="?pagina={{ pagina.previous_page_number }}" class="text-brand-600 hover:underline">← Anterior</a>{% endif %}
+    <span class="text-surface-400">Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+    {% if pagina.has_next %}<a href="?pagina={{ pagina.next_page_number }}" class="text-brand-600 hover:underline">Siguiente →</a>{% endif %}
   </div>
   {% endif %}
 
-  <a href="{% url 'portal:dashboard' %}" class="block mt-6 text-sm text-slate-400 hover:underline">← Volver al panel principal</a>
+  <a href="{% url 'portal:dashboard' %}" class="block mt-6 text-sm text-surface-400 hover:underline">← Volver al panel principal</a>
 </div>
 {% endblock %}

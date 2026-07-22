@@ -2,23 +2,23 @@
 {% block titulo %}Teleconsultas{% endblock %}
 {% block contenido %}
 <div class="max-w-2xl w-full">
-  <h1 class="text-xl font-bold text-navy mb-4">Teleconsultas</h1>
+  <h1 class="text-xl font-bold text-surface-900 mb-4">Teleconsultas</h1>
 
   {% if teleconsultas %}
     <div class="space-y-3">
       {% for tc in teleconsultas %}
-      <a href="{% url 'teleconsulta:detalle' tc.id %}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-teal-300 transition">
+      <a href="{% url 'teleconsulta:detalle' tc.id %}" class="block bg-white rounded-xl border border-surface-200 p-4 hover:border-brand-300 transition">
         <div class="flex items-center justify-between">
           <div>
-            <p class="font-semibold text-navy">{{ tc.motivo }}</p>
-            <p class="text-xs text-slate-400">
+            <p class="font-semibold text-surface-900">{{ tc.motivo }}</p>
+            <p class="text-xs text-surface-400">
               {{ tc.codigo }} · Dr(a). {{ tc.medico.apellidos }} con {{ tc.paciente.nombre_completo }}
             </p>
           </div>
           <span class="text-xs font-semibold px-2.5 py-1 rounded-full
-            {% if tc.estado == 'PROGRAMADA' %} bg-slate-100 text-slate-600
+            {% if tc.estado == 'PROGRAMADA' %} bg-surface-100 text-slate-600
             {% elif tc.estado == 'EN_CURSO' %} bg-amber-50 text-amber-700
-            {% elif tc.estado == 'FINALIZADA' %} bg-teal-50 text-teal-700
+            {% elif tc.estado == 'FINALIZADA' %} bg-brand-50 text-brand-700
             {% else %} bg-red-50 text-red-600 {% endif %}">
             {{ tc.get_estado_display }}
           </span>
@@ -27,11 +27,11 @@
       {% endfor %}
     </div>
   {% else %}
-    <div class="bg-white rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-400">
+    <div class="bg-white rounded-xl border border-dashed border-surface-300 p-8 text-center text-surface-400">
       No tienes teleconsultas registradas.
     </div>
   {% endif %}
 
-  <a href="{% url 'portal:dashboard' %}" class="block mt-6 text-sm text-slate-400 hover:underline">← Volver al panel principal</a>
+  <a href="{% url 'portal:dashboard' %}" class="block mt-6 text-sm text-surface-400 hover:underline">← Volver al panel principal</a>
 </div>
 {% endblock %}
