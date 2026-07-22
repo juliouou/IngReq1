@@ -1,4 +1,6 @@
 venv/
+vevn/
+.venv/
 env/
 __pycache__/
 *.pyc
@@ -9,3 +11,4 @@ media/*
 !media/.gitkeep
 *.log
 .DS_Store
+
