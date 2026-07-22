@@ -1,0 +1,41 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Mis solicitudes{% endblock %}
+{% block contenido %}
+<div class="max-w-2xl w-full">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-xl font-bold text-navy">Mis solicitudes de atención</h1>
+    <a href="{% url 'triaje:nueva' %}" class="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-teal-700">+ Nueva solicitud</a>
+  </div>
+
+  {% if solicitudes %}
+    <div class="space-y-3">
+      {% for s in solicitudes %}
+      <a href="{% url 'triaje:detalle' s.id %}" class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-teal-300 transition">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="font-semibold text-navy">{{ s.motivo }}</p>
+            <p class="text-xs text-slate-400">{{ s.codigo }} · {{ s.creado_en|date:"d/m/Y H:i" }}</p>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full
+            {% if s.estado == 'PENDIENTE' %} bg-slate-100 text-slate-600
+            {% elif s.estado == 'EN_TRIAJE' %} bg-amber-50 text-amber-700
+            {% elif s.estado == 'ATENDIDA' %} bg-teal-50 text-teal-700
+            {% else %} bg-red-50 text-red-600 {% endif %}">
+            {{ s.get_estado_display }}
+          </span>
+        </div>
+        {% if s.evaluacion %}
+          <p class="text-xs text-slate-500 mt-2">Nivel de urgencia: <strong>{{ s.evaluacion.get_nivel_urgencia_display }}</strong></p>
+        {% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="bg-white rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-400">
+      No tienes solicitudes todavía.
+    </div>
+  {% endif %}
+
+  <a href="{% url 'portal:dashboard' %}" class="block mt-6 text-sm text-slate-400 hover:underline">← Volver al panel principal</a>
+</div>
+{% endblock %}
