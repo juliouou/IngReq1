@@ -39,6 +39,20 @@ class NivelUrgencia:
     )
 
 
+class TipoOrigenSolicitud:
+    """Origenes posibles de una solicitud de atencion."""
+
+    CHAT_IA = "CHAT_IA"
+    EMERGENCIA_MANUAL = "EMERGENCIA_MANUAL"
+    ALERTA_IOT = "ALERTA_IOT"
+
+    CHOICES = (
+        (CHAT_IA, "Chat con IA"),
+        (EMERGENCIA_MANUAL, "Emergencia solicitada manualmente"),
+        (ALERTA_IOT, "Alerta generada por dispositivo IoT"),
+    )
+
+
 class SolicitudAtencion(ModeloBase):
     """Solicitud de atencion medica creada por un paciente."""
 
@@ -55,6 +69,12 @@ class SolicitudAtencion(ModeloBase):
         max_length=20,
         choices=EstadoSolicitud.CHOICES,
         default=EstadoSolicitud.PENDIENTE,
+    )
+    tipo_origen = models.CharField(
+        "Tipo de origen",
+        max_length=20,
+        choices=TipoOrigenSolicitud.CHOICES,
+        default=TipoOrigenSolicitud.CHAT_IA,
     )
 
     class Meta:
