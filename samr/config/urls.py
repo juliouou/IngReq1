@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from apps.usuarios.views_ui import login_view
+from apps.usuarios.views_ui import login_view, register_view
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -21,6 +21,7 @@ urlpatterns = [
 
     # Vistas Frontend (Django Templates)
     path("auth/login/", login_view, name="login_ui"),
+    path("auth/register/", register_view, name="register_ui"),
 
     # Autenticacion JWT
     path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
