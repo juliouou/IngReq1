@@ -88,6 +88,7 @@ def _completar_triaje(solicitud, texto_completo, resultado, request):
         nivel_urgencia=resultado["nivel_urgencia"],
         observaciones=resultado["explicacion_xai"],
     )
+    SolicitudService().asignar_medico(solicitud)
     RegistroAuditoriaService().registrar(
         usuario=request.user, accion="solicitud_clasificada",
         ruta="/triaje/chat/", codigo_estado=201,
@@ -167,6 +168,7 @@ def formulario_solicitud(request):
             nivel_urgencia=resultado["nivel_urgencia"],
             observaciones=resultado["explicacion_xai"],
         )
+        SolicitudService().asignar_medico(solicitud)
 
         RegistroAuditoriaService().registrar(
             usuario=request.user,
@@ -175,7 +177,7 @@ def formulario_solicitud(request):
             codigo_estado=201,
         )
 
-        messages.success(request, "Solicitud de atención creada y evaluada exitosamente por Med-Gemini.")
+        messages.success(request, "Solicitud de atención creada y evaluada exitosamente por Med-Gemini. Médico asignado.")
         return redirect("triaje:detalle", solicitud_id=solicitud.id)
 
     return render(request, "triaje/formulario.html")
@@ -238,6 +240,7 @@ def solicitar_alerta_iot(request):
         nivel_urgencia=resultado["nivel_urgencia"],
         observaciones=resultado["explicacion_xai"],
     )
+    SolicitudService().asignar_medico(solicitud)
 
     RegistroAuditoriaService().registrar(
         usuario=request.user,
@@ -246,5 +249,5 @@ def solicitar_alerta_iot(request):
         codigo_estado=201,
     )
 
-    messages.success(request, "Se ha generado y clasificado una solicitud de atención a partir de sus lecturas biométricas por Med-Gemini.")
+    messages.success(request, "Se ha generado y clasificado una solicitud de atención a partir de sus lecturas biométricas por Med-Gemini. Médico asignado.")
     return redirect("triaje:detalle", solicitud_id=solicitud.id)
