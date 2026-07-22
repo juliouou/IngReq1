@@ -4,6 +4,7 @@ from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.utils import timezone
 
 from core.exceptions import ReglaNegocioError
 from apps.usuarios.models import Usuario
@@ -126,7 +127,18 @@ def reenviar_mfa_view(request):
 
 @login_required(login_url="portal:login")
 def dashboard_view(request):
-    return render(request, "portal/dashboard.html", {"usuario": request.user})
+    context = {"usuario": request.user}
+    if request.user.rol == "MEDICO":
+        from apps.teleconsulta.models import Teleconsulta
+        hoy = timezone.now().date()
+        citas = Teleconsulta.objects.filter(
+            medico=request.user, 
+            estado__in=['PROGRAMADA', 'EN_CURSO']
+        )
+        context["citas_hoy"] = citas.filter(fecha_programada__date=hoy).count()
+        context["proximas_citas"] = citas.order_by("fecha_programada")[:3]
+        
+    return render(request, "portal/dashboard.html", context)
 
 
 def logout_view(request):

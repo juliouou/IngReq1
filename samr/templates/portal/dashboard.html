@@ -16,7 +16,54 @@
     </form>
   </div>
 
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+  {% if usuario.rol == 'MEDICO' %}
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-2xl border border-surface-200 p-6 shadow-md flex items-center gap-4">
+      <div class="w-16 h-16 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      </div>
+      <div>
+        <p class="text-3xl font-bold text-surface-900">{{ citas_hoy }}</p>
+        <p class="text-sm font-semibold text-surface-500 uppercase tracking-wide">Citas para hoy</p>
+      </div>
+    </div>
+    
+    <a href="{% url 'teleconsulta:lista' %}" class="bg-brand-600 hover:bg-brand-700 text-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition flex flex-col justify-center items-center text-center group col-span-1 md:col-span-2">
+      <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+      </div>
+      <p class="text-lg font-bold">Mis Pacientes / Consultas</p>
+      <p class="text-sm text-brand-100 font-medium">Gestiona tus teleconsultas programadas</p>
+    </a>
+  </div>
+  
+  <h3 class="text-lg font-bold text-surface-900 mb-4">Tus próximas citas</h3>
+  <div class="space-y-3 mb-8">
+    {% for cita in proximas_citas %}
+      <div class="bg-white rounded-xl border border-surface-200 p-4 shadow-sm flex justify-between items-center">
+        <div>
+          <p class="font-bold text-surface-900">{{ cita.paciente.nombre_completo }}</p>
+          <p class="text-sm text-surface-500">{{ cita.fecha_programada|date:"d M, H:i" }} — <span class="font-semibold {% if cita.estado == 'PROGRAMADA' %}text-brand-600{% else %}text-amber-600{% endif %}">{{ cita.get_estado_display }}</span></p>
+        </div>
+        <a href="{% url 'teleconsulta:detalle' cita.id %}" class="bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-lg px-4 py-2 text-sm font-bold transition">Atender</a>
+      </div>
+    {% empty %}
+      <p class="text-sm text-surface-500 py-4">No tienes citas programadas próximamente.</p>
+    {% endfor %}
+  </div>
+
+  {% elif usuario.rol == 'ADMINISTRATIVO' or usuario.es_admin %}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    <a href="{% url 'auditoria:panel' %}" class="bg-white border border-surface-200 hover:border-amber-300 rounded-2xl p-6 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 group">
+      <div class="w-14 h-14 mx-auto rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+      </div>
+      <p class="text-sm font-bold text-surface-900">Auditoría del Sistema</p>
+    </a>
+  </div>
+  
+  {% else %}
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
     <a href="{% url 'triaje:lista' %}" class="bg-white border border-surface-200 hover:border-brand-300 rounded-2xl p-6 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 group">
       <div class="w-14 h-14 mx-auto rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
@@ -37,14 +84,8 @@
       </div>
       <p class="text-sm font-bold text-surface-900">Teleconsulta</p>
     </a>
-    
-    <a href="{% url 'auditoria:panel' %}" class="bg-white border border-surface-200 hover:border-amber-300 rounded-2xl p-6 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 group">
-      <div class="w-14 h-14 mx-auto rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-      </div>
-      <p class="text-sm font-bold text-surface-900">Auditoría</p>
-    </a>
   </div>
+  {% endif %}
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Perfil del Paciente -->
