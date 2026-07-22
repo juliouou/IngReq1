@@ -45,7 +45,7 @@ def chat_triaje(request):
                 request.session["chat_solicitud_id"] = solicitud.id
                 MensajeChat.objects.create(solicitud=solicitud, autor="PACIENTE", texto=texto)
                 
-                res = responder_chat("", texto, 0)
+                res = responder_chat([], texto, 0)
                 MensajeChat.objects.create(solicitud=solicitud, autor="BOT", texto=res["texto_respuesta"])
                 
                 if res["listo_para_clasificar"]:
@@ -65,7 +65,7 @@ def chat_triaje(request):
             
             MensajeChat.objects.create(solicitud=solicitud, autor="PACIENTE", texto=texto)
             
-            res = responder_chat(historial, texto, turno)
+            res = responder_chat(mensajes_previos, texto, turno)
             MensajeChat.objects.create(solicitud=solicitud, autor="BOT", texto=res["texto_respuesta"])
             
             if res["listo_para_clasificar"]:

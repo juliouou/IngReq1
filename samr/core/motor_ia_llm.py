@@ -16,9 +16,10 @@ DEFAULT_OLLAMA_MODEL = "llama3.2"
 OLLAMA_TIMEOUT_SECS = 15
 
 
-def llamar_groq(prompt, modelo=DEFAULT_GROQ_MODEL):
+def llamar_groq(prompt_o_mensajes, modelo=DEFAULT_GROQ_MODEL):
     """
     Hace una petición POST a la API de Groq en la nube.
+    Recibe un string o una lista estructurada de mensajes [{"role": ..., "content": ...}].
     Retorna el texto generado o None si la clave no existe o si falla la llamada.
     """
     api_key = os.environ.get("GROQ_API_KEY", "").strip()
@@ -30,9 +31,15 @@ def llamar_groq(prompt, modelo=DEFAULT_GROQ_MODEL):
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
+
+    if isinstance(prompt_o_mensajes, list):
+        messages = prompt_o_mensajes
+    else:
+        messages = [{"role": "user", "content": str(prompt_o_mensajes)}]
+
     payload = {
         "model": modelo,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": messages,
         "temperature": 0.3,
     }
 
@@ -55,11 +62,22 @@ def llamar_groq(prompt, modelo=DEFAULT_GROQ_MODEL):
         return None
 
 
-def llamar_ollama(prompt, modelo=DEFAULT_OLLAMA_MODEL):
+def llamar_ollama(prompt_o_mensajes, modelo=DEFAULT_OLLAMA_MODEL):
     """
     Hace una petición POST a la API local de Ollama.
+    Acepta string o lista de mensajes conversacionales.
     Retorna el texto generado o None si falla.
     """
+    if isinstance(prompt_o_mensajes, list):
+        lines = []
+        for m in prompt_o_mensajes:
+            role = m.get("role", "user")
+            content = m.get("content", "")
+            lines.append(f"{role.upper()}: {content}")
+        prompt = "\n".join(lines)
+    else:
+        prompt = str(prompt_o_mensajes)
+
     payload = {
         "model": modelo,
         "prompt": prompt,
@@ -77,7 +95,7 @@ def llamar_ollama(prompt, modelo=DEFAULT_OLLAMA_MODEL):
         return None
 
 
-def obtener_respuesta_llm(prompt):
+def obtener_respuesta_llm(prompt_o_mensajes):
     """
     Cadena de respaldo LLM:
     1. Intenta Groq API (nube).
@@ -85,12 +103,12 @@ def obtener_respuesta_llm(prompt):
     3. Si ambos fallan, devuelve (None, None).
     Retorna la tupla: (texto_respuesta, identificador_modelo)
     """
-    respuesta_groq = llamar_groq(prompt)
+    respuesta_groq = llamar_groq(prompt_o_mensajes)
     if respuesta_groq:
         logger.info("Respuesta obtenida exitosamente desde Groq API.")
         return respuesta_groq, f"groq-{DEFAULT_GROQ_MODEL}"
 
-    respuesta_ollama = llamar_ollama(prompt)
+    respuesta_ollama = llamar_ollama(prompt_o_mensajes)
     if respuesta_ollama:
         logger.info("Respuesta obtenida exitosamente desde Ollama.")
         return respuesta_ollama, f"ollama-{DEFAULT_OLLAMA_MODEL}"
@@ -158,32 +176,42 @@ Síntomas del paciente: {texto_sintomas}"""
         return None
 
 
-def responder_chat_llm(historial_previo, nuevo_mensaje, turno):
+def responder_chat_llm(mensajes_chat, nuevo_mensaje, turno):
     """
     Genera una respuesta conversacional basada en el contexto previo mediante el LLM.
+    `mensajes_chat` es una lista de objetos MensajeChat o dicts {'autor': ..., 'texto': ...}.
     """
-    prompt = f"""Eres un asistente médico virtual empático encargado exclusivamente de TRIAJE.
-Tu objetivo es recopilar información del paciente haciendo máximo una o dos preguntas claras y breves a la vez. No diagnostiques, solo indaga para clasificar.
+    system_prompt = (
+        "Eres un asistente médico virtual empático encargado exclusivamente de TRIAJE.\n"
+        "Tu objetivo es recopilar información del paciente haciendo máximo una o dos preguntas claras y breves a la vez. No diagnostiques, solo indaga para clasificar urgencia.\n\n"
+        "REGLAS ESTRICTAS:\n"
+        "- NUNCA diagnostiques ni menciones posibles enfermedades.\n"
+        "- NUNCA des consejos de tratamiento (medicamentos, remedios).\n"
+        "- Mantén viva la memoria de todo lo que el paciente te ha dicho en los mensajes anteriores.\n\n"
+        "Debes responder ÚNICAMENTE en formato JSON con la siguiente estructura exacta:\n"
+        "{\n"
+        '    "texto_respuesta": "Tu respuesta conversacional y empática aquí",\n'
+        '    "listo_para_clasificar": <true o false. Pónlo en true si ya tienes información suficiente para clasificar o si el turno es >= 2>\n'
+        "}"
+    )
 
-REGLAS ESTRICTAS:
-- NUNCA diagnostiques ni menciones posibles enfermedades.
-- Nunca dés consejos de tratamiento (medicamentos, remedios).
+    mensajes = [{"role": "system", "content": system_prompt}]
 
-Debes responder en formato JSON exactamente con esta estructura:
-{{
-    "texto_respuesta": "Tu respuesta conversacional y empática aquí",
-    "listo_para_clasificar": <true o false. Usa true si ya tienes suficiente información (ej. intensidad, duración) o si el turno es >= 2>
-}}
+    for m in (mensajes_chat or []):
+        autor = getattr(m, "autor", m.get("autor") if isinstance(m, dict) else None)
+        texto = getattr(m, "texto", m.get("texto") if isinstance(m, dict) else None)
+        if autor == "PACIENTE" and texto:
+            mensajes.append({"role": "user", "content": texto})
+        elif autor == "BOT" and texto:
+            mensajes.append({"role": "assistant", "content": texto})
 
-Historial de la conversación (solo mensajes del paciente): {historial_previo}
-Nuevo mensaje del paciente: {nuevo_mensaje}
-Turno actual: {turno}
+    mensajes.append({"role": "user", "content": nuevo_mensaje})
 
-Recuerda, si turno es >= 2, debes poner listo_para_clasificar en true para terminar el chat."""
-
-    respuesta, id_modelo = obtener_respuesta_llm(prompt)
+    respuesta, id_modelo = obtener_respuesta_llm(mensajes)
     if not respuesta:
         return None
+
+    logger.info(f"LLM Chat ({id_modelo}) raw response: {respuesta}")
 
     try:
         match = re.search(r'\{.*\}', respuesta, re.DOTALL)
@@ -208,3 +236,4 @@ Recuerda, si turno es >= 2, debes poner listo_para_clasificar en true para termi
     except Exception as e:
         logger.error(f"Error parseando respuesta de chat de {id_modelo}: {e}")
         return None
+

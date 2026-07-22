@@ -26,7 +26,7 @@ SINTOMAS_CONOCIDOS = [
     (r"mareo\s+fuerte", "mareo fuerte", 5),
     # Normales (1-3)
     (r"dolor\s+de\s+cabeza|duele\s+(la\s+)?cabeza", "dolor de cabeza", 3),
-    (r"fiebre(?!\s+alta)", "fiebre", 2),
+    (r"fiebre(?!\s+alta)", "fiebre", 3),
     (r"tos", "tos", 1),
     (r"n[aá]useas?", "náuseas", 2),
     (r"cansancio", "cansancio", 1),
@@ -74,6 +74,8 @@ def clasificar_sintomas(texto_sintomas):
         nivel = 1
     elif max_peso >= 5:
         nivel = 2
+    elif max_peso >= 3:
+        nivel = 3
     elif max_peso >= 1:
         nivel = 4
     else:
@@ -85,6 +87,8 @@ def clasificar_sintomas(texto_sintomas):
             explicacion = f"Se identificaron: {sintomas_str}. Esto requiere atención inmediata."
         elif nivel == 2:
             explicacion = f"Se identificaron: {sintomas_str}. Estos síntomas son urgentes y requieren atención pronta."
+        elif nivel == 3:
+            explicacion = f"Se identificaron: {sintomas_str}. Prioridad moderada."
         else:
             explicacion = f"Se identificaron: {sintomas_str}. La condición descrita no presenta signos de gravedad inminente."
         confianza = round(min(0.75 + len(sintomas_detectados) * 0.05, 0.99), 2)
@@ -100,22 +104,34 @@ def clasificar_sintomas(texto_sintomas):
         "version_modelo": VERSION_MODELO,
     }
 
-def responder_chat(historial_texto, mensaje_actual, turno):
+def responder_chat(mensajes_chat, mensaje_actual, turno):
     """
     RF-04: Chat conversacional para triaje.
     """
     try:
         from core.motor_ia_llm import responder_chat_llm
-        resultado_llm = responder_chat_llm(historial_texto, mensaje_actual, turno)
+        resultado_llm = responder_chat_llm(mensajes_chat, mensaje_actual, turno)
         if resultado_llm:
-            # Si el LLM dice que está listo, debemos hacer la clasificación también
             if resultado_llm.get("listo_para_clasificar"):
-                texto_completo = (historial_texto + " " + mensaje_actual).strip()
+                textos = []
+                for m in (mensajes_chat or []):
+                    txt = getattr(m, "texto", m.get("texto") if isinstance(m, dict) else "")
+                    if txt:
+                        textos.append(txt)
+                textos.append(mensaje_actual)
+                texto_completo = " ".join(textos).strip()
                 resultado_llm["resultado"] = clasificar_sintomas(texto_completo)
             return resultado_llm
     except Exception:
         pass
-    texto_completo = (historial_texto + " " + mensaje_actual).strip()
+
+    textos = []
+    for m in (mensajes_chat or []):
+        txt = getattr(m, "texto", m.get("texto") if isinstance(m, dict) else "")
+        if txt:
+            textos.append(txt)
+    textos.append(mensaje_actual)
+    texto_completo = " ".join(textos).strip()
     resultado = clasificar_sintomas(texto_completo)
     
     critico = False
