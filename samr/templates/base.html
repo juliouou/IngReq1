@@ -18,6 +18,7 @@
             }
         }
     </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen font-sans antialiased">
@@ -46,5 +47,8 @@
     </main>
 
     {% block extra_scripts %}{% endblock %}
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

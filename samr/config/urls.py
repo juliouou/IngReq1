@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 from apps.usuarios.views_ui import login_view, register_view, mfa_view
+from apps.triaje.views_ui import triaje_view
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -23,6 +24,7 @@ urlpatterns = [
     path("auth/login/", login_view, name="login_ui"),
     path("auth/register/", register_view, name="register_ui"),
     path("auth/mfa/", mfa_view, name="mfa_ui"),
+    path("triaje/chat/", triaje_view, name="triaje_chat_ui"),
 
     # Autenticacion JWT
     path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),

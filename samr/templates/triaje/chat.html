@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Triaje IA - SAMR{% endblock %}
+
+{% block content %}
+<div class="h-screen flex bg-gray-100 overflow-hidden">
+    <!-- Area del Chat (Izquierda) -->
+    <div class="flex-1 flex flex-col w-full md:w-2/3 bg-white border-r border-gray-200">
+        <!-- Header del Chat -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-primary">
+                    <i data-lucide="bot" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h2 class="font-bold text-gray-800">Med-Gemini Assistant</h2>
+                    <p class="text-xs text-green-500 flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-green-500 block"></span> En línea
+                    </p>
+                </div>
+            </div>
+            <button class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="more-vertical"></i>
+            </button>
+        </div>
+
+        <!-- Mensajes del Chat (Burbujas) -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <!-- Mensaje Bot (Inicial) -->
+            <div class="flex items-start gap-2 max-w-[80%]">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-primary mt-1">
+                    <i data-lucide="bot" class="w-5 h-5"></i>
+                </div>
+                <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm text-sm text-gray-800 border border-gray-100">
+                    Hola. Soy el asistente inteligente de SAMR. Por favor, descríbeme detalladamente qué síntomas presentas hoy para poder ayudarte.
+                </div>
+            </div>
+        </div>
+
+        <!-- Input de texto -->
+        <div class="p-4 bg-white border-t border-gray-200">
+            <div class="flex items-center gap-2">
+                <button type="button" class="p-2 text-gray-500 hover:text-primary hover:bg-blue-50 rounded-full transition-colors" title="Grabar audio">
+                    <i data-lucide="mic"></i>
+                </button>
+                <input type="text" id="chat-input" placeholder="Escribe tus síntomas aquí..." class="flex-1 bg-gray-100 border-transparent focus:bg-white focus:border-primary focus:ring-1 focus:ring-primary rounded-full px-4 py-2 text-sm">
+                <button type="button" id="send-btn" class="p-2 bg-primary text-white hover:bg-blue-600 rounded-full transition-colors shadow-sm" title="Enviar mensaje">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- El panel lateral derecho se construirá en la Sección 2 -->
+    <div class="hidden md:flex flex-col w-1/3 bg-slate-50 p-6 overflow-y-auto">
+        <p class="text-gray-400 text-sm italic text-center mt-20">Panel lateral de resumen y estado se construirá en la siguiente sección.</p>
+    </div>
+</div>
+{% endblock %}
