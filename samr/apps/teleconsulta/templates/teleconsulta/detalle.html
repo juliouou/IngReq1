@@ -40,20 +40,244 @@
       </details>
     {% endif %}
 
-    {% if es_medico and tc.estado == 'EN_CURSO' %}
-      <form method="post" class="space-y-3">
-        {% csrf_token %}
-        <input type="hidden" name="accion" value="finalizar" />
-        <div>
-          <label class="block text-sm font-medium text-surface-700 mb-1">Diagnóstico</label>
-          <textarea name="diagnostico" rows="2" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm"></textarea>
+    {% if tc.estado == 'EN_CURSO' %}
+      <!-- Contenedor WebRTC Videollamada -->
+      <div class="bg-surface-900 rounded-2xl p-4 shadow-xl text-white relative mb-4 overflow-hidden" id="webrtc-container">
+        <div class="relative w-full h-80 bg-black rounded-xl overflow-hidden flex items-center justify-center">
+          <!-- Video Remoto (Principal) -->
+          <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+          
+          <!-- Placeholder cuando no hay video remoto aún -->
+          <div id="videoPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-surface-400 bg-surface-800 p-4 text-center">
+            <svg class="w-16 h-16 mb-2 animate-pulse text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <p class="text-sm font-semibold text-white">Esperando que el participante se conecte a la sala...</p>
+            <p class="text-xs text-surface-400 mt-1">Conexión WebRTC P2P Directa (Latencia &le; 200ms)</p>
+          </div>
+
+          <!-- Video Local (PiP Esquina) -->
+          <div class="absolute bottom-3 right-3 w-28 h-36 bg-surface-900 border-2 border-white/20 rounded-xl overflow-hidden shadow-lg z-10">
+            <video id="localVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+            <span class="absolute bottom-1 left-1 bg-black/60 text-[10px] text-white px-1.5 py-0.5 rounded">Tú</span>
+          </div>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-surface-700 mb-1">Notas de la consulta</label>
-          <textarea name="notas" rows="2" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm"></textarea>
+
+        <!-- Mensaje de Error (si falla cámara/micrófono) -->
+        <div id="webrtcError" class="hidden mt-3 p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-red-200 text-xs text-center"></div>
+
+        <!-- Barra de Controles WebRTC -->
+        <div class="flex items-center justify-center gap-4 mt-4">
+          <button id="btnAudio" type="button" class="w-11 h-11 rounded-full bg-surface-700 hover:bg-surface-600 text-white flex items-center justify-center shadow transition" title="Silenciar / Activar Micrófono">
+            🎤
+          </button>
+          <button id="btnVideo" type="button" class="w-11 h-11 rounded-full bg-surface-700 hover:bg-surface-600 text-white flex items-center justify-center shadow transition" title="Apagar / Encender Cámara">
+            📹
+          </button>
+          {% if es_medico %}
+            <form method="post" class="inline">
+              {% csrf_token %}
+              <input type="hidden" name="accion" value="finalizar" />
+              <button id="btnColgar" type="submit" class="h-11 px-5 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm flex items-center gap-2 shadow transition" title="Finalizar Teleconsulta">
+                📞 Colgar y Finalizar
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'teleconsulta:lista' %}" class="h-11 px-5 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm flex items-center gap-2 shadow transition" title="Salir de la videollamada">
+              📞 Colgar
+            </a>
+          {% endif %}
         </div>
-        <button class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">Finalizar teleconsulta</button>
-      </form>
+      </div>
+
+      {% if es_medico %}
+        <!-- Formulario de Diagnóstico y Notas para el Médico -->
+        <div class="bg-white rounded-2xl border border-surface-100 p-6 shadow-md mb-4">
+          <h3 class="font-bold text-surface-900 text-sm mb-3">Registro de Diagnóstico y Notas (Médico)</h3>
+          <form method="post" class="space-y-3">
+            {% csrf_token %}
+            <input type="hidden" name="accion" value="finalizar" />
+            <div>
+              <label class="block text-xs font-semibold text-surface-700 mb-1">Diagnóstico definitivo</label>
+              <textarea name="diagnostico" rows="2" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition" placeholder="Escriba el diagnóstico..."></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-surface-700 mb-1">Notas clínicas de la consulta</label>
+              <textarea name="notas" rows="2" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition" placeholder="Escriba notas adicionales..."></textarea>
+            </div>
+            <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-xl py-2.5 font-bold shadow-md transition">Guardar Diagnóstico y Finalizar Cita</button>
+          </form>
+        </div>
+      {% endif %}
+
+      <!-- Script JavaScript WebRTC -->
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const teleconsultaId = "{{ tc.id }}";
+          const localVideo = document.getElementById("localVideo");
+          const remoteVideo = document.getElementById("remoteVideo");
+          const videoPlaceholder = document.getElementById("videoPlaceholder");
+          const webrtcError = document.getElementById("webrtcError");
+          const btnAudio = document.getElementById("btnAudio");
+          const btnVideo = document.getElementById("btnVideo");
+
+          let localStream = null;
+          let peerConnection = null;
+          let ws = null;
+          let audioMuted = false;
+          let videoMuted = false;
+
+          const rtcConfig = {
+            iceServers: [
+              { urls: "stun:stun.l.google.com:19302" },
+              { urls: "stun:stun1.l.google.com:19302" }
+            ]
+          };
+
+          function mostrarError(msg) {
+            if (webrtcError) {
+              webrtcError.textContent = msg;
+              webrtcError.classList.remove("hidden");
+            }
+            console.error("WebRTC Error:", msg);
+          }
+
+          async function initMedia() {
+            try {
+              if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                mostrarError("Tu navegador no soporta llamadas de video/audio en vivo (MediaDevices API no encontrada).");
+                return false;
+              }
+              localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+              localVideo.srcObject = localStream;
+              return true;
+            } catch (err) {
+              mostrarError("No se pudo acceder a la cámara o micrófono: " + (err.message || err.name) + ". Por favor otorgue permisos en el navegador.");
+              return false;
+            }
+          }
+
+          function crearPeerConnection() {
+            peerConnection = new RTCPeerConnection(rtcConfig);
+
+            if (localStream) {
+              localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+            }
+
+            peerConnection.ontrack = (event) => {
+              if (event.streams && event.streams[0]) {
+                remoteVideo.srcObject = event.streams[0];
+                if (videoPlaceholder) videoPlaceholder.classList.add("hidden");
+              }
+            };
+
+            peerConnection.onicecandidate = (event) => {
+              if (event.candidate && ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                  type: "candidate",
+                  candidate: event.candidate
+                }));
+              }
+            };
+
+            peerConnection.onconnectionstatechange = () => {
+              console.log("Estado conexión WebRTC:", peerConnection.connectionState);
+              if (peerConnection.connectionState === "connected" && videoPlaceholder) {
+                videoPlaceholder.classList.add("hidden");
+              }
+            };
+          }
+
+          async function initWebSocket() {
+            const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+            const wsUrl = `${wsScheme}://${window.location.host}/ws/teleconsulta/${teleconsultaId}/signaling/`;
+
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = async () => {
+              console.log("WebSocket de señalización WebRTC conectado.");
+              crearPeerConnection();
+              ws.send(JSON.stringify({ type: "ready" }));
+            };
+
+            ws.onmessage = async (event) => {
+              try {
+                const data = JSON.parse(event.data);
+
+                if (data.type === "ready") {
+                  console.log("Participante remoto listo. Generando oferta SDP...");
+                  const offer = await peerConnection.createOffer();
+                  await peerConnection.setLocalDescription(offer);
+                  ws.send(JSON.stringify({
+                    type: "offer",
+                    sdp: peerConnection.localDescription
+                  }));
+                } else if (data.type === "offer") {
+                  console.log("Oferta SDP recibida. Generando respuesta...");
+                  await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                  const answer = await peerConnection.createAnswer();
+                  await peerConnection.setLocalDescription(answer);
+                  ws.send(JSON.stringify({
+                    type: "answer",
+                    sdp: peerConnection.localDescription
+                  }));
+                } else if (data.type === "answer") {
+                  console.log("Respuesta SDP recibida.");
+                  await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                } else if (data.type === "candidate") {
+                  if (data.candidate) {
+                    try {
+                      await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+                    } catch (e) {
+                      console.warn("Error agregando candidato ICE:", e);
+                    }
+                  }
+                }
+              } catch (err) {
+                console.error("Error procesando mensaje WebRTC:", err);
+              }
+            };
+
+            ws.onerror = (err) => {
+              console.error("Error de WebSocket WebRTC:", err);
+            };
+
+            ws.onclose = () => {
+              console.log("WebSocket de señalización cerrado.");
+            };
+          }
+
+          // Inicializar llamadas
+          initMedia().then(success => {
+            if (success) {
+              initWebSocket();
+            }
+          });
+
+          // Handlers de botones
+          if (btnAudio) {
+            btnAudio.addEventListener("click", () => {
+              if (localStream) {
+                audioMuted = !audioMuted;
+                localStream.getAudioTracks().forEach(t => t.enabled = !audioMuted);
+                btnAudio.innerHTML = audioMuted ? "🔇" : "🎤";
+                btnAudio.classList.toggle("bg-red-600", audioMuted);
+                btnAudio.classList.toggle("bg-surface-700", !audioMuted);
+              }
+            });
+          }
+
+          if (btnVideo) {
+            btnVideo.addEventListener("click", () => {
+              if (localStream) {
+                videoMuted = !videoMuted;
+                localStream.getVideoTracks().forEach(t => t.enabled = !videoMuted);
+                btnVideo.innerHTML = videoMuted ? "📷" : "📹";
+                btnVideo.classList.toggle("bg-red-600", videoMuted);
+                btnVideo.classList.toggle("bg-surface-700", !videoMuted);
+              }
+            });
+          }
+        });
+      </script>
     {% endif %}
   </div>
 

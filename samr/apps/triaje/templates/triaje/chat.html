@@ -1,16 +1,21 @@
 {% extends "portal/base.html" %}
-{% block titulo %}Chat de Triaje — SAMR{% endblock %}
+{% block titulo %}Asistente de Emergencia — SAMR{% endblock %}
 {% block contenido %}
-<div class="max-w-2xl w-full flex flex-col h-[70vh] bg-white rounded-xl border border-surface-200 overflow-hidden shadow-sm">
-  <!-- Header del chat -->
-  <div class="bg-surface-900 text-white px-4 py-3 flex items-center justify-between border-b border-surface-900">
-    <div>
-      <h2 class="font-bold text-lg">Asistente de Triaje</h2>
+<div class="max-w-2xl w-full flex flex-col h-[75vh] bg-white rounded-2xl border border-surface-200 shadow-md overflow-hidden">
+  <!-- Header del Chat -->
+  <div class="bg-surface-900 text-white p-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold shadow">
+        🤖
+      </div>
+      <div>
+        <h2 class="font-bold text-lg">Asistente de Emergencia</h2>
       {% if solicitud %}
         <p class="text-xs text-surface-300">Solicitud #{{ solicitud.codigo }}</p>
       {% else %}
         <p class="text-xs text-surface-300">Nueva evaluación</p>
       {% endif %}
+    </div>
     </div>
     {% if solicitud.evaluacion %}
       <span class="text-xs font-semibold px-3 py-1 rounded-full bg-brand-500 text-white shadow-sm">
@@ -55,7 +60,7 @@
   </div>
   {% else %}
   <div class="p-4 bg-surface-100 border-t border-surface-200 text-center">
-    <p class="text-sm text-surface-500 font-medium">El triaje ha concluido. Ya no puedes enviar más mensajes.</p>
+    <p class="text-sm text-surface-500 font-medium">La evaluación de la solicitud ha concluido. Ya no puedes enviar más mensajes.</p>
   </div>
   {% endif %}
 </div>
