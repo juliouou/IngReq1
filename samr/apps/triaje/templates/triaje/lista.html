@@ -5,7 +5,7 @@
   <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
     <h1 class="text-xl font-bold text-navy">Mis solicitudes de atención</h1>
     <div class="flex flex-wrap gap-2">
-      <a href="{% url 'triaje:nueva' %}" class="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-teal-700">+ Nueva solicitud</a>
+      <a href="{% url 'triaje:chat' %}" class="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-teal-700">+ Nueva solicitud</a>
       <a href="{% url 'triaje:emergencia_manual' %}" class="bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-red-700">🚨 Emergencia ahora</a>
       {% if request.user.dispositivos.exists %}
         <a href="{% url 'triaje:alerta_iot' %}" class="bg-orange-500 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-orange-600">📡 Alertar con mis datos IoT</a>
