@@ -93,6 +93,36 @@ def clasificar_sintomas(texto_sintomas):
         "version_modelo": VERSION_MODELO,
     }
 
+def responder_chat(historial_texto, mensaje_actual, turno):
+    """
+    RF-04: Chat conversacional para triaje.
+    """
+    texto_completo = (historial_texto + " " + mensaje_actual).strip()
+    resultado = clasificar_sintomas(texto_completo)
+    
+    critico = False
+    for patron, etiqueta, peso in SINTOMAS_CONOCIDOS:
+        if peso >= 9 and re.search(patron, texto_completo, re.IGNORECASE):
+            critico = True
+            break
+            
+    if critico or turno >= 2:
+        return {
+            "texto_respuesta": "Gracias por la información. Procedo a clasificar su estado...",
+            "listo_para_clasificar": True,
+            "resultado": resultado
+        }
+    else:
+        if turno == 0:
+            pregunta = "¿Desde cuándo presentas estos síntomas? ¿Han empeorado?"
+        else:
+            pregunta = "¿Algún otro detalle o molestia que debamos saber?"
+        return {
+            "texto_respuesta": pregunta,
+            "listo_para_clasificar": False,
+            "resultado": None
+        }
+
 
 def detectar_anomalia(tipo_signo, valor, rango_normal):
     """

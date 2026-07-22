@@ -118,3 +118,22 @@ class EvaluacionTriaje(ModeloBase):
             NivelUrgencia.EMERGENCIA,
             NivelUrgencia.MUY_URGENTE,
         )
+
+
+class MensajeChat(ModeloBase):
+    """Mensaje de chat conversacional en triaje."""
+    solicitud = models.ForeignKey(
+        SolicitudAtencion,
+        on_delete=models.CASCADE,
+        related_name="mensajes"
+    )
+    autor = models.CharField("Autor", max_length=10, choices=(("PACIENTE", "Paciente"), ("BOT", "Bot")))
+    texto = models.TextField("Texto del mensaje")
+
+    class Meta:
+        verbose_name = "Mensaje de chat"
+        verbose_name_plural = "Mensajes de chat"
+        ordering = ["creado_en"]
+
+    def __str__(self):
+        return f"{self.autor} - {self.solicitud.codigo}"
