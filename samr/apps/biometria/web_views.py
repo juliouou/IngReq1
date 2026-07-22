@@ -44,3 +44,29 @@ def atender_alerta(request, alerta_id):
     )
     messages.success(request, "Alerta marcada como atendida.")
     return redirect("biometria:dashboard")
+
+@login_required
+def registrar_lectura(request):
+    """RF-09/RF-10: simula la llegada de una lectura desde un dispositivo IoT real."""
+    from apps.biometria.services import LecturaService
+    
+    if request.method == "POST":
+        tipo_signo = request.POST.get("tipo_signo")
+        valor = request.POST.get("valor")
+        
+        dispositivo = DispositivoIoT.objects.filter(paciente=request.user, activo=True).first()
+        if not dispositivo:
+            messages.error(request, "No tienes dispositivos activos para registrar lecturas.")
+            return redirect("biometria:dashboard")
+            
+        try:
+            LecturaService().registrar_lectura(
+                dispositivo=dispositivo,
+                tipo_signo=tipo_signo,
+                valor=float(valor)
+            )
+            messages.success(request, "Lectura registrada con éxito.")
+        except Exception as e:
+            messages.error(request, f"Error al registrar lectura: {str(e)}")
+            
+    return redirect("biometria:dashboard")
