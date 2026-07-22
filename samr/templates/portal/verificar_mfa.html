@@ -1,12 +1,12 @@
 {% extends "portal/base.html" %}
 {% block titulo %}Verificación MFA{% endblock %}
 {% block contenido %}
-<div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center max-w-md w-full">
-  <div class="w-14 h-14 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-4 text-2xl">
+<div class="bg-white rounded-2xl shadow-samr border border-surface-100 p-8 text-center max-w-md w-full">
+  <div class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-4 text-2xl">
     🔒
   </div>
-  <h1 class="text-xl font-bold text-navy mb-1">Verifica tu identidad</h1>
-  <p class="text-sm text-slate-500 mb-6">
+  <h1 class="text-xl font-bold text-surface-900 mb-1">Verifica tu identidad</h1>
+  <p class="text-sm text-surface-500 mb-6">
     Enviamos un código de 6 dígitos a <strong>{{ usuario.email }}</strong>
   </p>
 
@@ -22,19 +22,19 @@
       {{ form.codigo }}
       {% for error in form.codigo.errors %}<p class="text-xs text-red-600 mt-1">{{ error }}</p>{% endfor %}
     </div>
-    <button type="submit" class="w-full bg-navy text-white rounded-lg py-2.5 font-semibold hover:bg-slate-800 transition">
+    <button type="submit" class="w-full bg-brand-700 text-white rounded-lg py-2.5 font-semibold hover:bg-brand-800 transition">
       Verificar
     </button>
   </form>
 
   <form method="post" action="{% url 'portal:reenviar_mfa' %}" class="mt-4">
     {% csrf_token %}
-    <button type="submit" class="text-sm text-teal-600 font-medium hover:underline" id="btn-reenviar" disabled>
+    <button type="submit" class="text-sm text-brand-600 font-medium hover:underline" id="btn-reenviar" disabled>
       Reenviar código (<span id="contador">20</span>s)
     </button>
   </form>
 
-  <a href="{% url 'portal:login' %}" class="block mt-4 text-xs text-slate-400 hover:underline">Cancelar y volver a iniciar sesión</a>
+  <a href="{% url 'portal:login' %}" class="block mt-4 text-xs text-surface-400 hover:underline">Cancelar y volver a iniciar sesión</a>
 </div>
 
 <script>

@@ -2,18 +2,18 @@
 {% block titulo %}Teleconsulta {{ tc.codigo }}{% endblock %}
 {% block contenido %}
 <div class="max-w-2xl w-full space-y-4">
-  <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-    <p class="text-xs uppercase tracking-wide text-teal-600 font-semibold mb-1">{{ tc.codigo }} · {{ tc.get_estado_display }}</p>
-    <h1 class="text-xl font-bold text-navy mb-1">{{ tc.motivo }}</h1>
-    <p class="text-sm text-slate-500 mb-6">
+  <div class="bg-white rounded-2xl shadow-samr border border-surface-100 p-8">
+    <p class="text-xs uppercase tracking-wide text-brand-600 font-semibold mb-1">{{ tc.codigo }} · {{ tc.get_estado_display }}</p>
+    <h1 class="text-xl font-bold text-surface-900 mb-1">{{ tc.motivo }}</h1>
+    <p class="text-sm text-surface-500 mb-6">
       Dr(a). {{ tc.medico.nombre_completo }} — Paciente: {{ tc.paciente.nombre_completo }}
       · {{ tc.fecha_programada|date:"d/m/Y H:i" }}
     </p>
 
     {% if tc.diagnostico %}
-      <div class="bg-slate-50 rounded-lg p-4 mb-4">
-        <p class="text-xs text-slate-400 mb-1">Diagnóstico</p>
-        <p class="text-slate-700">{{ tc.diagnostico }}</p>
+      <div class="bg-surface-50 rounded-lg p-4 mb-4">
+        <p class="text-xs text-surface-400 mb-1">Diagnóstico</p>
+        <p class="text-surface-700">{{ tc.diagnostico }}</p>
       </div>
     {% endif %}
 
@@ -21,7 +21,7 @@
       <form method="post" class="mb-2">
         {% csrf_token %}
         <input type="hidden" name="accion" value="iniciar" />
-        <button class="w-full bg-navy text-white rounded-lg py-2.5 font-semibold hover:bg-slate-800">Iniciar teleconsulta</button>
+        <button class="w-full bg-brand-700 text-white rounded-lg py-2.5 font-semibold hover:bg-brand-800">Iniciar teleconsulta</button>
       </form>
     {% endif %}
 
@@ -30,47 +30,47 @@
         {% csrf_token %}
         <input type="hidden" name="accion" value="finalizar" />
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Diagnóstico</label>
-          <textarea name="diagnostico" rows="2" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
+          <label class="block text-sm font-medium text-surface-700 mb-1">Diagnóstico</label>
+          <textarea name="diagnostico" rows="2" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm"></textarea>
         </div>
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Notas de la consulta</label>
-          <textarea name="notas" rows="2" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
+          <label class="block text-sm font-medium text-surface-700 mb-1">Notas de la consulta</label>
+          <textarea name="notas" rows="2" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm"></textarea>
         </div>
-        <button class="w-full bg-navy text-white rounded-lg py-2.5 font-semibold hover:bg-slate-800">Finalizar teleconsulta</button>
+        <button class="w-full bg-brand-700 text-white rounded-lg py-2.5 font-semibold hover:bg-brand-800">Finalizar teleconsulta</button>
       </form>
     {% endif %}
   </div>
 
   {% if es_medico and tc.esta_finalizada and not tc.receta %}
-  <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-    <p class="text-xs uppercase tracking-wide text-teal-600 font-semibold mb-3">Emitir receta digital · RF-14</p>
+  <div class="bg-white rounded-2xl shadow-samr border border-surface-100 p-8">
+    <p class="text-xs uppercase tracking-wide text-brand-600 font-semibold mb-3">Emitir receta digital · RF-14</p>
     <form method="post" class="space-y-3">
       {% csrf_token %}
       <input type="hidden" name="accion" value="emitir_receta" />
       <div class="grid grid-cols-2 gap-3">
-        <input name="medicamento" placeholder="Medicamento" class="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-        <input name="dosis" placeholder="Dosis (ej. 500mg)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        <input name="medicamento" placeholder="Medicamento" class="rounded-lg border border-surface-300 px-3 py-2 text-sm" />
+        <input name="dosis" placeholder="Dosis (ej. 500mg)" class="rounded-lg border border-surface-300 px-3 py-2 text-sm" />
       </div>
       <div class="grid grid-cols-2 gap-3">
-        <input name="frecuencia" placeholder="Frecuencia (ej. cada 8h)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-        <input name="duracion" placeholder="Duración (ej. 5 días)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        <input name="frecuencia" placeholder="Frecuencia (ej. cada 8h)" class="rounded-lg border border-surface-300 px-3 py-2 text-sm" />
+        <input name="duracion" placeholder="Duración (ej. 5 días)" class="rounded-lg border border-surface-300 px-3 py-2 text-sm" />
       </div>
-      <textarea name="indicaciones" rows="2" placeholder="Indicaciones generales" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
-      <button class="w-full bg-teal-600 text-white rounded-lg py-2.5 font-semibold hover:bg-teal-700">Firmar y emitir receta</button>
+      <textarea name="indicaciones" rows="2" placeholder="Indicaciones generales" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm"></textarea>
+      <button class="w-full bg-brand-600 text-white rounded-lg py-2.5 font-semibold hover:bg-brand-700">Firmar y emitir receta</button>
     </form>
   </div>
   {% endif %}
 
   {% if tc.receta %}
-  <div class="bg-teal-50 border border-teal-100 rounded-2xl p-8">
-    <p class="text-xs uppercase tracking-wide text-teal-700 font-semibold mb-3">Receta digital {{ tc.receta.codigo }} ✅ Firmada</p>
+  <div class="bg-brand-50 border border-brand-100 rounded-2xl p-8">
+    <p class="text-xs uppercase tracking-wide text-brand-700 font-semibold mb-3">Receta digital {{ tc.receta.codigo }} ✅ Firmada</p>
     {% for d in tc.receta.detalles.all %}
-      <p class="text-sm text-teal-800">• {{ d.medicamento }} — {{ d.dosis }}, {{ d.frecuencia }}, {{ d.duracion }}</p>
+      <p class="text-sm text-brand-800">• {{ d.medicamento }} — {{ d.dosis }}, {{ d.frecuencia }}, {{ d.duracion }}</p>
     {% endfor %}
   </div>
   {% endif %}
 
-  <a href="{% url 'teleconsulta:lista' %}" class="block text-sm text-slate-400 hover:underline">← Ver teleconsultas</a>
+  <a href="{% url 'teleconsulta:lista' %}" class="block text-sm text-surface-400 hover:underline">← Ver teleconsultas</a>
 </div>
 {% endblock %}

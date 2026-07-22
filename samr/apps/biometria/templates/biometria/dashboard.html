@@ -2,7 +2,7 @@
 {% block titulo %}Monitoreo biométrico{% endblock %}
 {% block contenido %}
 <div class="max-w-3xl w-full space-y-6">
-  <h1 class="text-xl font-bold text-navy">Monitoreo biométrico</h1>
+  <h1 class="text-xl font-bold text-surface-900">Monitoreo biométrico</h1>
 
   {% if alertas %}
     <div class="space-y-2">
@@ -17,11 +17,11 @@
               {% if a.nivel == 'CRITICA' %} text-red-700 {% elif a.nivel == 'ADVERTENCIA' %} text-amber-700 {% else %} text-blue-700 {% endif %}">
               Alerta {{ a.get_nivel_display }}
             </p>
-            <p class="text-sm text-slate-700">{{ a.mensaje }}</p>
+            <p class="text-sm text-surface-700">{{ a.mensaje }}</p>
           </div>
           <form method="post" action="{% url 'biometria:atender_alerta' a.id %}">
             {% csrf_token %}
-            <button class="text-xs font-semibold bg-white border border-slate-300 rounded-lg px-3 py-1.5 hover:bg-slate-50">
+            <button class="text-xs font-semibold bg-white border border-surface-300 rounded-lg px-3 py-1.5 hover:bg-surface-50">
               Marcar atendida
             </button>
           </form>
@@ -32,39 +32,39 @@
   {% endif %}
 
   <div>
-    <p class="text-xs uppercase tracking-wide text-slate-400 font-semibold mb-2">Últimas lecturas</p>
+    <p class="text-xs uppercase tracking-wide text-surface-400 font-semibold mb-2">Últimas lecturas</p>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       {% for l in lecturas %}
-        <div class="bg-white rounded-xl border border-slate-200 p-4">
-          <p class="text-xs text-slate-400">{{ l.get_tipo_signo_display }}</p>
-          <p class="text-2xl font-bold {% if l.fuera_de_rango %}text-red-600{% else %}text-navy{% endif %}">
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-xs text-surface-400">{{ l.get_tipo_signo_display }}</p>
+          <p class="text-2xl font-bold {% if l.fuera_de_rango %}text-red-600{% else %}text-surface-900{% endif %}">
             {{ l.valor }}
           </p>
-          <p class="text-xs text-slate-400">{{ l.tomada_en|date:"d/m H:i" }}</p>
+          <p class="text-xs text-surface-400">{{ l.tomada_en|date:"d/m H:i" }}</p>
         </div>
       {% empty %}
-        <p class="text-sm text-slate-400 col-span-4">Todavía no hay lecturas registradas.</p>
+        <p class="text-sm text-surface-400 col-span-4">Todavía no hay lecturas registradas.</p>
       {% endfor %}
     </div>
   </div>
 
   <div>
-    <p class="text-xs uppercase tracking-wide text-slate-400 font-semibold mb-2">Dispositivos vinculados</p>
-    <div class="bg-white rounded-xl border border-slate-200 divide-y divide-slate-100">
+    <p class="text-xs uppercase tracking-wide text-surface-400 font-semibold mb-2">Dispositivos vinculados</p>
+    <div class="bg-white rounded-xl border border-surface-200 divide-y divide-slate-100">
       {% for d in dispositivos %}
         <div class="flex items-center justify-between px-4 py-3">
           <div>
-            <p class="text-sm font-medium text-navy">{{ d.nombre }}</p>
-            <p class="text-xs text-slate-400">{{ d.codigo }}</p>
+            <p class="text-sm font-medium text-surface-900">{{ d.nombre }}</p>
+            <p class="text-xs text-surface-400">{{ d.codigo }}</p>
           </div>
-          <span class="text-xs text-teal-600 font-semibold">● Activo</span>
+          <span class="text-xs text-brand-600 font-semibold">● Activo</span>
         </div>
       {% empty %}
-        <p class="text-sm text-slate-400 px-4 py-3">No tienes dispositivos vinculados.</p>
+        <p class="text-sm text-surface-400 px-4 py-3">No tienes dispositivos vinculados.</p>
       {% endfor %}
     </div>
   </div>
 
-  <a href="{% url 'portal:dashboard' %}" class="block text-sm text-slate-400 hover:underline">← Volver al panel principal</a>
+  <a href="{% url 'portal:dashboard' %}" class="block text-sm text-surface-400 hover:underline">← Volver al panel principal</a>
 </div>
 {% endblock %}
