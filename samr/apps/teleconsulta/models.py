@@ -127,6 +127,7 @@ class HistorialClinico(ModeloBase):
     )
     descripcion = models.TextField("Descripcion")
     diagnostico = models.TextField("Diagnostico", blank=True)
+    contenido_fhir = models.JSONField("Contenido FHIR", default=dict, blank=True)
 
     class Meta:
         verbose_name = "Historial clinico"

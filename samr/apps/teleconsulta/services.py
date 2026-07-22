@@ -60,6 +60,56 @@ class TeleconsultaService(BaseService):
                 teleconsulta.solicitud, EstadoSolicitud.ATENDIDA
             )
 
+        # Obtener signos vitales recientes del paciente si existen
+        from apps.biometria.models import LecturaBiometrica
+        lecturas_recientes = LecturaBiometrica.objects.filter(
+            dispositivo__paciente=teleconsulta.paciente
+        ).order_by("-tomada_en")[:5]
+
+        signos_vitales_fhir = []
+        for l in lecturas_recientes:
+            signos_vitales_fhir.append({
+                "tipo": l.get_tipo_signo_display(),
+                "valor": str(l.valor),
+                "unidad": l.unidad,
+                "fecha": l.tomada_en.isoformat() if l.tomada_en else ""
+            })
+
+        medicamentos_fhir = []
+        if hasattr(teleconsulta, "receta") and teleconsulta.receta:
+            for d in teleconsulta.receta.detalles.all():
+                medicamentos_fhir.append({
+                    "nombre": d.medicamento,
+                    "dosis": d.dosis,
+                    "frecuencia": d.frecuencia,
+                    "duracion": d.duracion,
+                })
+
+        contenido_fhir = {
+            "resourceType": "Encounter",
+            "status": "finished",
+            "periodo": {
+                "inicio": teleconsulta.creado_en.isoformat() if teleconsulta.creado_en else "",
+                "fin": teleconsulta.actualizado_en.isoformat() if teleconsulta.actualizado_en else "",
+            },
+            "paciente": {
+                "id": str(teleconsulta.paciente.id),
+                "nombre": teleconsulta.paciente.nombre_completo,
+            },
+            "medico": {
+                "id": str(teleconsulta.medico.id),
+                "nombre": teleconsulta.medico.nombre_completo,
+            },
+            "diagnostico": [{
+                "texto": diagnostico,
+                "sistema_clasificacion": "CIE-10",
+                "codigo": None
+            }],
+            "medicamentos": medicamentos_fhir,
+            "signos_vitales": signos_vitales_fhir,
+            "notas": notas,
+        }
+
         # Genera la entrada de historial clinico.
         HistorialClinico.objects.create(
             paciente=teleconsulta.paciente,
@@ -68,6 +118,7 @@ class TeleconsultaService(BaseService):
                 teleconsulta.codigo, teleconsulta.motivo
             ),
             diagnostico=diagnostico,
+            contenido_fhir=contenido_fhir,
         )
         return teleconsulta
 
@@ -89,6 +140,7 @@ class RecetaService(BaseService):
             teleconsulta=teleconsulta,
             indicaciones_generales=indicaciones_generales,
         )
+        medicamentos_fhir = []
         for item in (medicamentos or []):
             DetalleReceta.objects.create(
                 receta=receta,
@@ -97,4 +149,33 @@ class RecetaService(BaseService):
                 frecuencia=item["frecuencia"],
                 duracion=item["duracion"],
             )
+            medicamentos_fhir.append({
+                "nombre": item["medicamento"],
+                "dosis": item["dosis"],
+                "frecuencia": item["frecuencia"],
+                "duracion": item["duracion"],
+            })
+
+        # Actualiza el documento FHIR en el HistorialClinico correspondiente
+        historial = HistorialClinico.objects.filter(teleconsulta=teleconsulta).first()
+        if historial:
+            if not historial.contenido_fhir:
+                historial.contenido_fhir = {}
+            historial.contenido_fhir["medicamentos"] = medicamentos_fhir
+            historial.save(update_fields=["contenido_fhir", "actualizado_en"])
+
         return receta
+
+
+class HistorialClinicoService:
+    """Servicio para consultas y operaciones sobre el Historial Clinico FHIR."""
+
+    def buscar_por_medicamento(self, nombre_medicamento):
+        """
+        Busca entradas de historial clinico que contengan un medicamento especifico
+        en su documento FHIR utilizando el operador de contencion JSONB (@>).
+        """
+        return HistorialClinico.objects.filter(
+            contenido_fhir__medicamentos__contains=[{"nombre": nombre_medicamento}]
+        )
+
