@@ -70,5 +70,32 @@
   if(chatContainer) {
     chatContainer.scrollTop = chatContainer.scrollHeight;
   }
+
+  const chatForm = document.querySelector('form');
+  const submitBtn = chatForm ? chatForm.querySelector('button[type="submit"]') : null;
+  if(chatForm && submitBtn) {
+    chatForm.addEventListener('submit', function(e) {
+      // Disable button
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Enviando...';
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+      // Add indicator
+      const indicator = document.createElement('div');
+      indicator.className = 'flex justify-start mt-4';
+      indicator.innerHTML = `
+        <div class="bg-white border border-slate-200 text-navy rounded-r-2xl rounded-tl-2xl px-4 py-3 max-w-[85%] shadow-sm flex items-center gap-1">
+          <span class="text-sm italic text-slate-500">El asistente está escribiendo</span>
+          <span class="flex gap-1 items-center ml-2">
+            <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms;"></span>
+            <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></span>
+            <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms;"></span>
+          </span>
+        </div>
+      `;
+      chatContainer.appendChild(indicator);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    });
+  }
 </script>
 {% endblock %}

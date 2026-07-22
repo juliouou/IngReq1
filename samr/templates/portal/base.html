@@ -75,7 +75,7 @@
   <main class="flex-1 flex justify-center px-4 py-10 w-full">
     <div class="w-full">
       {% if messages %}
-        <div class="mb-6 space-y-2 max-w-2xl mx-auto">
+        <div id="system-messages" class="mb-6 space-y-2 max-w-2xl mx-auto transition-opacity duration-500">
           {% for message in messages %}
             <div class="rounded-lg px-4 py-3 text-sm flex items-center shadow-sm
               {% if message.tags == 'error' %} bg-red-50 text-red-700 border border-red-200
@@ -96,5 +96,15 @@
   <footer class="text-center text-xs text-surface-400 py-6 mt-auto">
     SAMR — Equipo LLdE — UTPL
   </footer>
+
+  <script>
+    const sysMessages = document.getElementById('system-messages');
+    if(sysMessages) {
+      setTimeout(() => {
+        sysMessages.style.opacity = '0';
+        setTimeout(() => sysMessages.remove(), 500);
+      }, 5000);
+    }
+  </script>
 </body>
 </html>

@@ -7,6 +7,11 @@
     <p class="text-sm text-slate-500 mt-1">Complete los detalles para que la Inteligencia Artificial (Med-Gemini) evalúe su nivel de prioridad.</p>
   </div>
 
+  <div id="urgent-warning" class="hidden bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl mb-6 text-sm font-medium flex items-start gap-2 shadow-sm transition-all duration-300">
+    <span>⚠️</span>
+    <p>Esto podría ser urgente — considera usar el chat o solicitar atención de emergencia inmediatamente.</p>
+  </div>
+
   <form method="POST" action="{% url 'triaje:formulario' %}" class="space-y-6">
     {% csrf_token %}
 
@@ -112,4 +117,42 @@
     </div>
   </form>
 </div>
+
+<script>
+  const checkboxes = document.querySelectorAll('input[name="sintomas_asociados"]');
+  const warningDiv = document.getElementById('urgent-warning');
+
+  function checkUrgency() {
+    let isUrgent = false;
+    checkboxes.forEach(cb => {
+      if(cb.checked && (cb.value === 'dolor en el pecho' || cb.value === 'dificultad para respirar')) {
+        isUrgent = true;
+      }
+    });
+    if(isUrgent) {
+      warningDiv.classList.remove('hidden');
+    } else {
+      warningDiv.classList.add('hidden');
+    }
+  }
+
+  checkboxes.forEach(cb => cb.addEventListener('change', checkUrgency));
+
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e) {
+    const sintoma = document.getElementById('sintoma_principal').value.trim();
+    const intensidad = parseInt(document.getElementById('intensidad').value);
+    
+    if(!sintoma) {
+      e.preventDefault();
+      alert("Por favor, ingrese el síntoma principal.");
+      return;
+    }
+    if(intensidad < 1 || intensidad > 10) {
+      e.preventDefault();
+      alert("La intensidad del dolor debe estar entre 1 y 10.");
+      return;
+    }
+  });
+</script>
 {% endblock %}

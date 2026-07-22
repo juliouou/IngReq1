@@ -4,11 +4,12 @@
 <div class="max-w-3xl w-full space-y-6">
   <h1 class="text-xl font-bold text-surface-900">Monitoreo biométrico</h1>
 
+  <div id="alertas-container">
   {% if alertas %}
     <div class="space-y-2">
       {% for a in alertas %}
         {% if not a.atendida %}
-        <div class="flex items-center justify-between rounded-lg p-4 border
+        <div class="flex items-center justify-between rounded-lg p-4 border transition-all duration-300
           {% if a.nivel == 'CRITICA' %} bg-red-50 border-red-200
           {% elif a.nivel == 'ADVERTENCIA' %} bg-amber-50 border-amber-200
           {% else %} bg-blue-50 border-blue-200 {% endif %}">
@@ -30,12 +31,13 @@
       {% endfor %}
     </div>
   {% endif %}
+  </div>
 
-  <div>
+  <div id="lecturas-container">
     <p class="text-xs uppercase tracking-wide text-surface-400 font-semibold mb-2">Últimas lecturas</p>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       {% for l in lecturas %}
-        <div class="bg-white rounded-xl border border-surface-200 p-4">
+        <div class="bg-white rounded-xl border border-surface-200 p-4 transition-all duration-300">
           <p class="text-xs text-surface-400">{{ l.get_tipo_signo_display }}</p>
           <p class="text-2xl font-bold {% if l.fuera_de_rango %}text-red-600{% else %}text-surface-900{% endif %}">
             {{ l.valor }}
@@ -88,4 +90,40 @@
 
   <a href="{% url 'portal:dashboard' %}" class="block text-sm text-surface-400 hover:underline">← Volver al panel principal</a>
 </div>
+
+<script>
+  function refreshDashboard() {
+    fetch(window.location.href)
+      .then(res => res.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        const newAlertas = doc.getElementById('alertas-container');
+        const oldAlertas = document.getElementById('alertas-container');
+        if(newAlertas && oldAlertas) {
+          const newHtml = newAlertas.innerHTML;
+          if(oldAlertas.innerHTML !== newHtml) {
+            oldAlertas.innerHTML = newHtml;
+            // Add entry animation to the first alert if we assume new ones are on top
+            const firstAlert = oldAlertas.querySelector('.flex.items-center');
+            if(firstAlert) {
+              firstAlert.classList.add('animate-pulse');
+              setTimeout(() => firstAlert.classList.remove('animate-pulse'), 2000);
+            }
+          }
+        }
+        
+        const newLecturas = doc.getElementById('lecturas-container');
+        const oldLecturas = document.getElementById('lecturas-container');
+        if(newLecturas && oldLecturas) {
+          if(oldLecturas.innerHTML !== newLecturas.innerHTML) {
+            oldLecturas.innerHTML = newLecturas.innerHTML;
+          }
+        }
+      })
+      .catch(err => console.error('Error refreshing dashboard:', err));
+  }
+  setInterval(refreshDashboard, 15000);
+</script>
 {% endblock %}
