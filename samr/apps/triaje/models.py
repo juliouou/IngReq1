@@ -1,6 +1,7 @@
 """Modelos de la app triaje."""
 from django.conf import settings
 from django.db import models
+from pgcrypto import fields as pgcrypto_fields
 
 from core.models import ModeloBase
 
@@ -63,7 +64,7 @@ class SolicitudAtencion(ModeloBase):
         related_name="solicitudes",
     )
     motivo = models.CharField("Motivo", max_length=200)
-    sintomas = models.TextField("Sintomas")
+    sintomas = pgcrypto_fields.TextPGPSymmetricKeyField("Sintomas")
     estado = models.CharField(
         "Estado",
         max_length=20,

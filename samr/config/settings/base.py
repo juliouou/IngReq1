@@ -34,6 +34,7 @@ def env_list(nombre, por_defecto=""):
 SECRET_KEY = os.environ.get(
     "SECRET_KEY", "django-insecure-clave-por-defecto-cambiar-en-produccion"
 )
+PGCRYPTO_KEY = os.environ.get("PGCRYPTO_KEY", "default-key-do-not-use-in-prod")
 DEBUG = env_bool("DEBUG", "True")
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "127.0.0.1,localhost")
 

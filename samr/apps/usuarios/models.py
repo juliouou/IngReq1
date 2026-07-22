@@ -1,6 +1,7 @@
 """Modelos de la app usuarios: usuario personalizado y perfiles."""
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
+from pgcrypto import fields as pgcrypto_fields
 
 from core.constants import Roles
 from core.models import ModeloBase
@@ -24,11 +25,11 @@ class Usuario(AbstractBaseUser, PermissionsMixin, ModeloBase):
     email = models.EmailField("Correo electronico", unique=True)
     nombres = models.CharField("Nombres", max_length=120)
     apellidos = models.CharField("Apellidos", max_length=120)
-    cedula = models.CharField(
+    cedula = pgcrypto_fields.CharPGPSymmetricKeyField(
         "Cedula", max_length=10, unique=True, null=True, blank=True
     )
-    telefono = models.CharField("Telefono", max_length=15, blank=True)
-    afiliacion_iess = models.CharField(
+    telefono = pgcrypto_fields.CharPGPSymmetricKeyField("Telefono", max_length=15, blank=True)
+    afiliacion_iess = pgcrypto_fields.CharPGPSymmetricKeyField(
         "Afiliacion IESS", max_length=50, blank=True,
         help_text="Numero de afiliacion validado contra el IESS/MSP (RF-02).",
     )

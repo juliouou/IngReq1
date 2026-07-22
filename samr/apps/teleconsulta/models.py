@@ -1,6 +1,7 @@
 """Modelos de la app teleconsulta."""
 from django.conf import settings
 from django.db import models
+from pgcrypto import fields as pgcrypto_fields
 
 from core.models import ModeloBase
 from apps.triaje.models import SolicitudAtencion
@@ -52,8 +53,8 @@ class Teleconsulta(ModeloBase):
     fecha_programada = models.DateTimeField("Fecha programada")
     enlace_sala = models.URLField("Enlace de sala virtual", blank=True)
     motivo = models.CharField("Motivo", max_length=200)
-    diagnostico = models.TextField("Diagnostico", blank=True)
-    notas = models.TextField("Notas de la consulta", blank=True)
+    diagnostico = pgcrypto_fields.TextPGPSymmetricKeyField("Diagnostico", blank=True)
+    notas = pgcrypto_fields.TextPGPSymmetricKeyField("Notas de la consulta", blank=True)
 
     class Meta:
         verbose_name = "Teleconsulta"
