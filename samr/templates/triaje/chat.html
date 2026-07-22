@@ -252,11 +252,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let textoAcumulado = "";
     
-    // Diccionario simple para análisis
+    // Diccionario simple para análisis ampliado
     const diccionarioSintomas = {
-        alta: ["dificultad para respirar", "pérdida de consciencia", "dolor de pecho", "sangrado", "desmayo"],
-        moderada: ["fiebre alta", "vómito constante", "dolor agudo", "fractura", "corte profundo"],
-        menor: ["dolor de cabeza", "mareo", "fiebre leve", "tos", "gripe", "resfriado", "náusea"]
+        alta: ["dificultad para respirar", "pérdida de consciencia", "dolor de pecho", "sangrado", "desmayo", "severo", "fuerte", "7-10"],
+        moderada: ["fiebre", "vómito", "dolor", "fractura", "corte", "4-6", "moderado"],
+        menor: ["dolor de cabeza", "mareo", "tos", "gripe", "resfriado", "náusea", "leve", "1-3"]
     };
 
     function analizarSintomas(texto) {
@@ -264,24 +264,35 @@ document.addEventListener("DOMContentLoaded", function() {
         let prioridad = "menor";
         
         const txt = texto.toLowerCase();
+        let nivelDetectado = "menor";
         
-        // Buscar síntomas
+        // Buscar síntomas (raíces y exactos)
         for (const nivel in diccionarioSintomas) {
             diccionarioSintomas[nivel].forEach(sintoma => {
                 if (txt.includes(sintoma) && !sintomasDetectados.includes(sintoma)) {
                     sintomasDetectados.push(sintoma);
-                    if (nivel === "alta") prioridad = "alta";
-                    if (nivel === "moderada" && prioridad === "menor") prioridad = "moderada";
+                    if (nivel === "alta") nivelDetectado = "alta";
+                    if (nivel === "moderada" && nivelDetectado !== "alta") nivelDetectado = "moderada";
                 }
             });
         }
         
-        // Actualizar UI del panel
-        const badge = document.getElementById('prioridad-badge');
-        const container = document.getElementById('sintomas-container');
-        const xaiText = document.getElementById('xai-text');
-        
+        // Ajuste de prioridad general
         if (sintomasDetectados.length > 0) {
+            prioridad = nivelDetectado;
+            
+            // Si detecta modificadores de severidad en el texto, puede escalar
+            if (txt.includes("fuerte") || txt.includes("severo") || txt.includes("muy") || txt.includes("7-10")) {
+                prioridad = "alta";
+            }
+        }
+        
+        // Actualizar UI del panel solo si se encontraron síntomas
+        if (sintomasDetectados.length > 0) {
+            const badge = document.getElementById('prioridad-badge');
+            const container = document.getElementById('sintomas-container');
+            const xaiText = document.getElementById('xai-text');
+            
             document.getElementById('resumen-placeholder').classList.add('hidden');
             document.getElementById('resumen-panel').classList.remove('hidden');
             document.getElementById('resumen-panel').classList.add('flex');
@@ -311,30 +322,53 @@ document.addEventListener("DOMContentLoaded", function() {
             
             lucide.createIcons();
         }
+        
+        return sintomasDetectados;
     }
 
     function handleSend() {
         const text = chatInput.value.trim();
         if (!text) return;
 
-        textoAcumulado += " " + text;
+        // Mostrar mensaje del usuario
         addUserMessage(text);
         chatInput.value = '';
+        
+        // 1. Manejo de saludos o mensajes vacíos de síntomas (antes de acumular)
+        const saludos = ["hola", "buenas", "hey", "buenos dias", "buenas tardes", "buenas noches", "saludos"];
+        if (saludos.includes(text.toLowerCase())) {
+            const typingId = addTypingIndicator();
+            setTimeout(() => {
+                removeTypingIndicator(typingId);
+                addBotMessage("¡Hola! Cuéntame qué síntomas presentas para poder ayudarte.");
+            }, 1000);
+            return;
+        }
 
+        textoAcumulado += " " + text;
         const typingId = addTypingIndicator();
 
         setTimeout(() => {
             removeTypingIndicator(typingId);
             
-            if (text.toLowerCase().includes("dolor") || text.toLowerCase().includes("cabeza")) {
+            // 2. Si el usuario reporta explícitamente solo dolor sin escala, le preguntamos la escala.
+            // Si ya respondió la escala (ej. trae "7-10"), pasamos al else para analizar.
+            const txtLower = text.toLowerCase();
+            if ((txtLower.includes("dolor") || txtLower.includes("cabeza")) && !txtLower.includes("(") && !txtLower.includes("-")) {
                 addBotMessage("Entiendo. ¿En una escala del 1 al 10, qué tan fuerte dirías que es el dolor?", ["1-3 (Leve)", "4-6 (Moderado)", "7-10 (Severo)"]);
             } else {
                 addBotMessage("Voy a analizar tus síntomas antes de continuar.");
                 const typingId2 = addTypingIndicator();
+                
                 setTimeout(() => {
                     removeTypingIndicator(typingId2);
-                    analizarSintomas(textoAcumulado);
-                    addBotMessage("He registrado tus síntomas y actualizado el panel de resumen. ¿Hay algo más que deba saber antes de enviar la solicitud?");
+                    const sintomas = analizarSintomas(textoAcumulado);
+                    
+                    if (sintomas.length > 0) {
+                        addBotMessage("He registrado tus síntomas y actualizado el panel de resumen. ¿Hay algo más que deba saber antes de enviar la solicitud?");
+                    } else {
+                        addBotMessage("No logré identificar síntomas claros en tu mensaje. ¿Podrías describir qué sientes? Por ejemplo: dolor, fiebre, mareo, dificultad para respirar, etc.");
+                    }
                 }, 1500);
             }
         }, 1500);
@@ -354,7 +388,6 @@ document.addEventListener("DOMContentLoaded", function() {
         submitBtn.addEventListener('click', async function() {
             try {
                 // Mock Backend POST request (Optional Requirement 4)
-                // Se envía el POST a la API pero envuelto en try/catch para evitar fallos si el endpoint requiere autenticación.
                 const response = await fetch('/api/triaje/solicitudes/', {
                     method: 'POST',
                     headers: {
@@ -367,12 +400,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     })
                 });
                 
-                if(!response.ok && response.status !== 401 && response.status !== 403) {
+                if(!response.ok && response.status !== 401 && response.status !== 403 && response.status !== 404) {
                     throw new Error("Error en la solicitud al servidor.");
                 }
             } catch(e) {
                 console.error("No se pudo conectar al backend real, continuando con UI:", e);
-                // Si requerimos detenernos, haríamos return aquí. Como es un mock híbrido, seguimos.
             }
 
             submitContainer.classList.add('hidden');
