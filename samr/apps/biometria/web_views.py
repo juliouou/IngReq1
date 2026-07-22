@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.auditoria.services import RegistroAuditoriaService
 from apps.biometria.models import Alerta, DispositivoIoT, LecturaBiometrica
+from apps.biometria.queries import obtener_tendencia_agregada
+
 
 
 @login_required
