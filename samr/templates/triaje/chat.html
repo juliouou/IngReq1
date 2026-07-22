@@ -252,107 +252,66 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let textoAcumulado = "";
     
-    // Diccionarios separados
-    const sintomasClinicos = {
-        alta: ["dificultad para respirar", "pérdida de consciencia", "dolor de pecho", "sangrado", "desmayo"],
-        moderada: ["fiebre", "vómito", "dolor", "fractura", "corte"],
-        menor: ["dolor de cabeza", "mareo", "tos", "gripe", "resfriado", "náusea"]
-    };
+    let textoAcumulado = "";
 
-    const modificadoresSeveridad = {
-        alta: ["severo", "fuerte", "muy", "7-10"],
-        moderada: ["4-6", "moderado"],
-        menor: ["leve", "1-3"]
-    };
-
-    function analizarSintomas(texto) {
-        let sintomasDetectados = [];
-        let prioridad = "menor";
-        
-        const txt = texto.toLowerCase();
-        let nivelDetectado = "menor";
-        
-        // 1. Buscar síntomas clínicos (solo palabras que representan síntomas reales)
-        for (const nivel in sintomasClinicos) {
-            sintomasClinicos[nivel].forEach(sintoma => {
-                if (txt.includes(sintoma) && !sintomasDetectados.includes(sintoma)) {
-                    sintomasDetectados.push(sintoma);
-                    if (nivel === "alta") nivelDetectado = "alta";
-                    if (nivel === "moderada" && nivelDetectado !== "alta") nivelDetectado = "moderada";
-                }
+    async function analizarSintomas(texto) {
+        try {
+            const response = await fetch('/api/triaje/analizar-sintomas/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : ''
+                },
+                body: JSON.stringify({ texto: texto })
             });
-        }
-        
-        // Deduplicación por substring (ej. "dolor de cabeza" oculta "dolor")
-        sintomasDetectados = sintomasDetectados.filter(s1 => {
-            return !sintomasDetectados.some(s2 => s2 !== s1 && s2.includes(s1));
-        });
 
-        // Si no hay síntomas reales, no continuar (incluso si hay modificadores)
-        if (sintomasDetectados.length === 0) {
+            if (!response.ok) {
+                throw new Error('Error del servidor: ' + response.status);
+            }
+
+            const data = await response.json();
+
+            if (data.error) {
+                console.error("Error devuelto por la API:", data.mensaje);
+                return [];
+            }
+
+            if (data.sintomas && data.sintomas.length > 0) {
+                document.getElementById('resumen-placeholder').classList.add('hidden');
+                document.getElementById('resumen-panel').classList.remove('hidden');
+                document.getElementById('resumen-panel').classList.add('flex');
+
+                const container = document.getElementById('sintomas-container');
+                container.innerHTML = '';
+                data.sintomas.forEach(s => {
+                    container.innerHTML += `<span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs capitalize">${s}</span>`;
+                });
+
+                const badge = document.getElementById('prioridad-badge');
+                badge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ";
+                const etiquetas = { 
+                    alta: ["Urgencia Alta", "bg-red-100 text-red-700"], 
+                    moderada: ["Urgencia Moderada", "bg-yellow-100 text-yellow-700"], 
+                    menor: ["Urgencia Menor", "bg-orange-100 text-orange-700"] 
+                };
+                const [texto_badge, clase_badge] = etiquetas[data.prioridad] || etiquetas.menor;
+                badge.textContent = texto_badge;
+                badge.className += clase_badge;
+
+                document.getElementById('xai-text').innerHTML = `${data.explicacion} Confianza del modelo: <strong>${data.confianza}%</strong>.`;
+
+                lucide.createIcons();
+            }
+
+            return data.sintomas || [];
+        } catch (e) {
+            console.error("Error llamando al analisis de Gemini/Ollama:", e);
+            // Si el servicio no está disponible, devolvemos array vacío para que el bot avise al usuario
             return [];
         }
-
-        prioridad = nivelDetectado;
-        let modificadorUsado = false;
-        
-        // 2. Buscar modificadores de severidad para escalar prioridad
-        for (const mod of modificadoresSeveridad.alta) {
-            if (txt.includes(mod)) {
-                prioridad = "alta";
-                modificadorUsado = true;
-                break;
-            }
-        }
-        if (!modificadorUsado && prioridad !== "alta") {
-            for (const mod of modificadoresSeveridad.moderada) {
-                if (txt.includes(mod)) {
-                    prioridad = "moderada";
-                    modificadorUsado = true;
-                    break;
-                }
-            }
-        }
-
-        // Actualizar UI del panel
-        const badge = document.getElementById('prioridad-badge');
-        const container = document.getElementById('sintomas-container');
-        const xaiText = document.getElementById('xai-text');
-        
-        document.getElementById('resumen-placeholder').classList.add('hidden');
-        document.getElementById('resumen-panel').classList.remove('hidden');
-        document.getElementById('resumen-panel').classList.add('flex');
-        
-        // Chips
-        container.innerHTML = '';
-        sintomasDetectados.forEach(s => {
-            container.innerHTML += `<span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs capitalize">${s}</span>`;
-        });
-        
-        // Prioridad
-        badge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ";
-        if (prioridad === "alta") {
-            badge.textContent = "Urgencia Alta";
-            badge.className += "bg-red-100 text-red-700";
-        } else if (prioridad === "moderada") {
-            badge.textContent = "Urgencia Moderada";
-            badge.className += "bg-yellow-100 text-yellow-700";
-        } else {
-            badge.textContent = "Urgencia Menor";
-            badge.className += "bg-orange-100 text-orange-700";
-        }
-        
-        // XAI
-        let textoIntensidad = modificadorUsado && prioridad === "alta" ? " (intensidad reportada como severa/fuerte)" : "";
-        const confianza = Math.floor(Math.random() * (95 - 80 + 1) + 80);
-        xaiText.innerHTML = `Basado en la presencia de <strong>${sintomasDetectados.join(", ")}</strong>, el cuadro sugiere un nivel de atención correspondiente a ${badge.textContent}${textoIntensidad}. Confianza del modelo: <strong>${confianza}%</strong>.`;
-        
-        lucide.createIcons();
-        
-        return sintomasDetectados;
     }
 
-    function handleSend() {
+    async function handleSend() {
         const text = chatInput.value.trim();
         if (!text) return;
 
@@ -374,7 +333,7 @@ document.addEventListener("DOMContentLoaded", function() {
         textoAcumulado += " " + text;
         const typingId = addTypingIndicator();
 
-        setTimeout(() => {
+        setTimeout(async () => {
             removeTypingIndicator(typingId);
             
             // 2. Si el usuario reporta explícitamente solo dolor sin escala, le preguntamos la escala.
@@ -386,16 +345,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 addBotMessage("Voy a analizar tus síntomas antes de continuar.");
                 const typingId2 = addTypingIndicator();
                 
-                setTimeout(() => {
-                    removeTypingIndicator(typingId2);
-                    const sintomas = analizarSintomas(textoAcumulado);
-                    
-                    if (sintomas.length > 0) {
-                        addBotMessage("He registrado tus síntomas y actualizado el panel de resumen. ¿Hay algo más que deba saber antes de enviar la solicitud?");
-                    } else {
-                        addBotMessage("No logré identificar síntomas claros en tu mensaje. ¿Podrías describir qué sientes? Por ejemplo: dolor, fiebre, mareo, dificultad para respirar, etc.");
-                    }
-                }, 1500);
+                // Llamamos de forma asíncrona a la IA real
+                const sintomas = await analizarSintomas(textoAcumulado);
+                
+                removeTypingIndicator(typingId2);
+                
+                if (sintomas.length > 0) {
+                    addBotMessage("He registrado tus síntomas y actualizado el panel de resumen. ¿Hay algo más que deba saber antes de enviar la solicitud?");
+                } else {
+                    addBotMessage("No logré identificar síntomas claros en tu mensaje (o el motor de IA no está disponible). ¿Podrías describir qué sientes? Por ejemplo: dolor, fiebre, mareo, dificultad para respirar, etc.");
+                }
             }
         }, 1500);
     }
