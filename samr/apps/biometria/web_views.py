@@ -21,10 +21,32 @@ def dashboard_biometrico(request):
         .select_related("lectura")
         .order_by("-creado_en")[:10]
     )
+    
+    # Preparar datos para Chart.js (graficamos el ultimo tipo de signo registrado)
+    import json
+    chart_data = None
+    if lecturas_recientes:
+        ultimo_tipo = lecturas_recientes[0].tipo_signo
+        lecturas_chart = (
+            LecturaBiometrica.objects.filter(
+                dispositivo__paciente=request.user, 
+                tipo_signo=ultimo_tipo
+            )
+            .order_by("-tomada_en")[:15]
+        )
+        # Invertimos para que la más antigua esté a la izquierda
+        lecturas_chart = list(reversed(lecturas_chart))
+        chart_data = json.dumps({
+            "labels": [l.tomada_en.strftime("%H:%M") for l in lecturas_chart],
+            "data": [float(l.valor) for l in lecturas_chart],
+            "titulo": lecturas_chart[0].get_tipo_signo_display()
+        })
+
     return render(request, "biometria/dashboard.html", {
         "dispositivos": dispositivos,
         "lecturas": lecturas_recientes,
         "alertas": alertas,
+        "chart_data": chart_data,
     })
 
 

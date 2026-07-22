@@ -1,28 +1,47 @@
 {% extends "portal/base.html" %}
 {% block titulo %}Monitoreo biométrico — SAMR{% endblock %}
 {% block contenido %}
-<div class="max-w-3xl w-full space-y-6">
-  <h1 class="text-xl font-bold text-surface-900">Monitoreo biométrico</h1>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 
+<div class="max-w-4xl w-full space-y-6">
+  <h1 class="text-2xl font-bold text-surface-900 mb-6">Monitoreo biométrico</h1>
+
+  <!-- Alertas -->
   <div id="alertas-container">
   {% if alertas %}
-    <div class="space-y-2">
+    <div class="space-y-3">
       {% for a in alertas %}
         {% if not a.atendida %}
-        <div class="flex items-center justify-between rounded-lg p-4 border transition-all duration-300
+        <div class="flex items-center justify-between rounded-2xl p-5 border shadow-md transition-all duration-300
           {% if a.nivel == 'CRITICA' %} bg-red-50 border-red-200
           {% elif a.nivel == 'ADVERTENCIA' %} bg-amber-50 border-amber-200
           {% else %} bg-blue-50 border-blue-200 {% endif %}">
-          <div>
-            <p class="text-xs font-semibold uppercase
-              {% if a.nivel == 'CRITICA' %} text-red-700 {% elif a.nivel == 'ADVERTENCIA' %} text-amber-700 {% else %} text-blue-700 {% endif %}">
-              Alerta {{ a.get_nivel_display }}
-            </p>
-            <p class="text-sm text-surface-700">{{ a.mensaje }}</p>
+          <div class="flex items-center gap-4">
+            {% if a.nivel == 'CRITICA' %}
+              <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              </div>
+            {% elif a.nivel == 'ADVERTENCIA' %}
+              <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              </div>
+            {% else %}
+              <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+            {% endif %}
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wide
+                {% if a.nivel == 'CRITICA' %} text-red-700 {% elif a.nivel == 'ADVERTENCIA' %} text-amber-700 {% else %} text-blue-700 {% endif %}">
+                Alerta {{ a.get_nivel_display }}
+              </p>
+              <p class="text-base font-semibold {% if a.nivel == 'CRITICA' %} text-red-900 {% else %} text-surface-900 {% endif %}">{{ a.mensaje }}</p>
+              <p class="text-xs {% if a.nivel == 'CRITICA' %} text-red-600 {% else %} text-surface-500 {% endif %} mt-1">Hace un momento</p>
+            </div>
           </div>
-          <form method="post" action="{% url 'biometria:atender_alerta' a.id %}">
+          <form method="post" action="{% url 'biometria:atender_alerta' a.id %}" class="shrink-0 ml-4">
             {% csrf_token %}
-            <button class="bg-white border border-surface-300 text-surface-700 hover:bg-surface-50 rounded-lg px-4 py-2 font-medium transition">
+            <button class="bg-white border-2 border-surface-200 text-surface-700 hover:bg-surface-50 hover:border-surface-300 rounded-xl px-5 py-2.5 font-bold shadow-sm transition">
               Marcar atendida
             </button>
           </form>
@@ -33,66 +52,154 @@
   {% endif %}
   </div>
 
+  <!-- Últimas Lecturas -->
   <div id="lecturas-container">
-    <p class="text-xs uppercase tracking-wide text-surface-400 font-semibold mb-2">Últimas lecturas</p>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <p class="text-xs uppercase tracking-wide text-surface-400 font-bold mb-3">Últimas lecturas por signo</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       {% for l in lecturas %}
-        <div class="bg-white rounded-xl border border-surface-200 p-4 transition-all duration-300">
-          <p class="text-xs text-surface-400">{{ l.get_tipo_signo_display }}</p>
-          <p class="text-2xl font-bold {% if l.fuera_de_rango %}text-red-600{% else %}text-surface-900{% endif %}">
-            {{ l.valor }}
-          </p>
-          <p class="text-xs text-surface-400">{{ l.tomada_en|date:"d/m H:i" }}</p>
+        <div class="bg-white rounded-2xl border border-surface-100 shadow-md p-5 flex flex-col justify-between">
+          <div class="flex items-start justify-between mb-2">
+            {% if l.tipo_signo == 'FRECUENCIA_CARDIACA' %}
+              <div class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+              </div>
+            {% elif l.tipo_signo == 'SPO2' %}
+              <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+              </div>
+            {% elif l.tipo_signo == 'TEMPERATURA' %}
+              <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6a3 3 0 016 0v13m-6 0a3 3 0 006 0m-6 0h6"></path></svg>
+              </div>
+            {% else %}
+              <div class="w-10 h-10 rounded-full bg-brand-50 text-brand-500 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+              </div>
+            {% endif %}
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {% if l.fuera_de_rango %}bg-red-100 text-red-700{% else %}bg-surface-100 text-surface-600{% endif %}">
+              {% if l.fuera_de_rango %}Alerta{% else %}Normal{% endif %}
+            </span>
+          </div>
+          <div>
+            <p class="text-xs text-surface-500 font-medium line-clamp-1" title="{{ l.get_tipo_signo_display }}">{{ l.get_tipo_signo_display }}</p>
+            <p class="text-2xl font-bold mt-1 {% if l.fuera_de_rango %}text-red-600{% else %}text-surface-900{% endif %}">
+              {{ l.valor }} <span class="text-xs text-surface-400 font-normal">{{ l.unidad }}</span>
+            </p>
+            <p class="text-[10px] text-surface-400 mt-1">{{ l.tomada_en|date:"d M H:i" }}</p>
+          </div>
         </div>
       {% empty %}
-        <p class="text-sm text-surface-400 col-span-4">Todavía no hay lecturas registradas.</p>
+        <div class="col-span-4 bg-white rounded-2xl border border-surface-100 shadow-md p-8 text-center">
+          <p class="text-sm text-surface-500">Todavía no hay lecturas registradas. Conecta tu dispositivo.</p>
+        </div>
       {% endfor %}
     </div>
   </div>
 
-  <div class="bg-white rounded-xl border border-surface-200 p-6">
-    <p class="text-xs uppercase tracking-wide text-surface-400 font-semibold mb-3">Simulador de dispositivo IoT</p>
-    <form method="post" action="{% url 'biometria:registrar' %}" class="flex gap-3 items-end">
+  <!-- Tendencia Chart.js -->
+  {% if chart_data %}
+  <div class="bg-white rounded-2xl border border-surface-100 shadow-md p-6">
+    <p class="text-xs uppercase tracking-wide text-surface-400 font-bold mb-4">Tendencia de Signos Vitales</p>
+    <div class="relative h-[250px] w-full">
+      <canvas id="trendChart"></canvas>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Simulador IoT -->
+  <div class="bg-white rounded-2xl border border-surface-100 shadow-md p-6">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-8 h-8 rounded-full bg-surface-100 text-surface-500 flex items-center justify-center">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+      </div>
+      <p class="text-sm uppercase tracking-wide text-surface-700 font-bold">Simulador de dispositivo IoT</p>
+    </div>
+    
+    <form method="post" action="{% url 'biometria:registrar' %}" class="flex flex-col md:flex-row gap-4 items-end">
       {% csrf_token %}
-      <div class="flex-1">
-        <label class="block text-sm font-medium text-surface-700 mb-1">Tipo de signo</label>
-        <select name="tipo_signo" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm" required>
-          <option value="TEMPERATURA">Temperatura (°C)</option>
-          <option value="FRECUENCIA_CARDIACA">Frecuencia Cardíaca (bpm)</option>
-          <option value="PRESION_SISTOLICA">Presión Sistólica (mmHg)</option>
-          <option value="SPO2">Saturación Oxígeno (%)</option>
-        </select>
+      <div class="flex-1 w-full">
+        <label class="block text-xs font-semibold text-surface-700 mb-1.5 ml-1">Tipo de signo</label>
+        <div class="w-full rounded-xl border border-surface-300 focus-within:ring-1 focus-within:ring-brand-500 bg-white overflow-hidden transition">
+          <select name="tipo_signo" class="w-full px-4 py-2.5 outline-none bg-transparent text-sm" required>
+            <option value="TEMPERATURA">Temperatura (°C)</option>
+            <option value="FRECUENCIA_CARDIACA">Frecuencia Cardíaca (bpm)</option>
+            <option value="PRESION_SISTOLICA">Presión Sistólica (mmHg)</option>
+            <option value="SPO2">Saturación Oxígeno (%)</option>
+          </select>
+        </div>
       </div>
-      <div class="flex-1">
-        <label class="block text-sm font-medium text-surface-700 mb-1">Valor</label>
-        <input type="number" step="0.1" name="valor" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm" required placeholder="Ej. 38.5" />
+      <div class="flex-1 w-full">
+        <label class="block text-xs font-semibold text-surface-700 mb-1.5 ml-1">Valor</label>
+        <input type="number" step="0.1" name="valor" class="w-full px-4 py-2.5 rounded-xl border border-surface-300 focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm transition" required placeholder="Ej. 38.5" />
       </div>
-      <button class="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">Registrar</button>
+      <button class="w-full md:w-auto bg-brand-600 hover:bg-brand-700 text-white rounded-xl px-6 py-2.5 font-bold shadow-samr transition">Registrar</button>
     </form>
   </div>
 
-  <div>
-    <p class="text-xs uppercase tracking-wide text-surface-400 font-semibold mb-2">Dispositivos vinculados</p>
-    <div class="bg-white rounded-xl border border-surface-200 divide-y divide-surface-100">
-      {% for d in dispositivos %}
-        <div class="flex items-center justify-between px-4 py-3">
-          <div>
-            <p class="text-sm font-medium text-surface-900">{{ d.nombre }}</p>
-            <p class="text-xs text-surface-400">{{ d.codigo }}</p>
-          </div>
-          <span class="text-xs text-brand-600 font-semibold">● Activo</span>
-        </div>
-      {% empty %}
-        <p class="text-sm text-surface-400 px-4 py-3">No tienes dispositivos vinculados.</p>
-      {% endfor %}
-    </div>
-  </div>
-
-  <a href="{% url 'portal:dashboard' %}" class="bg-white border border-surface-300 text-surface-700 hover:bg-surface-50 rounded-lg px-4 py-2 font-medium transition inline-block mt-6">← Volver al panel principal</a>
 </div>
 
 <script>
+  // Chart.js Init
+  {% if chart_data %}
+  document.addEventListener("DOMContentLoaded", function() {
+    const rawData = {{ chart_data|safe }};
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    
+    // Create gradient
+    let gradient = ctx.createLinearGradient(0, 0, 0, 250);
+    gradient.addColorStop(0, 'rgba(20, 184, 166, 0.4)'); // brand-500 with opacity
+    gradient.addColorStop(1, 'rgba(20, 184, 166, 0.0)');
+    
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: rawData.labels,
+        datasets: [{
+          label: rawData.titulo,
+          data: rawData.data,
+          borderColor: '#14b8a6', // brand-500
+          backgroundColor: gradient,
+          borderWidth: 2,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: '#14b8a6',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          fill: true,
+          tension: 0.4 // smooth curve
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#0f172a',
+            padding: 10,
+            cornerRadius: 8,
+            titleFont: { size: 13, family: 'Inter' },
+            bodyFont: { size: 13, family: 'Inter' }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false, drawBorder: false },
+            ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8' }
+          },
+          y: {
+            border: { display: false },
+            grid: { color: '#f1f5f9' },
+            ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8', padding: 10 }
+          }
+        }
+      }
+    });
+  });
+  {% endif %}
+
   function refreshDashboard() {
+    // Only refresh the alerts and top readings part, not the chart to avoid redrawing bugs
     fetch(window.location.href)
       .then(res => res.text())
       .then(html => {
@@ -105,12 +212,6 @@
           const newHtml = newAlertas.innerHTML;
           if(oldAlertas.innerHTML !== newHtml) {
             oldAlertas.innerHTML = newHtml;
-            // Add entry animation to the first alert if we assume new ones are on top
-            const firstAlert = oldAlertas.querySelector('.flex.items-center');
-            if(firstAlert) {
-              firstAlert.classList.add('animate-pulse');
-              setTimeout(() => firstAlert.classList.remove('animate-pulse'), 2000);
-            }
           }
         }
         
