@@ -1,4 +1,7 @@
 venv/
+vevn/
+.venv/
+env/
 __pycache__/
 *.pyc
 *.db
@@ -6,3 +9,5 @@ __pycache__/
 instance/
 migrations/
 .DS_Store
+~$*.docx
+~$*.xlsx
