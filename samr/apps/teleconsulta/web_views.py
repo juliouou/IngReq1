@@ -5,8 +5,9 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from core.exceptions import SamrException
-from apps.teleconsulta.models import Teleconsulta
+from apps.teleconsulta.models import Teleconsulta, HistorialClinico
 from apps.teleconsulta.services import RecetaService, TeleconsultaService
+from apps.biometria.models import DispositivoIoT, Alerta
 
 
 @login_required
@@ -14,7 +15,7 @@ def lista_teleconsultas(request):
     """Lista las teleconsultas del usuario (como medico o como paciente)."""
     qs = Teleconsulta.objects.filter(
         Q(medico=request.user) | Q(paciente=request.user)
-    ).select_related("medico", "paciente").order_by("-fecha_programada")
+    ).select_related("medico", "paciente", "receta").order_by("-fecha_programada")
     return render(request, "teleconsulta/lista.html", {"teleconsultas": qs})
 
 
@@ -22,13 +23,18 @@ def lista_teleconsultas(request):
 def detalle_teleconsulta(request, teleconsulta_id):
     """RF-13, RF-14, RF-15: ver detalle, finalizar y emitir receta."""
     tc = get_object_or_404(
-        Teleconsulta.objects.select_related("medico", "paciente"), id=teleconsulta_id
+        Teleconsulta.objects.select_related("medico", "paciente", "receta"), id=teleconsulta_id
     )
     if request.user.id not in (tc.medico_id, tc.paciente_id) and not request.user.es_admin:
         messages.error(request, "No tienes acceso a esta teleconsulta.")
         return redirect("teleconsulta:lista")
 
     es_medico_de_esta_consulta = request.user.id == tc.medico_id
+
+    # Si el paciente entra y hay receta sin leer, marcarla como leída
+    if request.user.id == tc.paciente_id and hasattr(tc, "receta") and tc.receta and not tc.receta.leida:
+        tc.receta.leida = True
+        tc.receta.save(update_fields=["leida"])
 
     if request.method == "POST" and es_medico_de_esta_consulta:
         accion = request.POST.get("accion")
@@ -70,6 +76,35 @@ def detalle_teleconsulta(request, teleconsulta_id):
             messages.error(request, exc.message)
         return redirect("teleconsulta:detalle", teleconsulta_id=tc.id)
 
+    # Datos de contexto clínico para el médico durante la consulta
+    historial_clinico = []
+    dispositivos_iot = []
+    lecturas_recientes = []
+    alertas_pendientes = []
+
+    if es_medico_de_esta_consulta:
+        historial_clinico = HistorialClinico.objects.filter(
+            paciente=tc.paciente
+        ).order_by("-creado_en")[:5]
+
+        dispositivos_iot = DispositivoIoT.objects.filter(
+            paciente=tc.paciente, activo=True
+        )
+
+        for disp in dispositivos_iot:
+            ultima = disp.lecturas.order_by("-tomada_en").first()
+            if ultima:
+                lecturas_recientes.append(ultima)
+
+        alertas_pendientes = Alerta.objects.filter(
+            paciente=tc.paciente, atendida=False
+        ).select_related("lectura__dispositivo").order_by("-creado_en")[:5]
+
     return render(request, "teleconsulta/detalle.html", {
-        "tc": tc, "es_medico": es_medico_de_esta_consulta,
+        "tc": tc,
+        "es_medico": es_medico_de_esta_consulta,
+        "historial_clinico": historial_clinico,
+        "dispositivos_iot": dispositivos_iot,
+        "lecturas_recientes": lecturas_recientes,
+        "alertas_pendientes": alertas_pendientes,
     })

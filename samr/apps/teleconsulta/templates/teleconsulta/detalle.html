@@ -1,315 +1,460 @@
 {% extends "portal/base.html" %}
 {% block titulo %}Teleconsulta {{ tc.codigo }} — SAMR{% endblock %}
 {% block contenido %}
-<div class="max-w-2xl w-full space-y-4">
-  <div class="bg-white rounded-2xl shadow-samr border border-surface-100 p-8">
-    <p class="text-xs uppercase tracking-wide text-brand-600 font-semibold mb-1">{{ tc.codigo }} · {{ tc.get_estado_display }}</p>
-    <h1 class="text-xl font-bold text-surface-900 mb-1">{{ tc.motivo }}</h1>
-    <p class="text-sm text-surface-500 mb-6">
-      Dr(a). {{ tc.medico.nombre_completo }} — Paciente: {{ tc.paciente.nombre_completo }}
-      · {{ tc.fecha_programada|date:"d/m/Y H:i" }}
-    </p>
+<div class="{% if tc.estado == 'EN_CURSO' and es_medico %}max-w-7xl{% else %}max-w-3xl{% endif %} w-full space-y-6">
+  <!-- Encabezado Principal de Teleconsulta -->
+  <div class="bg-white rounded-2xl shadow-md border border-surface-100 p-6 md:p-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-surface-100 pb-4 mb-4">
+      <div>
+        <p class="text-xs uppercase tracking-wide text-brand-600 font-bold mb-1">{{ tc.codigo }} · {{ tc.fecha_programada|date:"d/m/Y H:i" }}</p>
+        <h1 class="text-2xl font-extrabold text-surface-900">{{ tc.motivo }}</h1>
+        <p class="text-sm text-surface-500 mt-1">
+          Dr(a). <strong>{{ tc.medico.nombre_completo }}</strong> — Paciente: <strong>{{ tc.paciente.nombre_completo }}</strong>
+        </p>
+      </div>
+      <span class="text-xs font-extrabold px-3 py-1.5 rounded-full shadow-sm self-start md:self-center
+        {% if tc.estado == 'PROGRAMADA' %} bg-surface-100 text-surface-700
+        {% elif tc.estado == 'EN_CURSO' %} bg-amber-100 text-amber-700 animate-pulse
+        {% elif tc.estado == 'FINALIZADA' %} bg-brand-100 text-brand-700
+        {% else %} bg-red-100 text-red-700 {% endif %}">
+        {{ tc.get_estado_display }}
+      </span>
+    </div>
 
-    {% if tc.diagnostico %}
-      <div class="bg-surface-50 rounded-lg p-4 mb-4">
-        <p class="text-xs text-surface-400 mb-1">Diagnóstico</p>
-        <p class="text-surface-700">{{ tc.diagnostico }}</p>
+    {% if tc.diagnostico and not tc.receta %}
+      <div class="bg-surface-50 rounded-xl p-4 border border-surface-200">
+        <p class="text-xs font-bold text-surface-500 uppercase tracking-wide mb-1">Diagnóstico Médico</p>
+        <p class="text-surface-800 font-medium">{{ tc.diagnostico }}</p>
       </div>
     {% endif %}
 
     {% if es_medico and tc.estado == 'PROGRAMADA' %}
-      <form method="post" class="mb-2">
+      <form method="post" class="mt-4">
         {% csrf_token %}
         <input type="hidden" name="accion" value="iniciar" />
-        <button class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">Iniciar teleconsulta</button>
+        <button class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-xl py-3 font-bold shadow-md hover:-translate-y-0.5 transition duration-300">
+          🎥 Iniciar teleconsulta (Abrir Sala Virtual)
+        </button>
       </form>
       
-      <details class="mt-4 border border-surface-200 rounded-lg">
-        <summary class="cursor-pointer text-sm text-red-600 font-semibold p-3 hover:bg-surface-50">
-          ¿Rechazar y reasignar?
+      <details class="mt-4 border border-surface-200 rounded-xl overflow-hidden">
+        <summary class="cursor-pointer text-sm text-red-600 font-semibold p-3.5 bg-surface-50 hover:bg-surface-100 transition">
+          ¿Rechazar y reasignar cita?
         </summary>
-        <div class="p-3 border-t border-surface-200 bg-surface-50">
+        <div class="p-4 border-t border-surface-200 bg-white">
           <form method="post">
             {% csrf_token %}
             <input type="hidden" name="accion" value="rechazar" />
-            <label class="block text-sm font-medium text-surface-700 mb-1">Motivo de rechazo (obligatorio)</label>
-            <textarea name="motivo" required rows="2" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm mb-2" placeholder="Explique por qué no puede atenderla..."></textarea>
-            <button class="w-full bg-red-600 text-white rounded-lg py-2 font-semibold hover:bg-red-700">Rechazar y reasignar</button>
+            <label class="block text-xs font-semibold text-surface-700 mb-1">Motivo de rechazo (obligatorio)</label>
+            <textarea name="motivo" required rows="2" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm mb-3 focus:border-red-500 outline-none" placeholder="Explique la razón de la reasignación..."></textarea>
+            <button class="w-full bg-red-600 text-white rounded-xl py-2 font-bold hover:bg-red-700 transition">Rechazar y Reasignar Médico</button>
           </form>
         </div>
       </details>
     {% endif %}
+  </div>
 
-    {% if tc.estado == 'EN_CURSO' %}
-      <!-- Contenedor WebRTC Videollamada -->
-      <div class="bg-surface-900 rounded-2xl p-4 shadow-xl text-white relative mb-4 overflow-hidden" id="webrtc-container">
-        <div class="relative w-full h-80 bg-black rounded-xl overflow-hidden flex items-center justify-center">
-          <!-- Video Remoto (Principal) -->
-          <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover"></video>
-          
-          <!-- Placeholder cuando no hay video remoto aún -->
-          <div id="videoPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-surface-400 bg-surface-800 p-4 text-center">
-            <svg class="w-16 h-16 mb-2 animate-pulse text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <p class="text-sm font-semibold text-white">Esperando que el participante se conecte a la sala...</p>
-            <p class="text-xs text-surface-400 mt-1">Conexión WebRTC P2P Directa (Latencia &le; 200ms)</p>
+  <!-- MÓDULO EN CURSO: VIDEOLLAMADA WEBRTC + PANEL CLÍNICO DEL MÉDICO -->
+  {% if tc.estado == 'EN_CURSO' %}
+    <div class="{% if es_medico %}grid grid-cols-1 lg:grid-cols-3 gap-6{% endif %}">
+      <!-- Columna Principal: Sala WebRTC -->
+      <div class="{% if es_medico %}lg:col-span-2{% endif %} space-y-4">
+        <div class="bg-surface-900 rounded-2xl p-4 shadow-xl text-white relative overflow-hidden" id="webrtc-container">
+          <div class="relative w-full h-80 md:h-96 bg-black rounded-xl overflow-hidden flex items-center justify-center">
+            <!-- Video Remoto (Principal) -->
+            <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+            
+            <!-- Placeholder cuando no hay participante remoto aún -->
+            <div id="videoPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-surface-400 bg-surface-800 p-4 text-center">
+              <svg class="w-16 h-16 mb-2 animate-pulse text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <p class="text-base font-bold text-white">Esperando conexión del participante...</p>
+              <p class="text-xs text-surface-400 mt-1">Señalización WebRTC P2P Directa (Latencia &le; 200ms)</p>
+            </div>
+
+            <!-- Video Local (PiP) -->
+            <div class="absolute bottom-3 right-3 w-28 md:w-36 h-36 md:h-44 bg-surface-900 border-2 border-white/20 rounded-xl overflow-hidden shadow-lg z-10">
+              <video id="localVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+              <span class="absolute bottom-1.5 left-1.5 bg-black/70 text-[10px] text-white px-2 py-0.5 rounded font-bold">Tú</span>
+            </div>
           </div>
 
-          <!-- Video Local (PiP Esquina) -->
-          <div class="absolute bottom-3 right-3 w-28 h-36 bg-surface-900 border-2 border-white/20 rounded-xl overflow-hidden shadow-lg z-10">
-            <video id="localVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
-            <span class="absolute bottom-1 left-1 bg-black/60 text-[10px] text-white px-1.5 py-0.5 rounded">Tú</span>
+          <!-- Mensaje de Error de Cámara/Micrófono -->
+          <div id="webrtcError" class="hidden mt-3 p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-red-200 text-xs text-center font-medium"></div>
+
+          <!-- Barra de Controles WebRTC -->
+          <div class="flex items-center justify-center gap-4 mt-4">
+            <button id="btnAudio" type="button" class="w-12 h-12 rounded-full bg-surface-700 hover:bg-surface-600 text-white flex items-center justify-center shadow-lg transition text-lg" title="Silenciar / Activar Micrófono">
+              🎤
+            </button>
+            <button id="btnVideo" type="button" class="w-12 h-12 rounded-full bg-surface-700 hover:bg-surface-600 text-white flex items-center justify-center shadow-lg transition text-lg" title="Apagar / Encender Cámara">
+              📹
+            </button>
+            {% if es_medico %}
+              <form method="post" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="accion" value="finalizar" />
+                <button id="btnColgar" type="submit" class="h-12 px-6 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm flex items-center gap-2 shadow-lg transition" title="Finalizar Cita Médica">
+                  📞 Colgar y Finalizar
+                </button>
+              </form>
+            {% else %}
+              <a href="{% url 'teleconsulta:lista' %}" class="h-12 px-6 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm flex items-center gap-2 shadow-lg transition" title="Salir de la videollamada">
+                📞 Colgar
+              </a>
+            {% endif %}
           </div>
         </div>
 
-        <!-- Mensaje de Error (si falla cámara/micrófono) -->
-        <div id="webrtcError" class="hidden mt-3 p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-red-200 text-xs text-center"></div>
-
-        <!-- Barra de Controles WebRTC -->
-        <div class="flex items-center justify-center gap-4 mt-4">
-          <button id="btnAudio" type="button" class="w-11 h-11 rounded-full bg-surface-700 hover:bg-surface-600 text-white flex items-center justify-center shadow transition" title="Silenciar / Activar Micrófono">
-            🎤
-          </button>
-          <button id="btnVideo" type="button" class="w-11 h-11 rounded-full bg-surface-700 hover:bg-surface-600 text-white flex items-center justify-center shadow transition" title="Apagar / Encender Cámara">
-            📹
-          </button>
-          {% if es_medico %}
-            <form method="post" class="inline">
+        {% if es_medico %}
+          <!-- Formulario de Diagnóstico y Notas para el Médico -->
+          <div class="bg-white rounded-2xl border border-surface-100 p-6 shadow-md">
+            <h3 class="font-extrabold text-surface-900 text-base mb-3 flex items-center gap-2">
+              <span>✍️</span> Registro Clínico de la Consulta
+            </h3>
+            <form method="post" class="space-y-3">
               {% csrf_token %}
               <input type="hidden" name="accion" value="finalizar" />
-              <button id="btnColgar" type="submit" class="h-11 px-5 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm flex items-center gap-2 shadow transition" title="Finalizar Teleconsulta">
-                📞 Colgar y Finalizar
-              </button>
+              <div>
+                <label class="block text-xs font-bold text-surface-700 uppercase tracking-wide mb-1">Diagnóstico definitivo</label>
+                <textarea name="diagnostico" rows="2" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition" placeholder="Escriba el diagnóstico final..."></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-surface-700 uppercase tracking-wide mb-1">Notas clínicas de la consulta</label>
+                <textarea name="notas" rows="2" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition" placeholder="Escriba observaciones de la cita..."></textarea>
+              </div>
+              <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-xl py-3 font-bold shadow-md transition">Guardar Diagnóstico y Finalizar Consulta</button>
             </form>
-          {% else %}
-            <a href="{% url 'teleconsulta:lista' %}" class="h-11 px-5 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm flex items-center gap-2 shadow transition" title="Salir de la videollamada">
-              📞 Colgar
-            </a>
-          {% endif %}
-        </div>
+          </div>
+        {% endif %}
       </div>
 
       {% if es_medico %}
-        <!-- Formulario de Diagnóstico y Notas para el Médico -->
-        <div class="bg-white rounded-2xl border border-surface-100 p-6 shadow-md mb-4">
-          <h3 class="font-bold text-surface-900 text-sm mb-3">Registro de Diagnóstico y Notas (Médico)</h3>
-          <form method="post" class="space-y-3">
-            {% csrf_token %}
-            <input type="hidden" name="accion" value="finalizar" />
-            <div>
-              <label class="block text-xs font-semibold text-surface-700 mb-1">Diagnóstico definitivo</label>
-              <textarea name="diagnostico" rows="2" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition" placeholder="Escriba el diagnóstico..."></textarea>
+        <!-- Columna Secundaria: Panel de Contexto Clínico del Paciente (Solo Médico) -->
+        <div class="lg:col-span-1 space-y-4">
+          <!-- 1. ALERTAS BIOMÉTRICAS CRÍTICAS SIN ATENDER -->
+          {% if alertas_pendientes %}
+            <div class="bg-red-500/10 border-2 border-red-500/40 rounded-2xl p-4 text-red-900 shadow-md">
+              <div class="flex items-center gap-2 mb-2 text-red-700 font-bold text-xs uppercase tracking-wide">
+                <span class="animate-bounce">🚨</span> Alertas Biométricas Críticas
+              </div>
+              <div class="space-y-2">
+                {% for a in alertas_pendientes %}
+                  <div class="bg-white rounded-xl p-3 border border-red-200 text-xs shadow-sm">
+                    <p class="font-bold text-red-800">{{ a.lectura.dispositivo.get_tipo_display|default:"Signos Vitales" }} — {{ a.get_nivel_display }}</p>
+                    <p class="text-red-700 mt-0.5 font-medium">{{ a.mensaje }}</p>
+                    <p class="text-[10px] text-red-400 mt-1">{{ a.creado_en|date:"d/m/Y H:i" }}</p>
+                  </div>
+                {% endfor %}
+              </div>
             </div>
-            <div>
-              <label class="block text-xs font-semibold text-surface-700 mb-1">Notas clínicas de la consulta</label>
-              <textarea name="notas" rows="2" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition" placeholder="Escriba notas adicionales..."></textarea>
-            </div>
-            <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-xl py-2.5 font-bold shadow-md transition">Guardar Diagnóstico y Finalizar Cita</button>
-          </form>
+          {% endif %}
+
+          <!-- 2. DISPOSITIVOS IOT Y ÚLTIMAS LECTURAS -->
+          <div class="bg-white rounded-2xl border border-surface-200 p-5 shadow-md">
+            <h3 class="font-extrabold text-surface-900 text-sm mb-3 flex items-center gap-2">
+              <span>📡</span> Dispositivos IoT & Signos Vitales
+            </h3>
+            {% if lecturas_recientes %}
+              <div class="grid grid-cols-2 gap-2.5">
+                {% for l in lecturas_recientes %}
+                  <div class="bg-surface-50 rounded-xl p-3 border border-surface-200">
+                    <p class="text-[10px] font-bold text-surface-500 uppercase">{{ l.dispositivo.get_tipo_display }}</p>
+                    <p class="text-base font-black text-surface-900 mt-0.5">
+                      {{ l.valor_formateado }}
+                    </p>
+                    <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-1.5
+                      {% if l.fuera_de_rango %}bg-red-100 text-red-700 border border-red-200{% else %}bg-emerald-100 text-emerald-700 border border-emerald-200{% endif %}">
+                      {% if l.fuera_de_rango %}⚠️ Anormal{% else %}✓ Normal{% endif %}
+                    </span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p class="text-xs text-surface-400 italic">Sin lecturas biométricas activas.</p>
+            {% endif %}
+          </div>
+
+          <!-- 3. HISTORIAL CLÍNICO DEL PACIENTE -->
+          <div class="bg-white rounded-2xl border border-surface-200 p-5 shadow-md">
+            <h3 class="font-extrabold text-surface-900 text-sm mb-3 flex items-center gap-2">
+              <span>📋</span> Historial Clínico Previo
+            </h3>
+            {% if historial_clinico %}
+              <div class="space-y-2.5">
+                {% for h in historial_clinico %}
+                  <div class="bg-surface-50 rounded-xl p-3 border border-surface-200 text-xs">
+                    <div class="flex items-center justify-between text-surface-400 text-[10px] mb-1">
+                      <span>{{ h.creado_en|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    {% if h.diagnostico %}
+                      <p class="font-bold text-brand-700 mb-0.5">Dx: {{ h.diagnostico }}</p>
+                    {% endif %}
+                    <p class="text-surface-600 line-clamp-2 font-medium">{{ h.descripcion }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p class="text-xs text-surface-400 italic">Sin consultas previas registradas.</p>
+            {% endif %}
+          </div>
         </div>
       {% endif %}
+    </div>
 
-      <!-- Script JavaScript WebRTC -->
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          const teleconsultaId = "{{ tc.id }}";
-          const localVideo = document.getElementById("localVideo");
-          const remoteVideo = document.getElementById("remoteVideo");
-          const videoPlaceholder = document.getElementById("videoPlaceholder");
-          const webrtcError = document.getElementById("webrtcError");
-          const btnAudio = document.getElementById("btnAudio");
-          const btnVideo = document.getElementById("btnVideo");
+    <!-- JavaScript WebRTC -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const teleconsultaId = "{{ tc.id }}";
+        const localVideo = document.getElementById("localVideo");
+        const remoteVideo = document.getElementById("remoteVideo");
+        const videoPlaceholder = document.getElementById("videoPlaceholder");
+        const webrtcError = document.getElementById("webrtcError");
+        const btnAudio = document.getElementById("btnAudio");
+        const btnVideo = document.getElementById("btnVideo");
 
-          let localStream = null;
-          let peerConnection = null;
-          let ws = null;
-          let audioMuted = false;
-          let videoMuted = false;
+        let localStream = null;
+        let peerConnection = null;
+        let ws = null;
+        let audioMuted = false;
+        let videoMuted = false;
 
-          const rtcConfig = {
-            iceServers: [
-              { urls: "stun:stun.l.google.com:19302" },
-              { urls: "stun:stun1.l.google.com:19302" }
-            ]
-          };
+        const rtcConfig = {
+          iceServers: [
+            { urls: "stun:stun.l.google.com:19302" },
+            { urls: "stun:stun1.l.google.com:19302" }
+          ]
+        };
 
-          function mostrarError(msg) {
-            if (webrtcError) {
-              webrtcError.textContent = msg;
-              webrtcError.classList.remove("hidden");
-            }
-            console.error("WebRTC Error:", msg);
+        function mostrarError(msg) {
+          if (webrtcError) {
+            webrtcError.textContent = msg;
+            webrtcError.classList.remove("hidden");
           }
+          console.error("WebRTC Error:", msg);
+        }
 
-          async function initMedia() {
-            try {
-              if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                mostrarError("Tu navegador no soporta llamadas de video/audio en vivo (MediaDevices API no encontrada).");
-                return false;
-              }
-              localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-              localVideo.srcObject = localStream;
-              return true;
-            } catch (err) {
-              mostrarError("No se pudo acceder a la cámara o micrófono: " + (err.message || err.name) + ". Por favor otorgue permisos en el navegador.");
+        async function initMedia() {
+          try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+              mostrarError("Tu navegador no soporta llamadas de video/audio en vivo (MediaDevices API no encontrada).");
               return false;
             }
+            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            localVideo.srcObject = localStream;
+            return true;
+          } catch (err) {
+            mostrarError("No se pudo acceder a la cámara o micrófono: " + (err.message || err.name) + ". Por favor otorgue permisos en el navegador.");
+            return false;
+          }
+        }
+
+        function crearPeerConnection() {
+          peerConnection = new RTCPeerConnection(rtcConfig);
+
+          if (localStream) {
+            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
           }
 
-          function crearPeerConnection() {
-            peerConnection = new RTCPeerConnection(rtcConfig);
-
-            if (localStream) {
-              localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+          peerConnection.ontrack = (event) => {
+            if (event.streams && event.streams[0]) {
+              remoteVideo.srcObject = event.streams[0];
+              if (videoPlaceholder) videoPlaceholder.classList.add("hidden");
             }
+          };
 
-            peerConnection.ontrack = (event) => {
-              if (event.streams && event.streams[0]) {
-                remoteVideo.srcObject = event.streams[0];
-                if (videoPlaceholder) videoPlaceholder.classList.add("hidden");
-              }
-            };
+          peerConnection.onicecandidate = (event) => {
+            if (event.candidate && ws && ws.readyState === WebSocket.OPEN) {
+              ws.send(JSON.stringify({
+                type: "candidate",
+                candidate: event.candidate
+              }));
+            }
+          };
 
-            peerConnection.onicecandidate = (event) => {
-              if (event.candidate && ws && ws.readyState === WebSocket.OPEN) {
+          peerConnection.onconnectionstatechange = () => {
+            console.log("Estado conexión WebRTC:", peerConnection.connectionState);
+            if (peerConnection.connectionState === "connected" && videoPlaceholder) {
+              videoPlaceholder.classList.add("hidden");
+            }
+          };
+        }
+
+        async function initWebSocket() {
+          const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+          const wsUrl = `${wsScheme}://${window.location.host}/ws/teleconsulta/${teleconsultaId}/signaling/`;
+
+          ws = new WebSocket(wsUrl);
+
+          ws.onopen = async () => {
+            console.log("WebSocket de señalización WebRTC conectado.");
+            crearPeerConnection();
+            ws.send(JSON.stringify({ type: "ready" }));
+          };
+
+          ws.onmessage = async (event) => {
+            try {
+              const data = JSON.parse(event.data);
+
+              if (data.type === "ready") {
+                console.log("Participante remoto listo. Generando oferta SDP...");
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
                 ws.send(JSON.stringify({
-                  type: "candidate",
-                  candidate: event.candidate
+                  type: "offer",
+                  sdp: peerConnection.localDescription
                 }));
-              }
-            };
-
-            peerConnection.onconnectionstatechange = () => {
-              console.log("Estado conexión WebRTC:", peerConnection.connectionState);
-              if (peerConnection.connectionState === "connected" && videoPlaceholder) {
-                videoPlaceholder.classList.add("hidden");
-              }
-            };
-          }
-
-          async function initWebSocket() {
-            const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
-            const wsUrl = `${wsScheme}://${window.location.host}/ws/teleconsulta/${teleconsultaId}/signaling/`;
-
-            ws = new WebSocket(wsUrl);
-
-            ws.onopen = async () => {
-              console.log("WebSocket de señalización WebRTC conectado.");
-              crearPeerConnection();
-              ws.send(JSON.stringify({ type: "ready" }));
-            };
-
-            ws.onmessage = async (event) => {
-              try {
-                const data = JSON.parse(event.data);
-
-                if (data.type === "ready") {
-                  console.log("Participante remoto listo. Generando oferta SDP...");
-                  const offer = await peerConnection.createOffer();
-                  await peerConnection.setLocalDescription(offer);
-                  ws.send(JSON.stringify({
-                    type: "offer",
-                    sdp: peerConnection.localDescription
-                  }));
-                } else if (data.type === "offer") {
-                  console.log("Oferta SDP recibida. Generando respuesta...");
-                  await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-                  const answer = await peerConnection.createAnswer();
-                  await peerConnection.setLocalDescription(answer);
-                  ws.send(JSON.stringify({
-                    type: "answer",
-                    sdp: peerConnection.localDescription
-                  }));
-                } else if (data.type === "answer") {
-                  console.log("Respuesta SDP recibida.");
-                  await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-                } else if (data.type === "candidate") {
-                  if (data.candidate) {
-                    try {
-                      await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-                    } catch (e) {
-                      console.warn("Error agregando candidato ICE:", e);
-                    }
+              } else if (data.type === "offer") {
+                console.log("Oferta SDP recibida. Generando respuesta...");
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+                ws.send(JSON.stringify({
+                  type: "answer",
+                  sdp: peerConnection.localDescription
+                }));
+              } else if (data.type === "answer") {
+                console.log("Respuesta SDP recibida.");
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+              } else if (data.type === "candidate") {
+                if (data.candidate) {
+                  try {
+                    await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+                  } catch (e) {
+                    console.warn("Error agregando candidato ICE:", e);
                   }
                 }
-              } catch (err) {
-                console.error("Error procesando mensaje WebRTC:", err);
               }
-            };
-
-            ws.onerror = (err) => {
-              console.error("Error de WebSocket WebRTC:", err);
-            };
-
-            ws.onclose = () => {
-              console.log("WebSocket de señalización cerrado.");
-            };
-          }
-
-          // Inicializar llamadas
-          initMedia().then(success => {
-            if (success) {
-              initWebSocket();
+            } catch (err) {
+              console.error("Error procesando mensaje WebRTC:", err);
             }
-          });
+          };
 
-          // Handlers de botones
-          if (btnAudio) {
-            btnAudio.addEventListener("click", () => {
-              if (localStream) {
-                audioMuted = !audioMuted;
-                localStream.getAudioTracks().forEach(t => t.enabled = !audioMuted);
-                btnAudio.innerHTML = audioMuted ? "🔇" : "🎤";
-                btnAudio.classList.toggle("bg-red-600", audioMuted);
-                btnAudio.classList.toggle("bg-surface-700", !audioMuted);
-              }
-            });
-          }
+          ws.onerror = (err) => {
+            console.error("Error de WebSocket WebRTC:", err);
+          };
 
-          if (btnVideo) {
-            btnVideo.addEventListener("click", () => {
-              if (localStream) {
-                videoMuted = !videoMuted;
-                localStream.getVideoTracks().forEach(t => t.enabled = !videoMuted);
-                btnVideo.innerHTML = videoMuted ? "📷" : "📹";
-                btnVideo.classList.toggle("bg-red-600", videoMuted);
-                btnVideo.classList.toggle("bg-surface-700", !videoMuted);
-              }
-            });
+          ws.onclose = () => {
+            console.log("WebSocket de señalización cerrado.");
+          };
+        }
+
+        initMedia().then(success => {
+          if (success) {
+            initWebSocket();
           }
         });
-      </script>
-    {% endif %}
-  </div>
 
+        if (btnAudio) {
+          btnAudio.addEventListener("click", () => {
+            if (localStream) {
+              audioMuted = !audioMuted;
+              localStream.getAudioTracks().forEach(t => t.enabled = !audioMuted);
+              btnAudio.innerHTML = audioMuted ? "🔇" : "🎤";
+              btnAudio.classList.toggle("bg-red-600", audioMuted);
+              btnAudio.classList.toggle("bg-surface-700", !audioMuted);
+            }
+          });
+        }
+
+        if (btnVideo) {
+          btnVideo.addEventListener("click", () => {
+            if (localStream) {
+              videoMuted = !videoMuted;
+              localStream.getVideoTracks().forEach(t => t.enabled = !videoMuted);
+              btnVideo.innerHTML = videoMuted ? "📷" : "📹";
+              btnVideo.classList.toggle("bg-red-600", videoMuted);
+              btnVideo.classList.toggle("bg-surface-700", !videoMuted);
+            }
+          });
+        }
+      });
+    </script>
+  {% endif %}
+
+  <!-- EMISIÓN DE RECETA (MÉDICO CUANDO ESTÁ FINALIZADA SIN RECETA) -->
   {% if es_medico and tc.esta_finalizada and not tc.receta %}
-  <div class="bg-white rounded-2xl shadow-samr border border-surface-100 p-8">
-    <p class="text-xs uppercase tracking-wide text-brand-600 font-semibold mb-3">Emitir receta digital</p>
-    <form method="post" class="space-y-3">
+  <div class="bg-white rounded-2xl shadow-md border border-surface-100 p-6 md:p-8">
+    <p class="text-xs uppercase tracking-wide text-brand-600 font-bold mb-3">Emitir receta médica digital</p>
+    <form method="post" class="space-y-4">
       {% csrf_token %}
       <input type="hidden" name="accion" value="emitir_receta" />
-      <div class="grid grid-cols-2 gap-3">
-        <input name="medicamento" placeholder="Medicamento" class="rounded-lg border border-surface-300 px-3 py-2 text-sm" />
-        <input name="dosis" placeholder="Dosis (ej. 500mg)" class="rounded-lg border border-surface-300 px-3 py-2 text-sm" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-surface-700 mb-1">Medicamento</label>
+          <input name="medicamento" required placeholder="Nombre (ej. Paracetamol)" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 outline-none" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-surface-700 mb-1">Dosis</label>
+          <input name="dosis" required placeholder="Dosis (ej. 500mg)" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 outline-none" />
+        </div>
       </div>
-      <div class="grid grid-cols-2 gap-3">
-        <input name="frecuencia" placeholder="Frecuencia (ej. cada 8h)" class="rounded-lg border border-surface-300 px-3 py-2 text-sm" />
-        <input name="duracion" placeholder="Duración (ej. 5 días)" class="rounded-lg border border-surface-300 px-3 py-2 text-sm" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-surface-700 mb-1">Frecuencia</label>
+          <input name="frecuencia" required placeholder="Frecuencia (ej. cada 8 horas)" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 outline-none" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-surface-700 mb-1">Duración</label>
+          <input name="duracion" required placeholder="Duración (ej. 5 días)" class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 outline-none" />
+        </div>
       </div>
-      <textarea name="indicaciones" rows="2" placeholder="Indicaciones generales" class="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm"></textarea>
-      <button class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">Firmar y emitir receta</button>
+      <div>
+        <label class="block text-xs font-semibold text-surface-700 mb-1">Indicaciones generales</label>
+        <textarea name="indicaciones" rows="3" placeholder="Instrucciones para el paciente..." class="w-full rounded-xl border border-surface-200 px-3 py-2 text-sm focus:border-brand-500 outline-none"></textarea>
+      </div>
+      <button class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-xl py-3 font-bold shadow-md transition">Firmar y Emitir Receta Digital</button>
     </form>
   </div>
   {% endif %}
 
+  <!-- BLOQUE DE RECETA DIGITAL PARA PACIENTE Y MÉDICO -->
   {% if tc.receta %}
-  <div class="bg-brand-50 border border-brand-100 rounded-2xl p-8">
-    <p class="text-xs uppercase tracking-wide text-brand-700 font-semibold mb-3">Receta digital {{ tc.receta.codigo }} ✅ Firmada</p>
-    {% for d in tc.receta.detalles.all %}
-      <p class="text-sm text-brand-800">• {{ d.medicamento }} — {{ d.dosis }}, {{ d.frecuencia }}, {{ d.duracion }}</p>
-    {% endfor %}
+  <div class="bg-white rounded-2xl border border-purple-200 shadow-md p-6 md:p-8 space-y-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-purple-100 pb-4">
+      <div>
+        <span class="text-xs font-bold px-3 py-1 rounded-full bg-purple-100 text-purple-700 border border-purple-200 inline-block mb-1">
+          💊 Receta Médica Digital {{ tc.receta.codigo }}
+        </span>
+        <h3 class="text-xl font-extrabold text-surface-900">Prescripción Médica e Indicaciones</h3>
+      </div>
+      <span class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1 self-start md:self-center">
+        ✓ Firmada por Dr(a). {{ tc.medico.nombre_completo }}
+      </span>
+    </div>
+
+    {% if tc.diagnostico %}
+      <div class="bg-surface-50 rounded-xl p-4 border border-surface-200">
+        <p class="text-xs uppercase tracking-wide font-bold text-surface-500 mb-1">Diagnóstico Médico</p>
+        <p class="text-sm font-semibold text-surface-900">{{ tc.diagnostico }}</p>
+      </div>
+    {% endif %}
+
+    <!-- Lista de Medicamentos Prescritos -->
+    <div>
+      <h4 class="text-xs uppercase tracking-wide font-bold text-surface-500 mb-3">Medicamentos Prescritos</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {% for d in tc.receta.detalles.all %}
+          <div class="bg-purple-50/60 rounded-xl p-4 border border-purple-100 space-y-1 shadow-sm">
+            <p class="font-bold text-purple-950 text-base">💊 {{ d.medicamento }}</p>
+            <div class="flex flex-wrap gap-1.5 text-xs mt-2">
+              <span class="bg-white px-2.5 py-1 rounded-md font-semibold text-purple-800 border border-purple-200">Dosis: {{ d.dosis }}</span>
+              <span class="bg-white px-2.5 py-1 rounded-md font-semibold text-purple-800 border border-purple-200">Frecuencia: {{ d.frecuencia }}</span>
+              <span class="bg-white px-2.5 py-1 rounded-md font-semibold text-purple-800 border border-purple-200">Duración: {{ d.duracion }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if tc.receta.indicaciones_generales %}
+      <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+        <p class="text-xs uppercase tracking-wide font-bold text-amber-800 mb-1">📌 Indicaciones Generales del Médico</p>
+        <p class="text-sm text-amber-900 font-medium whitespace-pre-line">{{ tc.receta.indicaciones_generales }}</p>
+      </div>
+    {% endif %}
   </div>
   {% endif %}
 
-  <a href="{% url 'teleconsulta:lista' %}" class="block text-sm text-surface-400 hover:underline">← Ver teleconsultas</a>
+  <a href="{% url 'teleconsulta:lista' %}" class="block text-sm text-surface-400 hover:underline">← Volver al listado de teleconsultas</a>
 </div>
 {% endblock %}
