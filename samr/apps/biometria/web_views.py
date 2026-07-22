@@ -51,6 +51,38 @@ def dashboard_biometrico(request):
 
 
 @login_required
+def vincular_dispositivo(request):
+    """Permite al paciente registrar y vincular un nuevo dispositivo IoT."""
+    from apps.biometria.models import TipoDispositivo
+    from apps.biometria.services import DispositivoService
+    import secrets
+
+    if request.method == "POST":
+        nombre = request.POST.get("nombre", "").strip()
+        tipo = request.POST.get("tipo", "").strip()
+        numero_serie = request.POST.get("numero_serie", "").strip()
+
+        if not numero_serie:
+            numero_serie = "DEV-" + secrets.token_hex(4).upper()
+
+        try:
+            DispositivoService().registrar_dispositivo(
+                paciente=request.user,
+                nombre=nombre,
+                tipo=tipo,
+                numero_serie=numero_serie,
+            )
+            messages.success(request, f"Dispositivo '{nombre}' vinculado con éxito.")
+            return redirect("biometria:dashboard")
+        except Exception as exc:
+            messages.error(request, f"Error al vincular dispositivo: {str(exc)}")
+
+    return render(request, "biometria/vincular_dispositivo.html", {
+        "tipos_dispositivo": TipoDispositivo.CHOICES,
+    })
+
+
+@login_required
 def atender_alerta(request, alerta_id):
     """RF-11: el paciente o medico marca una alerta como atendida."""
     alerta = get_object_or_404(Alerta, id=alerta_id)
@@ -67,19 +99,32 @@ def atender_alerta(request, alerta_id):
     messages.success(request, "Alerta marcada como atendida.")
     return redirect("biometria:dashboard")
 
+
 @login_required
 def registrar_lectura(request):
     """RF-09/RF-10: simula la llegada de una lectura desde un dispositivo IoT real."""
-    from apps.biometria.services import LecturaService
+    from apps.biometria.services import LecturaService, DispositivoService
+    import secrets
     
     if request.method == "POST":
         tipo_signo = request.POST.get("tipo_signo")
         valor = request.POST.get("valor")
-        
-        dispositivo = DispositivoIoT.objects.filter(paciente=request.user, activo=True).first()
+        dispositivo_id = request.POST.get("dispositivo_id")
+
+        dispositivo = None
+        if dispositivo_id:
+            dispositivo = DispositivoIoT.objects.filter(id=dispositivo_id, paciente=request.user, activo=True).first()
+
         if not dispositivo:
-            messages.error(request, "No tienes dispositivos activos para registrar lecturas.")
-            return redirect("biometria:dashboard")
+            dispositivo = DispositivoIoT.objects.filter(paciente=request.user, activo=True).first()
+
+        if not dispositivo:
+            dispositivo = DispositivoService().registrar_dispositivo(
+                paciente=request.user,
+                nombre="Dispositivo IoT Principal",
+                tipo="PULSERA",
+                numero_serie="DEV-" + secrets.token_hex(4).upper(),
+            )
             
         try:
             LecturaService().registrar_lectura(
@@ -87,7 +132,7 @@ def registrar_lectura(request):
                 tipo_signo=tipo_signo,
                 valor=float(valor)
             )
-            messages.success(request, "Lectura registrada con éxito.")
+            messages.success(request, f"Lectura registrada con éxito en '{dispositivo.nombre}'.")
         except Exception as e:
             messages.error(request, f"Error al registrar lectura: {str(e)}")
             
