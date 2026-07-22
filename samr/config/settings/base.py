@@ -64,6 +64,7 @@ LOCAL_APPS = [
     "apps.biometria",
     "apps.teleconsulta",
     "apps.auditoria",
+    "apps.portal",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -136,6 +137,10 @@ CHANNEL_LAYERS = {
 # ---------------------------------------------------------------------------
 
 AUTH_USER_MODEL = "usuarios.Usuario"
+
+LOGIN_URL = "portal:login"
+LOGIN_REDIRECT_URL = "portal:dashboard"
+LOGOUT_REDIRECT_URL = "portal:login"
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -248,16 +253,6 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# ---------------------------------------------------------------------------
-# Integracion IA (Med-Gemini / Ollama local)
-# ---------------------------------------------------------------------------
-
-AI_PROVIDER = os.environ.get("AI_PROVIDER", "local")
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2:3b")
-OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
-
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = "media/"

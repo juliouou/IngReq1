@@ -66,16 +66,3 @@ class SolicitudAtencionViewSet(viewsets.ModelViewSet):
         )
         salida = SolicitudAtencionSerializer(evaluacion.solicitud)
         return Response(salida.data, status=status.HTTP_201_CREATED)
-
-from rest_framework.views import APIView
-from apps.triaje.ai_service import analizar_sintomas_con_ia
-
-class AnalizarSintomasView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        texto = request.data.get("texto", "").strip()
-        if not texto:
-            return Response({"sintomas": [], "prioridad": "menor", "explicacion": "", "confianza": 0})
-        resultado = analizar_sintomas_con_ia(texto)
-        return Response(resultado)

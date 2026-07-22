@@ -4,8 +4,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from apps.usuarios.views_ui import login_view, register_view, mfa_view
-from apps.triaje.views_ui import triaje_view
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -20,11 +18,12 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-    # Vistas Frontend (Django Templates)
-    path("auth/login/", login_view, name="login_ui"),
-    path("auth/register/", register_view, name="register_ui"),
-    path("auth/mfa/", mfa_view, name="mfa_ui"),
-    path("triaje/chat/", triaje_view, name="triaje_chat_ui"),
+    # Portal web (Pantalla 1: login, registro, MFA, dashboard) + resto de modulos
+    path("", include("apps.portal.urls")),
+    path("triaje/", include("apps.triaje.web_urls")),
+    path("biometria/", include("apps.biometria.web_urls")),
+    path("teleconsulta/", include("apps.teleconsulta.web_urls")),
+    path("auditoria-panel/", include("apps.auditoria.web_urls")),
 
     # Autenticacion JWT
     path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
