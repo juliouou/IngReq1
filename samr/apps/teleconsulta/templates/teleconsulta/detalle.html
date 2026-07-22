@@ -23,6 +23,21 @@
         <input type="hidden" name="accion" value="iniciar" />
         <button class="w-full bg-brand-700 text-white rounded-lg py-2.5 font-semibold hover:bg-brand-800">Iniciar teleconsulta</button>
       </form>
+      
+      <details class="mt-4 border border-slate-200 rounded-lg">
+        <summary class="cursor-pointer text-sm text-red-600 font-semibold p-3 hover:bg-slate-50">
+          ¿Rechazar y reasignar?
+        </summary>
+        <div class="p-3 border-t border-slate-200 bg-slate-50">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="accion" value="rechazar" />
+            <label class="block text-sm font-medium text-slate-700 mb-1">Motivo de rechazo (obligatorio)</label>
+            <textarea name="motivo" required rows="2" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm mb-2" placeholder="Explique por qué no puede atenderla..."></textarea>
+            <button class="w-full bg-red-600 text-white rounded-lg py-2 font-semibold hover:bg-red-700">Rechazar y reasignar</button>
+          </form>
+        </div>
+      </details>
     {% endif %}
 
     {% if es_medico and tc.estado == 'EN_CURSO' %}

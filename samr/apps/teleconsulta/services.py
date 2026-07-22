@@ -35,6 +35,39 @@ class TeleconsultaService(BaseService):
         return teleconsulta
 
     @transaction.atomic
+    def rechazar_y_reasignar(self, teleconsulta, medico_que_rechaza, motivo):
+        from django.utils import timezone
+        from datetime import timedelta
+        from django.contrib.auth import get_user_model
+        from core.constants import Roles
+        User = get_user_model()
+
+        if teleconsulta.estado != EstadoTeleconsulta.PROGRAMADA:
+            raise ConflictoEstado("Solo se puede rechazar una teleconsulta programada.")
+        if not motivo or not str(motivo).strip():
+            raise ReglaNegocioError("El motivo de rechazo no puede estar vacío.")
+
+        teleconsulta.estado = EstadoTeleconsulta.CANCELADA
+        nombre_medico = medico_que_rechaza.nombre_completo or medico_que_rechaza.email
+        teleconsulta.notas = f"Rechazada por Dr(a). {nombre_medico}: {motivo}"
+        teleconsulta.save(update_fields=["estado", "notas", "actualizado_en"])
+
+        nuevo_medico = User.objects.filter(rol=Roles.MEDICO).exclude(id=medico_que_rechaza.id).first()
+        if not nuevo_medico:
+            raise ReglaNegocioError("No hay otro médico disponible para reasignar la teleconsulta.")
+
+        nueva_tc = self.repository.crear(
+            codigo=generar_codigo("TC-", 8),
+            solicitud=teleconsulta.solicitud,
+            medico=nuevo_medico,
+            paciente=teleconsulta.paciente,
+            fecha_programada=timezone.now() + timedelta(minutes=5),
+            motivo=teleconsulta.motivo,
+            enlace_sala="https://salas.samr.local/{0}".format(generar_codigo("", 10)),
+        )
+        return nueva_tc
+
+    @transaction.atomic
     def iniciar(self, teleconsulta):
         if teleconsulta.estado != EstadoTeleconsulta.PROGRAMADA:
             raise ConflictoEstado("Solo se puede iniciar una teleconsulta programada.")

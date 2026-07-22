@@ -36,6 +36,12 @@ def detalle_teleconsulta(request, teleconsulta_id):
             if accion == "iniciar":
                 TeleconsultaService().iniciar(tc)
                 messages.success(request, "Teleconsulta iniciada.")
+            elif accion == "rechazar":
+                motivo = request.POST.get("motivo", "")
+                nueva_tc = TeleconsultaService().rechazar_y_reasignar(tc, request.user, motivo)
+                nombre_nuevo = nueva_tc.medico.nombre_completo or nueva_tc.medico.email
+                messages.success(request, f"Teleconsulta rechazada y reasignada exitosamente al Dr(a). {nombre_nuevo}.")
+                return redirect("teleconsulta:lista")
             elif accion == "finalizar":
                 TeleconsultaService().finalizar(
                     tc,

@@ -3,7 +3,24 @@
 {% block contenido %}
 <div class="max-w-xl w-full">
   <div class="bg-white rounded-2xl shadow-samr border border-surface-100 p-8">
-    <p class="text-xs uppercase tracking-wide text-brand-600 font-semibold mb-1">{{ solicitud.codigo }}</p>
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-xs uppercase tracking-wide text-brand-600 font-semibold">{{ solicitud.codigo }}</p>
+      <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full
+        {% if solicitud.tipo_origen == 'CHAT_IA' %} bg-brand-50 text-brand-700
+        {% elif solicitud.tipo_origen == 'FORMULARIO_MANUAL' %} bg-indigo-50 text-indigo-700
+        {% elif solicitud.tipo_origen == 'ALERTA_IOT' %} bg-orange-50 text-orange-700
+        {% endif %}">
+        {% if solicitud.tipo_origen == 'CHAT_IA' %}
+          💬 Chat con IA
+        {% elif solicitud.tipo_origen == 'FORMULARIO_MANUAL' %}
+          📋 Formulario de síntomas
+        {% elif solicitud.tipo_origen == 'ALERTA_IOT' %}
+          📡 Dispositivo IoT
+        {% else %}
+          {{ solicitud.tipo_origen }}
+        {% endif %}
+      </span>
+    </div>
     <h1 class="text-xl font-bold text-surface-900 mb-4">{{ solicitud.motivo }}</h1>
 
     <div class="bg-surface-50 rounded-lg p-4 mb-4">
@@ -16,7 +33,15 @@
         {% if solicitud.evaluacion.es_critica %} bg-red-50 border border-red-200 {% else %} bg-brand-50 border border-brand-100 {% endif %}">
         <p class="text-xs uppercase tracking-wide font-semibold
           {% if solicitud.evaluacion.es_critica %} text-red-700 {% else %} text-brand-700 {% endif %}">
-          Clasificación Med-Gemini (XAI)
+          {% if solicitud.tipo_origen == 'CHAT_IA' %}
+            Clasificación Med-Gemini (XAI)
+          {% elif solicitud.tipo_origen == 'FORMULARIO_MANUAL' %}
+            Clasificación Med-Gemini (Formulario)
+          {% elif solicitud.tipo_origen == 'ALERTA_IOT' %}
+            Clasificación Med-Gemini (Biometría IoT)
+          {% else %}
+            Clasificación de Solicitud
+          {% endif %}
         </p>
         <p class="font-semibold mt-1
           {% if solicitud.evaluacion.es_critica %} text-red-800 {% else %} text-brand-800 {% endif %}">
