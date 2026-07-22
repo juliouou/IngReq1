@@ -53,7 +53,30 @@
     
     <!-- Panel Lateral de Resumen y Estado (Derecha) -->
     <div class="hidden md:flex flex-col w-1/3 bg-slate-50 p-6 overflow-y-auto border-l border-gray-200">
-        <h3 class="font-bold text-lg text-gray-900 mb-6 flex items-center gap-2">
+        
+        <!-- Tarjeta de Emergencia IoT -->
+        <div class="bg-red-50 p-4 rounded-xl shadow-sm border border-red-200 mb-6">
+            <h4 class="text-sm font-bold text-red-900 mb-3 flex items-center gap-2">
+                <i data-lucide="activity" class="w-5 h-5"></i>
+                Monitoreo IoT en vivo
+            </h4>
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <div class="flex-1 bg-white p-3 rounded-lg border border-red-100 text-center">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Ritmo Cardíaco</p>
+                    <p class="text-2xl font-black text-red-600">112 <span class="text-sm font-normal">BPM</span></p>
+                </div>
+                <div class="flex-1 bg-white p-3 rounded-lg border border-red-100 text-center">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Oxígeno</p>
+                    <p class="text-2xl font-black text-blue-600">94 <span class="text-sm font-normal">% SpO2</span></p>
+                </div>
+            </div>
+            <button class="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors text-sm">
+                <i data-lucide="siren" class="w-4 h-4"></i>
+                Enviar Alerta de Emergencia
+            </button>
+        </div>
+
+        <h3 class="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
             <i data-lucide="clipboard-list" class="w-5 h-5 text-primary"></i>
             Resumen de Solicitud
         </h3>
@@ -111,4 +134,118 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const chatMessages = document.getElementById('chat-messages');
+
+    function createLucideIcon(name, size="w-5 h-5") {
+        return `<i data-lucide="${name}" class="${size}"></i>`;
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addUserMessage(text) {
+        const msgHtml = `
+            <div class="flex items-start gap-2 max-w-[80%] self-end ml-auto flex-row-reverse">
+                <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center text-gray-600 mt-1">
+                    ${createLucideIcon('user')}
+                </div>
+                <div class="bg-primary p-3 rounded-lg rounded-tr-none shadow-sm text-sm text-white">
+                    ${text}
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', msgHtml);
+        lucide.createIcons();
+        scrollToBottom();
+    }
+
+    function addTypingIndicator() {
+        const indicatorId = 'typing-' + Date.now();
+        const msgHtml = `
+            <div id="${indicatorId}" class="flex items-start gap-2 max-w-[80%]">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-primary mt-1">
+                    ${createLucideIcon('bot')}
+                </div>
+                <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm text-sm text-gray-500 border border-gray-100 flex items-center gap-1">
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', msgHtml);
+        lucide.createIcons();
+        scrollToBottom();
+        return indicatorId;
+    }
+
+    function removeTypingIndicator(id) {
+        const el = document.getElementById(id);
+        if(el) el.remove();
+    }
+
+    function addBotMessage(text, chips = []) {
+        let chipsHtml = '';
+        if (chips.length > 0) {
+            chipsHtml = '<div class="flex flex-wrap gap-2 mt-3">';
+            chips.forEach(chip => {
+                chipsHtml += `<button class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-primary border border-blue-200 rounded-full text-xs font-medium transition-colors" onclick="document.getElementById('chat-input').value='${chip}'; document.getElementById('send-btn').click();">${chip}</button>`;
+            });
+            chipsHtml += '</div>';
+        }
+
+        const msgHtml = `
+            <div class="flex items-start gap-2 max-w-[80%]">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-primary mt-1">
+                    ${createLucideIcon('bot')}
+                </div>
+                <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm text-sm text-gray-800 border border-gray-100">
+                    ${text}
+                    ${chipsHtml}
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', msgHtml);
+        lucide.createIcons();
+        scrollToBottom();
+    }
+
+    function handleSend() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        // 1. Mostrar mensaje del usuario
+        addUserMessage(text);
+        chatInput.value = '';
+
+        // 2. Mostrar "Escribiendo..."
+        const typingId = addTypingIndicator();
+
+        // 3. Simular retardo de red/IA (1.5s) y responder
+        setTimeout(() => {
+            removeTypingIndicator(typingId);
+            
+            // Respuesta simulada condicional básica
+            if (text.toLowerCase().includes("dolor") || text.toLowerCase().includes("cabeza")) {
+                addBotMessage("Entiendo. ¿En una escala del 1 al 10, qué tan fuerte dirías que es el dolor?", ["1-3 (Leve)", "4-6 (Moderado)", "7-10 (Severo)"]);
+            } else {
+                addBotMessage("Comprendo. He registrado estos síntomas en tu solicitud. ¿Hay algo más que deba saber antes de enviarla a un médico?");
+            }
+        }, 1500);
+    }
+
+    sendBtn.addEventListener('click', handleSend);
+    chatInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') handleSend();
+    });
+});
+</script>
 {% endblock %}
