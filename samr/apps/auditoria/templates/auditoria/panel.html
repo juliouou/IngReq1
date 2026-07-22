@@ -1,11 +1,34 @@
 {% extends "portal/base.html" %}
 {% block titulo %}Auditoría — SAMR{% endblock %}
 {% block contenido %}
-<div class="max-w-3xl w-full">
-  <h1 class="text-xl font-bold text-surface-900 mb-1">Registros de auditoría</h1>
-  <p class="text-sm text-surface-500 mb-4">
-    {% if es_auditor %}Vista de administrador — Historial completo de actividad del sistema.{% else %}Tus eventos registrados.{% endif %}
-  </p>
+<div class="max-w-4xl w-full space-y-4">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-extrabold text-surface-900">Registros de auditoría</h1>
+      <p class="text-xs text-surface-500">
+        {% if es_auditor %}Vista de administrador — Trazabilidad e historial de actividad.{% else %}Tus eventos registrados.{% endif %}
+      </p>
+    </div>
+
+    <!-- Formulario de Búsqueda de Caso / Código -->
+    <form method="get" class="flex gap-2">
+      <input type="text" name="q" value="{{ q|default:'' }}" placeholder="Código de caso (ej. SOL-XXXX, TC-XXXX)..." class="px-4 py-2.5 rounded-xl border border-surface-300 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 w-64 md:w-80 shadow-sm" />
+      <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white rounded-xl px-4 py-2.5 font-bold text-xs shadow-md transition">
+        🔍 Buscar
+      </button>
+      {% if q %}
+        <a href="{% url 'auditoria:panel' %}" class="bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-xl px-3 py-2.5 text-xs font-semibold transition flex items-center">
+          ✕ Limpiar
+        </a>
+      {% endif %}
+    </form>
+  </div>
+
+  {% if q %}
+    <div class="bg-brand-50 border border-brand-200 rounded-xl p-3.5 text-xs text-brand-900 font-medium flex items-center justify-between shadow-sm">
+      <span>🔍 Historial cronológico filtrado para el caso: <strong>"{{ q }}"</strong> ({{ pagina.paginator.count }} registros)</span>
+    </div>
+  {% endif %}
 
   <div class="bg-white rounded-xl border border-surface-200 overflow-hidden">
     <div class="overflow-x-auto w-full">

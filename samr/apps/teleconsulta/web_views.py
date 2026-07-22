@@ -100,10 +100,13 @@ def detalle_teleconsulta(request, teleconsulta_id):
             paciente=tc.paciente, atendida=False
         ).select_related("lectura__dispositivo").order_by("-creado_en")[:5]
 
+    historial_de_esta_consulta = HistorialClinico.objects.filter(teleconsulta=tc).first()
+
     return render(request, "teleconsulta/detalle.html", {
         "tc": tc,
         "es_medico": es_medico_de_esta_consulta,
         "historial_clinico": historial_clinico,
+        "historial_de_esta_consulta": historial_de_esta_consulta,
         "dispositivos_iot": dispositivos_iot,
         "lecturas_recientes": lecturas_recientes,
         "alertas_pendientes": alertas_pendientes,
