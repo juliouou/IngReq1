@@ -42,6 +42,13 @@ def clasificar_sintomas(texto_sintomas):
     RF-05: clasifica la descripcion de sintomas del paciente y devuelve
     nivel de urgencia (escala Manchester 1-5) + explicacion XAI + nivel de confianza.
     """
+    try:
+        from core.motor_ia_llm import clasificar_sintomas_llm
+        resultado_llm = clasificar_sintomas_llm(texto_sintomas)
+        if resultado_llm:
+            return resultado_llm
+    except Exception:
+        pass
     texto = (texto_sintomas or "").strip()
     
     if not texto:
@@ -97,6 +104,17 @@ def responder_chat(historial_texto, mensaje_actual, turno):
     """
     RF-04: Chat conversacional para triaje.
     """
+    try:
+        from core.motor_ia_llm import responder_chat_llm
+        resultado_llm = responder_chat_llm(historial_texto, mensaje_actual, turno)
+        if resultado_llm:
+            # Si el LLM dice que está listo, debemos hacer la clasificación también
+            if resultado_llm.get("listo_para_clasificar"):
+                texto_completo = (historial_texto + " " + mensaje_actual).strip()
+                resultado_llm["resultado"] = clasificar_sintomas(texto_completo)
+            return resultado_llm
+    except Exception:
+        pass
     texto_completo = (historial_texto + " " + mensaje_actual).strip()
     resultado = clasificar_sintomas(texto_completo)
     

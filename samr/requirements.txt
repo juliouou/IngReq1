@@ -9,4 +9,4 @@ channels==4.1.0
 celery==5.4.0
 psycopg2-binary
 dj-database-url
-
+requests==2.34.2

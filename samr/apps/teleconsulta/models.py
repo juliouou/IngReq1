@@ -78,6 +78,7 @@ class Receta(ModeloBase):
         related_name="receta",
     )
     indicaciones_generales = models.TextField("Indicaciones generales", blank=True)
+    leida = models.BooleanField("Leída por el paciente", default=False)
 
     class Meta:
         verbose_name = "Receta"

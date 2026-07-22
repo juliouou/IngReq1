@@ -1,0 +1,13 @@
+venv/
+vevn/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.db
+.env
+instance/
+migrations/
+.DS_Store
+~$*.docx
+~$*.xlsx

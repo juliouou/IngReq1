@@ -1,10 +1,15 @@
 {% extends "portal/base.html" %}
-{% block titulo %}Formulario de síntomas{% endblock %}
+{% block titulo %}Formulario de síntomas — SAMR{% endblock %}
 {% block contenido %}
-<div class="max-w-2xl w-full bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-  <div class="mb-6 border-b border-slate-100 pb-4">
-    <h1 class="text-xl font-bold text-navy">📋 Formulario de Evaluación de Síntomas</h1>
-    <p class="text-sm text-slate-500 mt-1">Complete los detalles para que la Inteligencia Artificial (Med-Gemini) evalúe su nivel de prioridad.</p>
+<div class="max-w-2xl w-full bg-white rounded-2xl shadow-sm border border-surface-200 p-8">
+  <div class="mb-6 border-b border-surface-100 pb-4">
+    <h1 class="text-xl font-bold text-surface-900">📋 Formulario de Evaluación de Síntomas</h1>
+    <p class="text-sm text-surface-500 mt-1">Complete los detalles para que la Inteligencia Artificial (Med-Gemini) evalúe su nivel de prioridad.</p>
+  </div>
+
+  <div id="urgent-warning" class="hidden bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl mb-6 text-sm font-medium flex items-start gap-2 shadow-sm transition-all duration-300">
+    <span>⚠️</span>
+    <p>Esto podría ser urgente — considera usar el chat o solicitar atención de emergencia inmediatamente.</p>
   </div>
 
   <form method="POST" action="{% url 'triaje:formulario' %}" class="space-y-6">
@@ -12,22 +17,22 @@
 
     <!-- Síntoma principal -->
     <div>
-      <label for="sintoma_principal" class="block text-sm font-semibold text-slate-700 mb-1">
+      <label for="sintoma_principal" class="block text-sm font-semibold text-surface-700 mb-1">
         Síntoma principal <span class="text-red-500">*</span>
       </label>
       <input type="text" id="sintoma_principal" name="sintoma_principal" required
         placeholder="Ej. Dolor de cabeza intenso, dolor punzante en la espalda..."
-        class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition">
+        class="w-full border border-surface-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Duración -->
       <div>
-        <label for="duracion" class="block text-sm font-semibold text-slate-700 mb-1">
+        <label for="duracion" class="block text-sm font-semibold text-surface-700 mb-1">
           Duración de las molestias <span class="text-red-500">*</span>
         </label>
         <select id="duracion" name="duracion" required
-          class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition">
+          class="w-full border border-surface-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
           <option value="menos de 1 hora">Menos de 1 hora</option>
           <option value="algunas horas">Algunas horas</option>
           <option value="1 día">1 día</option>
@@ -37,11 +42,11 @@
 
       <!-- Intensidad del dolor -->
       <div>
-        <label for="intensidad" class="block text-sm font-semibold text-slate-700 mb-1">
+        <label for="intensidad" class="block text-sm font-semibold text-surface-700 mb-1">
           Intensidad del dolor (1 al 10) <span class="text-red-500">*</span>
         </label>
         <select id="intensidad" name="intensidad" required
-          class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition">
+          class="w-full border border-surface-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
           <option value="1">1 - Leve / Casi imperceptible</option>
           <option value="2">2 - Muy leve</option>
           <option value="3">3 - Leve constante</option>
@@ -58,36 +63,36 @@
 
     <!-- Síntomas asociados (Checkboxes) -->
     <div>
-      <label class="block text-sm font-semibold text-slate-700 mb-2">
+      <label class="block text-sm font-semibold text-surface-700 mb-2">
         Síntomas asociados presentes
       </label>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 bg-slate-50 p-4 rounded-xl border border-slate-200">
-        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-navy">
-          <input type="checkbox" name="sintomas_asociados" value="fiebre" class="rounded text-teal-600 focus:ring-teal-500">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 bg-surface-50 p-4 rounded-xl border border-surface-200">
+        <label class="flex items-center gap-2 text-sm text-surface-700 cursor-pointer hover:text-surface-900">
+          <input type="checkbox" name="sintomas_asociados" value="fiebre" class="rounded text-brand-600 focus:ring-brand-500">
           <span>Fiebre</span>
         </label>
-        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-navy">
-          <input type="checkbox" name="sintomas_asociados" value="mareo" class="rounded text-teal-600 focus:ring-teal-500">
+        <label class="flex items-center gap-2 text-sm text-surface-700 cursor-pointer hover:text-surface-900">
+          <input type="checkbox" name="sintomas_asociados" value="mareo" class="rounded text-brand-600 focus:ring-brand-500">
           <span>Mareos</span>
         </label>
-        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-navy">
-          <input type="checkbox" name="sintomas_asociados" value="náuseas" class="rounded text-teal-600 focus:ring-teal-500">
+        <label class="flex items-center gap-2 text-sm text-surface-700 cursor-pointer hover:text-surface-900">
+          <input type="checkbox" name="sintomas_asociados" value="náuseas" class="rounded text-brand-600 focus:ring-brand-500">
           <span>Náuseas / Vómitos</span>
         </label>
-        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-navy">
-          <input type="checkbox" name="sintomas_asociados" value="dificultad para respirar" class="rounded text-teal-600 focus:ring-teal-500">
+        <label class="flex items-center gap-2 text-sm text-surface-700 cursor-pointer hover:text-surface-900">
+          <input type="checkbox" name="sintomas_asociados" value="dificultad para respirar" class="rounded text-brand-600 focus:ring-brand-500">
           <span>Dificultad para respirar</span>
         </label>
-        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-navy">
-          <input type="checkbox" name="sintomas_asociados" value="dolor en el pecho" class="rounded text-teal-600 focus:ring-teal-500">
+        <label class="flex items-center gap-2 text-sm text-surface-700 cursor-pointer hover:text-surface-900">
+          <input type="checkbox" name="sintomas_asociados" value="dolor en el pecho" class="rounded text-brand-600 focus:ring-brand-500">
           <span>Dolor en el pecho</span>
         </label>
-        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-navy">
-          <input type="checkbox" name="sintomas_asociados" value="sangrado" class="rounded text-teal-600 focus:ring-teal-500">
+        <label class="flex items-center gap-2 text-sm text-surface-700 cursor-pointer hover:text-surface-900">
+          <input type="checkbox" name="sintomas_asociados" value="sangrado" class="rounded text-brand-600 focus:ring-brand-500">
           <span>Sangrado abundante</span>
         </label>
-        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-navy">
-          <input type="checkbox" name="sintomas_asociados" value="pérdida de conciencia" class="rounded text-teal-600 focus:ring-teal-500">
+        <label class="flex items-center gap-2 text-sm text-surface-700 cursor-pointer hover:text-surface-900">
+          <input type="checkbox" name="sintomas_asociados" value="pérdida de conciencia" class="rounded text-brand-600 focus:ring-brand-500">
           <span>Pérdida de conciencia / Desmayo</span>
         </label>
       </div>
@@ -95,21 +100,59 @@
 
     <!-- Observaciones opcionales -->
     <div>
-      <label for="observaciones" class="block text-sm font-semibold text-slate-700 mb-1">
+      <label for="observaciones" class="block text-sm font-semibold text-surface-700 mb-1">
         Observaciones adicionales (opcional)
       </label>
       <textarea id="observaciones" name="observaciones" rows="3"
         placeholder="Detalles relevantes como antecedentes, medicamentos ingeridos, etc..."
-        class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition"></textarea>
+        class="w-full border border-surface-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition"></textarea>
     </div>
 
     <!-- Botones -->
-    <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-      <a href="{% url 'triaje:lista' %}" class="px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-700 transition">Cancelar</a>
-      <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-6 py-2.5 rounded-lg shadow-sm transition">
+    <div class="flex items-center justify-end gap-3 pt-4 border-t border-surface-100">
+      <a href="{% url 'triaje:lista' %}" class="bg-white border border-surface-300 text-surface-700 hover:bg-surface-50 rounded-lg px-4 py-2 font-medium transition">Cancelar</a>
+      <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">
         Evaluar con Med-Gemini →
       </button>
     </div>
   </form>
 </div>
+
+<script>
+  const checkboxes = document.querySelectorAll('input[name="sintomas_asociados"]');
+  const warningDiv = document.getElementById('urgent-warning');
+
+  function checkUrgency() {
+    let isUrgent = false;
+    checkboxes.forEach(cb => {
+      if(cb.checked && (cb.value === 'dolor en el pecho' || cb.value === 'dificultad para respirar')) {
+        isUrgent = true;
+      }
+    });
+    if(isUrgent) {
+      warningDiv.classList.remove('hidden');
+    } else {
+      warningDiv.classList.add('hidden');
+    }
+  }
+
+  checkboxes.forEach(cb => cb.addEventListener('change', checkUrgency));
+
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e) {
+    const sintoma = document.getElementById('sintoma_principal').value.trim();
+    const intensidad = parseInt(document.getElementById('intensidad').value);
+    
+    if(!sintoma) {
+      e.preventDefault();
+      alert("Por favor, ingrese el síntoma principal.");
+      return;
+    }
+    if(intensidad < 1 || intensidad > 10) {
+      e.preventDefault();
+      alert("La intensidad del dolor debe estar entre 1 y 10.");
+      return;
+    }
+  });
+</script>
 {% endblock %}
