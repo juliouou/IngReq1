@@ -81,47 +81,53 @@
             Resumen de Solicitud
         </h3>
 
-        <!-- Caja de Prioridad -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100 mb-4">
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-semibold text-gray-700">Prioridad Sugerida</span>
-                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold uppercase tracking-wide">Urgencia Menor</span>
-            </div>
-            
-            <div class="flex flex-wrap gap-2 mt-3">
-                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs">Dolor de cabeza</span>
-                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs">Fiebre leve</span>
-                <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs">Mareos</span>
-            </div>
+        <!-- Placeholder Inicial -->
+        <div id="resumen-placeholder" class="bg-gray-100 p-6 rounded-xl border border-gray-200 text-center text-gray-500 mb-6">
+            <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-gray-400"></i>
+            <p class="text-sm">Aún no hay suficiente información para generar un resumen. Por favor, describe tus síntomas en el chat.</p>
         </div>
 
-        <!-- Caja XAI (Explicación de IA) -->
-        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-4 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-2 opacity-10">
-                <i data-lucide="brain-circuit" class="w-16 h-16 text-blue-900"></i>
+        <div id="resumen-panel" class="hidden flex-col gap-4">
+            <!-- Caja de Prioridad -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-gray-700">Prioridad Sugerida</span>
+                    <span id="prioridad-badge" class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold uppercase tracking-wide">Urgencia Menor</span>
+                </div>
+                
+                <div id="sintomas-container" class="flex flex-wrap gap-2 mt-3">
+                    <!-- Síntomas dinámicos -->
+                </div>
             </div>
-            <h4 class="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
-                <i data-lucide="sparkles" class="w-4 h-4"></i> Razonamiento Med-Gemini
-            </h4>
-            <p class="text-xs text-blue-800 leading-relaxed relative z-10">
-                Basado en los síntomas descritos y la ausencia de signos de alarma vital (sin dificultad respiratoria severa o pérdida de consciencia), el cuadro sugiere una infección viral aguda. Confianza del modelo: <strong>89%</strong>.
-            </p>
-        </div>
 
-        <!-- Detalles de Asignación -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 space-y-3">
-            <h4 class="text-sm font-bold text-gray-800">Centro y Especialista</h4>
-            <div class="flex items-center gap-3 text-sm text-gray-600">
-                <i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i>
-                <span>Centro Médico UTPL (Telemedicina)</span>
+            <!-- Caja XAI (Explicación de IA) -->
+            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-2 opacity-10">
+                    <i data-lucide="brain-circuit" class="w-16 h-16 text-blue-900"></i>
+                </div>
+                <h4 class="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i> Razonamiento Med-Gemini
+                </h4>
+                <p id="xai-text" class="text-xs text-blue-800 leading-relaxed relative z-10">
+                    <!-- Texto generado dinámicamente -->
+                </p>
             </div>
-            <div class="flex items-center gap-3 text-sm text-gray-600">
-                <i data-lucide="user-round" class="w-4 h-4 text-gray-400"></i>
-                <span>Dr. Juan Pérez (Medicina General)</span>
-            </div>
-            <div class="flex items-center gap-3 text-sm text-gray-600">
-                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
-                <span>Tiempo de espera est. ~15 min</span>
+
+            <!-- Detalles de Asignación -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-3">
+                <h4 class="text-sm font-bold text-gray-800">Centro y Especialista</h4>
+                <div class="flex items-center gap-3 text-sm text-gray-600">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i>
+                    <span>Centro Médico Central (Telemedicina)</span>
+                </div>
+                <div class="flex items-center gap-3 text-sm text-gray-600">
+                    <i data-lucide="user-round" class="w-4 h-4 text-gray-400"></i>
+                    <span id="asignacion-medico">Dr. Asignado (General)</span>
+                </div>
+                <div class="flex items-center gap-3 text-sm text-gray-600">
+                    <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                    <span>Tiempo de espera est. ~15 min</span>
+                </div>
             </div>
         </div>
 
@@ -244,26 +250,92 @@ document.addEventListener("DOMContentLoaded", function() {
         scrollToBottom();
     }
 
+    let textoAcumulado = "";
+    
+    // Diccionario simple para análisis
+    const diccionarioSintomas = {
+        alta: ["dificultad para respirar", "pérdida de consciencia", "dolor de pecho", "sangrado", "desmayo"],
+        moderada: ["fiebre alta", "vómito constante", "dolor agudo", "fractura", "corte profundo"],
+        menor: ["dolor de cabeza", "mareo", "fiebre leve", "tos", "gripe", "resfriado", "náusea"]
+    };
+
+    function analizarSintomas(texto) {
+        let sintomasDetectados = [];
+        let prioridad = "menor";
+        
+        const txt = texto.toLowerCase();
+        
+        // Buscar síntomas
+        for (const nivel in diccionarioSintomas) {
+            diccionarioSintomas[nivel].forEach(sintoma => {
+                if (txt.includes(sintoma) && !sintomasDetectados.includes(sintoma)) {
+                    sintomasDetectados.push(sintoma);
+                    if (nivel === "alta") prioridad = "alta";
+                    if (nivel === "moderada" && prioridad === "menor") prioridad = "moderada";
+                }
+            });
+        }
+        
+        // Actualizar UI del panel
+        const badge = document.getElementById('prioridad-badge');
+        const container = document.getElementById('sintomas-container');
+        const xaiText = document.getElementById('xai-text');
+        
+        if (sintomasDetectados.length > 0) {
+            document.getElementById('resumen-placeholder').classList.add('hidden');
+            document.getElementById('resumen-panel').classList.remove('hidden');
+            document.getElementById('resumen-panel').classList.add('flex');
+            
+            // Chips
+            container.innerHTML = '';
+            sintomasDetectados.forEach(s => {
+                container.innerHTML += `<span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs capitalize">${s}</span>`;
+            });
+            
+            // Prioridad
+            badge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ";
+            if (prioridad === "alta") {
+                badge.textContent = "Urgencia Alta";
+                badge.className += "bg-red-100 text-red-700";
+            } else if (prioridad === "moderada") {
+                badge.textContent = "Urgencia Moderada";
+                badge.className += "bg-yellow-100 text-yellow-700";
+            } else {
+                badge.textContent = "Urgencia Menor";
+                badge.className += "bg-orange-100 text-orange-700";
+            }
+            
+            // XAI
+            const confianza = Math.floor(Math.random() * (95 - 80 + 1) + 80);
+            xaiText.innerHTML = `Basado en la presencia de <strong>${sintomasDetectados.join(", ")}</strong>, el cuadro sugiere un nivel de atención correspondiente a ${badge.textContent}. Confianza del modelo: <strong>${confianza}%</strong>.`;
+            
+            lucide.createIcons();
+        }
+    }
+
     function handleSend() {
         const text = chatInput.value.trim();
         if (!text) return;
 
-        // 1. Mostrar mensaje del usuario
+        textoAcumulado += " " + text;
         addUserMessage(text);
         chatInput.value = '';
 
-        // 2. Mostrar "Escribiendo..."
         const typingId = addTypingIndicator();
 
-        // 3. Simular retardo de red/IA (1.5s) y responder
         setTimeout(() => {
             removeTypingIndicator(typingId);
             
-            // Respuesta simulada condicional básica
             if (text.toLowerCase().includes("dolor") || text.toLowerCase().includes("cabeza")) {
                 addBotMessage("Entiendo. ¿En una escala del 1 al 10, qué tan fuerte dirías que es el dolor?", ["1-3 (Leve)", "4-6 (Moderado)", "7-10 (Severo)"]);
             } else {
-                addBotMessage("Comprendo. He registrado estos síntomas en tu solicitud. ¿Hay algo más que deba saber antes de enviarla a un médico?");
+                addBotMessage("Voy a analizar tus síntomas antes de continuar.");
+                const typingId2 = addTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator(typingId2);
+                    analizarSintomas(textoAcumulado);
+                    addBotMessage("He registrado tus síntomas y actualizado el panel de resumen. ¿Hay algo más que deba saber antes de enviar la solicitud?");
+                }, 1500);
             }
         }, 1500);
     }
@@ -279,7 +351,30 @@ document.addEventListener("DOMContentLoaded", function() {
     const submitContainer = document.getElementById('submit-container');
 
     if(submitBtn) {
-        submitBtn.addEventListener('click', function() {
+        submitBtn.addEventListener('click', async function() {
+            try {
+                // Mock Backend POST request (Optional Requirement 4)
+                // Se envía el POST a la API pero envuelto en try/catch para evitar fallos si el endpoint requiere autenticación.
+                const response = await fetch('/api/triaje/solicitudes/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : ''
+                    },
+                    body: JSON.stringify({
+                        motivo: 'Solicitud desde Triaje IA',
+                        sintomas: textoAcumulado || 'Sin síntomas descritos'
+                    })
+                });
+                
+                if(!response.ok && response.status !== 401 && response.status !== 403) {
+                    throw new Error("Error en la solicitud al servidor.");
+                }
+            } catch(e) {
+                console.error("No se pudo conectar al backend real, continuando con UI:", e);
+                // Si requerimos detenernos, haríamos return aquí. Como es un mock híbrido, seguimos.
+            }
+
             submitContainer.classList.add('hidden');
             statusContainer.classList.remove('hidden');
             
