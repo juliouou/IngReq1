@@ -252,11 +252,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let textoAcumulado = "";
     
-    // Diccionario simple para análisis ampliado
-    const diccionarioSintomas = {
-        alta: ["dificultad para respirar", "pérdida de consciencia", "dolor de pecho", "sangrado", "desmayo", "severo", "fuerte", "7-10"],
-        moderada: ["fiebre", "vómito", "dolor", "fractura", "corte", "4-6", "moderado"],
-        menor: ["dolor de cabeza", "mareo", "tos", "gripe", "resfriado", "náusea", "leve", "1-3"]
+    // Diccionarios separados
+    const sintomasClinicos = {
+        alta: ["dificultad para respirar", "pérdida de consciencia", "dolor de pecho", "sangrado", "desmayo"],
+        moderada: ["fiebre", "vómito", "dolor", "fractura", "corte"],
+        menor: ["dolor de cabeza", "mareo", "tos", "gripe", "resfriado", "náusea"]
+    };
+
+    const modificadoresSeveridad = {
+        alta: ["severo", "fuerte", "muy", "7-10"],
+        moderada: ["4-6", "moderado"],
+        menor: ["leve", "1-3"]
     };
 
     function analizarSintomas(texto) {
@@ -266,9 +272,9 @@ document.addEventListener("DOMContentLoaded", function() {
         const txt = texto.toLowerCase();
         let nivelDetectado = "menor";
         
-        // Buscar síntomas (raíces y exactos)
-        for (const nivel in diccionarioSintomas) {
-            diccionarioSintomas[nivel].forEach(sintoma => {
+        // 1. Buscar síntomas clínicos (solo palabras que representan síntomas reales)
+        for (const nivel in sintomasClinicos) {
+            sintomasClinicos[nivel].forEach(sintoma => {
                 if (txt.includes(sintoma) && !sintomasDetectados.includes(sintoma)) {
                     sintomasDetectados.push(sintoma);
                     if (nivel === "alta") nivelDetectado = "alta";
@@ -277,51 +283,71 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
         
-        // Ajuste de prioridad general
-        if (sintomasDetectados.length > 0) {
-            prioridad = nivelDetectado;
-            
-            // Si detecta modificadores de severidad en el texto, puede escalar
-            if (txt.includes("fuerte") || txt.includes("severo") || txt.includes("muy") || txt.includes("7-10")) {
+        // Deduplicación por substring (ej. "dolor de cabeza" oculta "dolor")
+        sintomasDetectados = sintomasDetectados.filter(s1 => {
+            return !sintomasDetectados.some(s2 => s2 !== s1 && s2.includes(s1));
+        });
+
+        // Si no hay síntomas reales, no continuar (incluso si hay modificadores)
+        if (sintomasDetectados.length === 0) {
+            return [];
+        }
+
+        prioridad = nivelDetectado;
+        let modificadorUsado = false;
+        
+        // 2. Buscar modificadores de severidad para escalar prioridad
+        for (const mod of modificadoresSeveridad.alta) {
+            if (txt.includes(mod)) {
                 prioridad = "alta";
+                modificadorUsado = true;
+                break;
             }
+        }
+        if (!modificadorUsado && prioridad !== "alta") {
+            for (const mod of modificadoresSeveridad.moderada) {
+                if (txt.includes(mod)) {
+                    prioridad = "moderada";
+                    modificadorUsado = true;
+                    break;
+                }
+            }
+        }
+
+        // Actualizar UI del panel
+        const badge = document.getElementById('prioridad-badge');
+        const container = document.getElementById('sintomas-container');
+        const xaiText = document.getElementById('xai-text');
+        
+        document.getElementById('resumen-placeholder').classList.add('hidden');
+        document.getElementById('resumen-panel').classList.remove('hidden');
+        document.getElementById('resumen-panel').classList.add('flex');
+        
+        // Chips
+        container.innerHTML = '';
+        sintomasDetectados.forEach(s => {
+            container.innerHTML += `<span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs capitalize">${s}</span>`;
+        });
+        
+        // Prioridad
+        badge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ";
+        if (prioridad === "alta") {
+            badge.textContent = "Urgencia Alta";
+            badge.className += "bg-red-100 text-red-700";
+        } else if (prioridad === "moderada") {
+            badge.textContent = "Urgencia Moderada";
+            badge.className += "bg-yellow-100 text-yellow-700";
+        } else {
+            badge.textContent = "Urgencia Menor";
+            badge.className += "bg-orange-100 text-orange-700";
         }
         
-        // Actualizar UI del panel solo si se encontraron síntomas
-        if (sintomasDetectados.length > 0) {
-            const badge = document.getElementById('prioridad-badge');
-            const container = document.getElementById('sintomas-container');
-            const xaiText = document.getElementById('xai-text');
-            
-            document.getElementById('resumen-placeholder').classList.add('hidden');
-            document.getElementById('resumen-panel').classList.remove('hidden');
-            document.getElementById('resumen-panel').classList.add('flex');
-            
-            // Chips
-            container.innerHTML = '';
-            sintomasDetectados.forEach(s => {
-                container.innerHTML += `<span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs capitalize">${s}</span>`;
-            });
-            
-            // Prioridad
-            badge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ";
-            if (prioridad === "alta") {
-                badge.textContent = "Urgencia Alta";
-                badge.className += "bg-red-100 text-red-700";
-            } else if (prioridad === "moderada") {
-                badge.textContent = "Urgencia Moderada";
-                badge.className += "bg-yellow-100 text-yellow-700";
-            } else {
-                badge.textContent = "Urgencia Menor";
-                badge.className += "bg-orange-100 text-orange-700";
-            }
-            
-            // XAI
-            const confianza = Math.floor(Math.random() * (95 - 80 + 1) + 80);
-            xaiText.innerHTML = `Basado en la presencia de <strong>${sintomasDetectados.join(", ")}</strong>, el cuadro sugiere un nivel de atención correspondiente a ${badge.textContent}. Confianza del modelo: <strong>${confianza}%</strong>.`;
-            
-            lucide.createIcons();
-        }
+        // XAI
+        let textoIntensidad = modificadorUsado && prioridad === "alta" ? " (intensidad reportada como severa/fuerte)" : "";
+        const confianza = Math.floor(Math.random() * (95 - 80 + 1) + 80);
+        xaiText.innerHTML = `Basado en la presencia de <strong>${sintomasDetectados.join(", ")}</strong>, el cuadro sugiere un nivel de atención correspondiente a ${badge.textContent}${textoIntensidad}. Confianza del modelo: <strong>${confianza}%</strong>.`;
+        
+        lucide.createIcons();
         
         return sintomasDetectados;
     }
