@@ -1,14 +1,15 @@
 {% extends "portal/base.html" %}
-{% block titulo %}Auditoría{% endblock %}
+{% block titulo %}Auditoría — SAMR{% endblock %}
 {% block contenido %}
 <div class="max-w-3xl w-full">
   <h1 class="text-xl font-bold text-surface-900 mb-1">Registros de auditoría</h1>
   <p class="text-sm text-surface-500 mb-4">
-    {% if es_auditor %}Vista de administrador — todos los eventos del sistema (RF-20).{% else %}Tus eventos registrados.{% endif %}
+    {% if es_auditor %}Vista de administrador — Historial completo de actividad del sistema.{% else %}Tus eventos registrados.{% endif %}
   </p>
 
   <div class="bg-white rounded-xl border border-surface-200 overflow-hidden">
-    <table class="w-full text-sm">
+    <div class="overflow-x-auto w-full">
+<table class="w-full text-sm">
       <thead class="bg-surface-50 text-surface-500 text-xs uppercase">
         <tr>
           <th class="text-left px-4 py-2">Fecha</th>
@@ -18,7 +19,7 @@
           <th class="text-left px-4 py-2">Estado</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-100">
+      <tbody class="divide-y divide-surface-100">
         {% for r in pagina %}
         <tr>
           <td class="px-4 py-2 text-surface-500">{{ r.creado_en|date:"d/m/Y H:i:s" }}</td>
@@ -37,6 +38,7 @@
         {% endfor %}
       </tbody>
     </table>
+</div>
   </div>
 
   {% if pagina.has_other_pages %}
@@ -47,6 +49,6 @@
   </div>
   {% endif %}
 
-  <a href="{% url 'portal:dashboard' %}" class="block mt-6 text-sm text-surface-400 hover:underline">← Volver al panel principal</a>
+  <a href="{% url 'portal:dashboard' %}" class="bg-white border border-surface-300 text-surface-700 hover:bg-surface-50 rounded-lg px-4 py-2 font-medium transition inline-block mt-6">← Volver al panel principal</a>
 </div>
 {% endblock %}

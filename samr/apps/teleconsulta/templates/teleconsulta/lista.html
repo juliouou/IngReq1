@@ -1,5 +1,5 @@
 {% extends "portal/base.html" %}
-{% block titulo %}Teleconsultas{% endblock %}
+{% block titulo %}Teleconsultas — SAMR{% endblock %}
 {% block contenido %}
 <div class="max-w-2xl w-full">
   <h1 class="text-xl font-bold text-surface-900 mb-4">Teleconsultas</h1>
@@ -16,7 +16,7 @@
             </p>
           </div>
           <span class="text-xs font-semibold px-2.5 py-1 rounded-full
-            {% if tc.estado == 'PROGRAMADA' %} bg-surface-100 text-slate-600
+            {% if tc.estado == 'PROGRAMADA' %} bg-surface-100 text-surface-600
             {% elif tc.estado == 'EN_CURSO' %} bg-amber-50 text-amber-700
             {% elif tc.estado == 'FINALIZADA' %} bg-brand-50 text-brand-700
             {% else %} bg-red-50 text-red-600 {% endif %}">
@@ -32,6 +32,6 @@
     </div>
   {% endif %}
 
-  <a href="{% url 'portal:dashboard' %}" class="block mt-6 text-sm text-surface-400 hover:underline">← Volver al panel principal</a>
+  <a href="{% url 'portal:dashboard' %}" class="bg-white border border-surface-300 text-surface-700 hover:bg-surface-50 rounded-lg px-4 py-2 font-medium transition inline-block mt-6">← Volver al panel principal</a>
 </div>
 {% endblock %}

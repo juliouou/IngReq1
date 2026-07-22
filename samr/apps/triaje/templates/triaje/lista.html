@@ -1,14 +1,14 @@
 {% extends "portal/base.html" %}
-{% block titulo %}Mis solicitudes{% endblock %}
+{% block titulo %}Mis solicitudes — SAMR{% endblock %}
 {% block contenido %}
 <div class="max-w-2xl w-full">
   <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
     <h1 class="text-xl font-bold text-surface-900">Mis solicitudes de atención</h1>
     <div class="flex flex-wrap gap-2">
-      <a href="{% url 'triaje:formulario' %}" class="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-indigo-700">📋 Formulario de síntomas</a>
-      <a href="{% url 'triaje:chat' %}" class="bg-brand-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-brand-700">💬 Hablar con el asistente</a>
+      <a href="{% url 'triaje:formulario' %}" class="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">📋 Formulario de síntomas</a>
+      <a href="{% url 'triaje:chat' %}" class="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">💬 Hablar con el asistente</a>
       {% if request.user.dispositivos.exists %}
-        <a href="{% url 'triaje:alerta_iot' %}" class="bg-orange-500 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-orange-600">📡 Alerta con mis datos IoT</a>
+        <a href="{% url 'triaje:alerta_iot' %}" class="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">📡 Alerta con mis datos IoT</a>
       {% endif %}
     </div>
   </div>
@@ -40,7 +40,7 @@
             </p>
           </div>
           <span class="text-xs font-semibold px-2.5 py-1 rounded-full
-            {% if s.estado == 'PENDIENTE' %} bg-surface-100 text-slate-600
+            {% if s.estado == 'PENDIENTE' %} bg-surface-100 text-surface-600
             {% elif s.estado == 'EN_TRIAJE' %} bg-amber-50 text-amber-700
             {% elif s.estado == 'ATENDIDA' %} bg-brand-50 text-brand-700
             {% else %} bg-red-50 text-red-600 {% endif %}">
@@ -59,6 +59,6 @@
     </div>
   {% endif %}
 
-  <a href="{% url 'portal:dashboard' %}" class="block mt-6 text-sm text-surface-400 hover:underline">← Volver al panel principal</a>
+  <a href="{% url 'portal:dashboard' %}" class="bg-white border border-surface-300 text-surface-700 hover:bg-surface-50 rounded-lg px-4 py-2 font-medium transition inline-block mt-6">← Volver al panel principal</a>
 </div>
 {% endblock %}

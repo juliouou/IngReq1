@@ -1,5 +1,20 @@
 {% extends "portal/base.html" %}
-{% block titulo %}Crear cuenta{% endblock %}
+{% block titulo %}Crear cuenta
+<script>
+  const forms = document.querySelectorAll('form');
+  forms.forEach(form => {
+    form.addEventListener('submit', function(e) {
+      const btn = form.querySelector('.submit-btn');
+      if(btn) {
+        btn.disabled = true;
+        btn.innerText = 'Procesando...';
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+    });
+  });
+</script>
+
+{% endblock %}
 {% block contenido %}
 <div class="bg-white rounded-2xl shadow-samr border border-surface-100 p-8 max-w-md w-full">
   <div class="flex mb-6 rounded-lg bg-surface-100 p-1">
@@ -8,7 +23,7 @@
   </div>
 
   <h1 class="text-xl font-bold text-surface-900 mb-1">Crea tu cuenta de paciente</h1>
-  <p class="text-sm text-surface-500 mb-6">RF-01, RF-02, RF-18 — validación de elegibilidad IESS y consentimiento LOPDP incluidos.</p>
+  <p class="text-sm text-surface-500 mb-6">Proceso seguro con validación de IESS y consentimiento informado.</p>
 
   {% if form.non_field_errors %}
     <div class="mb-4 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-3 border border-red-200">
@@ -74,15 +89,30 @@
       {{ form.dispositivo_iot }}
     </div>
 
-    <label class="flex items-start gap-2 text-sm text-slate-600">
+    <label class="flex items-start gap-2 text-sm text-surface-600">
       {{ form.consentimiento_lopdp }}
       <span>{{ form.consentimiento_lopdp.label }}</span>
     </label>
     {% for error in form.consentimiento_lopdp.errors %}<p class="text-xs text-red-600">{{ error }}</p>{% endfor %}
 
-    <button type="submit" class="w-full bg-brand-700 text-white rounded-lg py-2.5 font-semibold hover:bg-brand-800 transition">
+    <button type="submit" class="submit-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">
       Registrarme
     </button>
   </form>
 </div>
+
+<script>
+  const forms = document.querySelectorAll('form');
+  forms.forEach(form => {
+    form.addEventListener('submit', function(e) {
+      const btn = form.querySelector('.submit-btn');
+      if(btn) {
+        btn.disabled = true;
+        btn.innerText = 'Procesando...';
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+    });
+  });
+</script>
+
 {% endblock %}
