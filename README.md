@@ -1,94 +1,78 @@
-# # IngReq1
+# SAMR
 
----
+Sistema de Atencion Medica Remota distribuido en microservicios, con un API Gateway como punto unico de entrada, persistencia separada por dominio y una capa compartida de modelos de negocio.
 
-## CAMBIOSSS NUEVOSS AQUI
+## Arquitectura general
 
-### 1.0 en donde estan los nuevos archivosw w
+```mermaid
+flowchart LR
+  F[Frontend] --> G[API Gateway]
+  G --> M1[M1 Usuarios y Acceso]
+  G --> M2[M2 Triaje Inteligente]
+  G --> M3[M3 Monitoreo Biometrico]
+  G --> M4[M4 Teleconsulta]
+  G --> M5[M5 Seguridad y Auditoria]
 
-### 2.0 Cambios  los modulos tipo 10
-> Ahora tenemos 10 modulos para programaar qu risa xddddd
+  M1 --> P[(PostgreSQL clinico)]
+  M4 --> P
+  M3 --> T[(TimescaleDB IoT)]
+  M2 --> R[(Redis / BullMQ)]
+  M3 --> R
+  M5 --> P
+  M5 --> R
 
-### 2.1 Revison del Ingeniero e hicimos los cambios
-**DONDE:**
-* Ahora apliacamos las normas Iso(who?)
-* cambios en ls modulos ahora son solo 8
-* Cambios en lo stakeholder, ahora el Ingeniero es patrocinador
-* ¿y que mas? nada mas e   sla peor actualizacion de contenido akdjadka(alguien lee esto(?
+  M1 -. JWT .-> G
+  M2 -. eventos .-> M5
+  M3 -. eventos .-> M4
+  M3 -. eventos .-> M5
+  M4 -. eventos .-> M5
+```
 
-### 2.2 Revison y cambios en las dependencias y caracteristicas wwww
+### Capas del sistema
 
-### 2.3 Cambios en el BOT (Main problem)
-> (que?) Bueno ahora Transformación con IA y bots conversacionales, la ia se apodera de nosotos (I am Ia) wtfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+- `frontend/`: cliente web aun no materializado en el repositorio.
+- `backend/gateway/`: entrada unica del sistema, responsable de ruteo y validacion del JWT.
+- `microservices/`: dominios funcionales separados por responsabilidad.
+- `database/`: scripts y migraciones de base de datos.
+- `deployment/`: orquestacion local con Docker Compose.
+- `shared/models/`: contratos de dominio comunes entre modulos.
 
-<img width="1169" height="841" alt="image" src="https://github.com/user-attachments/assets/acebf5ee-4c64-4c83-82f0-c4d8877b19b1" />
+## Componentes y responsabilidad
 
----
+### API Gateway
 
-### 3.0 Esta mal todo
-> akdjadk mentira
+Punto de entrada unico. Debe validar el JWT emitido por M1 y enrutar peticiones a M1-M5 sin contener logica de negocio.
 
-Pasasmos de 8 modulos a tan solo **5 modulos** donde esta mejor estrucutras y una mejor forma de comprenderos. 
+### M1 - Usuarios y Acceso
 
-**¿el cambio era necesario?** si yo creo qeu si, pues aprte de eso un cambio gigante a todo el documento de vison por eso salto de 2.3 a 3.0 como el geomtry dash no? pues asi.
+Gestiona registro, login, MFA, verificacion IESS y consentimiento LOPDP. Es el unico modulo que emite JWT.
 
-### 3.1 cambios importantes?
-* **Reducción a 8 stakeholders esenciales.**
-* **Actualización en cascada** de RF, RNF, riesgos, criterios de éxito y trazabilidad.
-* Modificamos un poco los modulos dandole mas presencia al sistema. 
+### M2 - Triaje Inteligente
 
-*ACTULIAZCOON IMPORTANTE*
+Recibe solicitudes de triaje, evalua sintomas o alertas IoT, consulta Med-Gemini y realiza matching con centros de asistencia.
 
-### 3.2 Incorporación de Med-Gemini
-* Incorporación de Med-Gemini como motor clínico de IA. Importante igual.
-> la "Ia: I always come back"
+### M3 - Monitoreo Biometrico
 
-### 3.3 Rediseño de M2 y M3
-* **separación del bot.**
-* **dos tipos de solicitud** (síntomas y alerta IoT).
-* RF actualizados en cascada.
+Ingiere datos IoT, detecta anomalias y distribuye alertas a paciente, medico y centro de asistencia.
 
-> Revison final con el ingeniero ojaal le guste si no pues ya me mato hoy 
+### M4 - Teleconsulta
 
-<img width="277" height="128" alt="{6B4131CD-3AC0-410E-A8B3-B1CC99F8CCAE}" src="https://github.com/user-attachments/assets/9aa7773f-6c57-46c4-8f29-3ec04fed006b" />
+Gestiona video/audio por WebRTC, apoyo diagnostico XAI y emision de receta digital.
 
----
+### M5 - Seguridad y Auditoria
 
-# Segundo Bimestre
+Consume eventos del resto del sistema, los normaliza, los hashiza con SHA-256 y conserva trazabilidad inmutable.
 
-### 3.4 El mejor cambio
-Cambio a una aprte del docuemtno de vision no creo qeu sea tan relevante como para un salto ya que no cambia mucho la estructura sin embaego hace modificaciones con los diagrmas en especifico y diagraa de contexto.
+## Infraestructura local
 
-* **Carpeta requisotsFuncionalesxModulo:** pues ahi estan todos tanto requsitos funcionales como no funcionales.
-* **Lo relevante:** es que ya esta todo con trazabiliad.
-> la antonella hizo la carpeta es todo su aporte con tal de faltar dos semanas mas 🗣️ 
+El `docker-compose.yml` define estos servicios:
 
----
-
-### Notas de Control de Versiones y Colaboración:
-> me gustaria que actualizen ustdes tambien el git pero identifiquense tipo ejemplo (Julio cambio 3.2/3.3/3.4 y asi) para ver mejor pq creo qeu solo yo actualizo esto, igual si lo ve el ingniero borro este readme o QUE UNA ia me humanize ajdhajdajbjadjakhdaldkaklJDLAJfoijfosifjifojfisjfsifsniufhsufhiei.fsfjesoifhuesijfseifsef Juliouuuu
-
-
-### 4. Cambios realizados en el documento de requisitos:
-Se corrigui lo identación de los nombres de cada requisito, se cambio el color de las tablas, el Requerimiento no funcional de "Explicabilidad" se lo corriguio, y ya eso gracias,
-> Cambio hecho por Lady Robalino, EL ONE PIECE ES REAL. 
-
-
-# Segundo Bimestrre PARTEEEEE2 LA IMPORTANTE AMAZING
-### 3.5 El mEJOR CAMBIO DIRIA YO 
-### LA IA AVANZA
-Ahora la ia tien implemteado el RAG Y EL LLM Y TAMBIEN MEJORE LA DOCUEMNTACIN Y LA ADPARTE DE MEJORES FORMAS PARA QUE Y NO USEN LOS IJJUPUTAS CASOS DE USO DEL MES PASADO Y USEN LOS ACTUALES
-
-# # IngReq1 PARTE 3
-
----
-
-## CAMBIOSSS NUEVOSS AQUI
-
-### FE
-
-## CAMBIOS hechos por Lady y Pau
-Se subio el documentos de ·ESP_HS_M2_Triaje_v1.0· que son las historias de usuario del modulo 2 
-
-
-
+- `gateway` en `3000`
+- `m1` en `3001`
+- `m2` en `3002`
+- `m3` en `3003`
+- `m4` en `3004`
+- `m5` en `3005`
+- `postgres` para datos clinicos
+- `timescaledb` para telemetria IoT
+- `redis` para colas y eventos
