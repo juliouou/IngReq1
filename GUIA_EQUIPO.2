@@ -1,0 +1,178 @@
+# GUÍA MAESTRA DEL EQUIPO — SAMR v3.2
+
+**Arquitectura congelada. Nadie modifica contratos, esquemas o estructura sin
+aprobación de la Arquitecta**
+
+Cada rol
+tiene su sección: qué recibe, qué debe hacer, en qué orden, y qué se
+revisa antes de dar un módulo por terminado. Si tienes dudas de qué hacer,
+la respuesta está aquí, no se improvisa.
+
+---
+
+## 0. Estado actual del proyecto (ya construido, no repetir)
+
+- ✅ Arquitectura de 3 patrones: hexagonal (Med-Gemini), orientada a eventos
+  (BullMQ/Redis), microservicios por dominio (M1–M5, Docker, Cloud Run).
+- ✅ Repositorio creado con esta estructura real:
+  ```
+  SAMR/
+    frontend/
+    backend/gateway/          <- API Gateway (esqueleto funcional, /health OK)
+    microservices/
+      m1-users/                <- YA IMPLEMENTADO: login, registro, JWT
+      m2-triage/                <- esqueleto, pendiente de lógica
+      m3-monitoring/             <- esqueleto, pendiente de lógica
+      m4-telemedicine/            <- esqueleto, pendiente de lógica
+      m5-audit/                   <- esqueleto, pendiente de lógica
+    shared/
+      models/                   <- 9 entidades TypeScript (Paciente, Usuario, etc.)
+      contracts/
+        openapi/med-gemini-adapter.yaml
+        events/schemas.json      <- contrato de eventos BullMQ
+    database/
+      postgres/schema.sql        <- YA APLICADO (5 tablas creadas)
+      timescaledb/schema.sql     <- YA APLICADO (hypertable creada)
+    deployment/docker-compose.yml <- YA CORRIENDO (9 contenedores activos)
+    docs/ARCHITECTURE.md
+  ```
+- ✅ Docker Compose corriendo localmente: Gateway (puerto 3000), M1–M5
+  (puertos 3001–3005), PostgreSQL (5434), TimescaleDB (5433), Redis (6379).
+- ✅ M1 es la plantilla de referencia: código real en
+  `microservices/m1-users/src/index.js` y `db.js` — login con bcrypt,
+  JWT firmado, conectado a PostgreSQL. **Todos los demás módulos copian
+  este mismo patrón**, cambiando solo la lógica de negocio.
+
+## 1. Reglas generales para todo el equipo
+
+1. No modifiques un contrato (`docs/openapi.yaml` o `shared/contracts/`) sin
+   avisar a la Arquitecta — si tu módulo necesita un endpoint o evento que
+   no está definido, pídelo, no lo agregues por tu cuenta.
+2. No dupliques modelos: si necesitas la entidad `Paciente`, impórtala de
+   `shared/models/Paciente.ts`, no crees tu propia versión.
+3. Antes de dar tu módulo por terminado, revisa su `README.md` — la
+   sección `## Definition of Done` es la lista exacta que se verifica.
+4. Haz `git push` en la fecha del punto de sincronización (sección 7),
+   no antes ni después sin avisar.
+
+---
+
+## 2. Antonela — Backend (M2, M3, M4, M5)
+
+**Recibes:** M1 completo como plantilla (`microservices/m1-users/`), y tus
+4 carpetas con esqueleto ya creado (`Dockerfile`, `package.json`,
+`src/index.js` con `/health`, contrato en `docs/openapi.yaml`).
+
+**Orden de trabajo (sigue este orden, no empieces por M4):**
+
+### Paso 1 — M2 (Triaje)
+1. Copia el patrón de `m1-users/src/db.js` a `m2-triage/src/db.js`.
+2. Implementa los 3 endpoints de `microservices/m2-triage/docs/openapi.yaml`:
+   `POST /triage`, `POST /matching`, `GET /triage/{id}`.
+3. Al crear un triaje, publica el evento `solicitud_triaje` en BullMQ/Redis
+   según el formato exacto en `shared/contracts/events/schemas.json`.
+4. Integra el adaptador a Med-Gemini usando
+   `shared/contracts/openapi/med-gemini-adapter.yaml` — el campo
+   `explanation` es obligatorio en la respuesta, sin excepción.
+5. Marca en tu `README.md` qué quedó implementado (igual que hicimos en M1).
+
+### Paso 2 — M3 (Monitoreo), en paralelo con M2 si el tiempo lo permite
+1. Conecta a TimescaleDB (host `timescaledb`, base `samr_iot`), tabla
+   `lecturas_biometricas`.
+2. Implementa `POST /biometrics` (ingesta), `GET /alerts`, `POST /alerts`.
+3. Publica el evento `alerta_biometrica` (ver `schemas.json`) cuando se
+   detecte una anomalía.
+
+### Paso 3 — M4 (Teleconsulta)
+1. Implementa `POST /teleconsultation`, `POST /diagnosis`, `POST /prescription`.
+2. El campo `explanation` de Med-Gemini se guarda en la tabla
+   `diagnosticos` (ya existe en PostgreSQL).
+3. Publica `evento_auditoria` cada vez que el médico acepta, modifica o
+   rechaza una sugerencia.
+
+### Paso 4 — M5 (Auditoría)
+1. Consume los 3 eventos (`solicitud_triaje`, `alerta_biometrica`,
+   `evento_auditoria`) de todos los módulos anteriores.
+2. Cada evento consumido se hashea (SHA-256) y se guarda en la tabla
+   `auditoria` — inmutable, sin endpoint de edición ni borrado.
+3. Implementa `GET /audit/logs`, `GET /audit/logs/{id}`, `POST /audit/export`.
+
+**Cómo probar cada módulo:** igual que M1 —
+`docker compose up -d --build mX` y `curl` contra su puerto.
+
+---
+
+## 3. Alisson — Seguridad
+
+**Recibes:** `backend/gateway/` y M1 (`microservices/m1-users/`) como base.
+
+1. Implementa el middleware de validación JWT en
+   `backend/gateway/middlewares/auth.js`: debe rechazar (401) cualquier
+   petición sin token válido, verificando la firma con el mismo
+   `JWT_SECRET` que usa M1.
+2. Conecta ese middleware a todas las rutas de `backend/gateway/routes/`
+   que enrutan hacia M1–M5.
+3. Mueve `JWT_SECRET` y las credenciales de base de datos de
+   `docker-compose.yml` a un archivo `.env` (agrégalo a `.gitignore`,
+   no debe subirse al repositorio).
+4. Documenta la configuración de TLS 1.3 (canal de entrada del Gateway)
+   y AES-256/pgcrypto (ya activo en PostgreSQL) en
+   `backend/gateway/README.md`.
+5. Revisa que M1 no tenga vulnerabilidades obvias: contraseñas siempre
+   con `bcrypt` (ya implementado), nunca en texto plano en logs.
+
+---
+
+## 4. Julio — DBA
+
+**Recibes:** `database/postgres/schema.sql` y `database/timescaledb/schema.sql`,
+ya aplicados y corriendo.
+
+1. Crea índices para las consultas más frecuentes, por ejemplo:
+   ```sql
+   CREATE INDEX idx_lecturas_paciente ON lecturas_biometricas (paciente_id);
+   CREATE INDEX idx_auditoria_timestamp ON auditoria (timestamp);
+   ```
+2. Convierte `schema.sql` en migraciones numeradas dentro de
+   `database/migrations/` (`001_init_postgres.sql`,
+   `002_init_timescale.sql`, `003_add_password_hash.sql` — esta última
+   ya se aplicó manualmente, documéntala como migración retroactiva).
+3. Escribe en `database/scripts/` un script de backup simple para
+   PostgreSQL (`pg_dump`) antes de que el equipo empiece a probar con
+   datos reales.
+4. Valida con Antonela que los tipos de dato de cada tabla coincidan con
+   los modelos de `shared/models/` (ej. `Alerta.tipo` debe aceptar
+   exactamente `"EKG" | "EEG" | "SpO2"`).
+
+---
+
+## 5. Paula — Frontend
+
+**Recibes:** el Gateway (`http://localhost:3000`) y M1 ya funcional.
+
+1. Construye la pantalla de login contra el endpoint real:
+   `POST http://localhost:3000/auth/login` (una vez Alisson conecte el
+   Gateway a M1) devuelve un JWT real — úsalo, no simules la respuesta.
+2. Para las demás pantallas (triaje, monitoreo, teleconsulta), sigue los
+   contratos en `microservices/mX/docs/openapi.yaml` mientras Antonela
+   termina la lógica — así avanzas en paralelo sin esperar.
+3. Aplica el design system de David (paleta, tipografía, WCAG 2.1 AA)
+   apenas esté listo en Figma/Storybook.
+4. Guarda el JWT recibido de forma segura en el cliente (nunca en
+   `localStorage` sin cifrar, revisa con Alisson la práctica recomendada).
+
+---
+
+## 6. David — UX
+
+1. Diseña en Figma las 5 interfaces por rol (paciente, médico,
+   administrativo, MSP, DPO) con componentes reutilizables: tarjeta XAI,
+   badge de riesgo, tabla de auditoría.
+2. Cumple WCAG 2.1 AA desde el diseño: fuentes ≥16px en vista de
+   paciente, botones ≥44px táctiles, contraste ≥4.5:1.
+3. Publica el Storybook de componentes **antes** de que Paula maquete
+   cada pantalla, para evitar que ella construya un componente que tú
+   vas a rediseñar después.
+
+---
+

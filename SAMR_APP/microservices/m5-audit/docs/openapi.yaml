@@ -1,0 +1,29 @@
+openapi: 3.0.0
+info:
+  title: M5 - Seguridad y Auditoria
+  version: 1.0.0
+paths:
+  /audit/logs:
+    get:
+      summary: Listar logs de auditoria
+      responses:
+        '200':
+          description: Lista de logs con hash SHA-256
+  /audit/logs/{id}:
+    get:
+      summary: Consultar un log especifico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalle del log
+  /audit/export:
+    post:
+      summary: Exportar reporte de auditoria en PDF firmado por el DPO
+      responses:
+        '200':
+          description: PDF generado
