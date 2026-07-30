@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Topbar } from "../../components/layout/Topbar";
 import { useAuth } from "../../context/AuthContext";
 import * as auditoriaApi from "../../lib/api/auditoria";
 import { useApiQuery, useApiMutation } from "../../lib/useApi";
@@ -25,8 +24,7 @@ export function Auditoria() {
 
   return (
     <>
-      <Topbar title="Auditoria y trazabilidad" subtitle="Registro inmutable con hash SHA-256 (M5)" />
-
+      
       <div className="audit-toolbar">
         <span className="pill pill-info">GET /audit/logs</span>
         <div style={{ display: "flex", gap: 10 }}>

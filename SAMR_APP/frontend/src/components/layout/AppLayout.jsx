@@ -1,32 +1,23 @@
-import { useEffect, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
-import { Sidebar } from "./Sidebar";
-import { Icon } from "../ui/Icon";
+import { Outlet } from "react-router-dom";
+import { Topbar } from "./Topbar";
+import { ChatWidget } from "../ui/ChatWidget";
 
 export function AppLayout() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => setMenuOpen(false), [location.pathname]);
-
   return (
-    <div className="app-shell">
-      <button
-        type="button"
-        className="mobile-menu-btn"
-        aria-label={menuOpen ? "Cerrar menu" : "Abrir menu"}
-        aria-expanded={menuOpen}
-        onClick={() => setMenuOpen((v) => !v)}
-      >
-        <Icon name={menuOpen ? "x" : "menu"} size={18} />
-      </button>
-      {menuOpen && (
-        <div className="sidebar-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
-      )}
-      <Sidebar className={menuOpen ? "mobile-open" : ""} />
-      <main className="main-area">
-        <Outlet />
+    <div className="app-shell-top">
+      {/* Global Watermark */}
+      <div className="global-watermark">
+        <img src="/logo.png" alt="" />
+      </div>
+
+      <Topbar />
+      <main className="main-area-top">
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <Outlet />
+        </div>
       </main>
+
+      <ChatWidget />
     </div>
   );
 }

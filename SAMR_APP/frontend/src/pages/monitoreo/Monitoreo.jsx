@@ -1,138 +1,186 @@
 import { useState } from "react";
-import { Topbar } from "../../components/layout/Topbar";
 import { useAuth } from "../../context/AuthContext";
-import * as monitoreoApi from "../../lib/api/monitoreo";
-import { useApiQuery } from "../../lib/useApi";
-import { EmptyState, ErrorState, LoadingState } from "../../components/ui/StateBlock";
 import { Icon } from "../../components/ui/Icon";
+import { LineChart, Line, ResponsiveContainer, ReferenceLine } from "recharts";
 
-const VITAL_TYPES = [
-  { tipo: "FC", label: "Frecuencia cardiaca", unidad: "bpm", icon: "heart", rango: [58, 118] },
-  { tipo: "SPO2", label: "Saturacion SpO2", unidad: "%", iconText: "O2", rango: [90, 99] },
-  { tipo: "TA_SIS", label: "Presion sistolica", unidad: "mmHg", icon: "activity", rango: [100, 138] },
-  { tipo: "TEMP", label: "Temperatura corporal", unidad: "C", icon: "thermometer", rango: [36.1, 38.2] },
+const mainChartData = [
+  { time: "0", real: 68 }, { time: "1", real: 72 }, { time: "2", real: 70 },
+  { time: "3", real: 85 }, { time: "4", real: 82 }, { time: "5", real: 90 },
+  { time: "6", real: 88 }, { time: "7", real: 105 }, { time: "8", real: 100 },
+  { time: "9", real: 115 }, { time: "10", real: 108 }, { time: "11", real: 116 },
+  { time: "12", real: 112 }
 ];
 
-function randomInRange([min, max]) {
-  const val = min + Math.random() * (max - min);
-  return Number.isInteger(min) && Number.isInteger(max) ? Math.round(val) : Math.round(val * 10) / 10;
-}
+const sparkDataFC = [{v: 60}, {v: 65}, {v: 80}, {v: 75}, {v: 95}, {v: 90}, {v: 112}];
+const sparkDataSPO2 = [{v: 98}, {v: 97}, {v: 97}, {v: 98}, {v: 97}, {v: 96}, {v: 96}];
+const sparkDataTA = [{v: 120}, {v: 121}, {v: 122}, {v: 120}, {v: 125}, {v: 128}, {v: 128}];
+const sparkDataTEMP = [{v: 36.5}, {v: 36.6}, {v: 36.6}, {v: 36.8}, {v: 37.0}, {v: 37.1}, {v: 37.1}];
+
+const VITALS = [
+  { tipo: "FC", label: "Frecuencia cardíaca", unidad: "bpm", valor: "112", status: "Atención", color: "#d97706", sparkData: sparkDataFC, icon: "heart", pillClass: "pill-atencion" },
+  { tipo: "SPO2", label: "Saturación SpO2", unidad: "%", valor: "96", status: "Normal", color: "#059669", sparkData: sparkDataSPO2, iconText: "O₂", pillClass: "pill-normal" },
+  { tipo: "TA", label: "Presión arterial", unidad: "mmHg", valor: "128/84", status: "Normal", color: "#059669", sparkData: sparkDataTA, icon: "activity", pillClass: "pill-normal" },
+  { tipo: "TEMP", label: "Temperatura corporal", unidad: "°C", valor: "37.1", status: "Normal", color: "#0284c7", sparkData: sparkDataTEMP, icon: "thermometer", pillClass: "pill-normal" }
+];
 
 export function Monitoreo() {
-  const { user, token } = useAuth();
-  const [lecturas, setLecturas] = useState({});
-  const [envioStatus, setEnvioStatus] = useState({ status: "idle", error: null });
+  const { user } = useAuth();
+  const [toast, setToast] = useState(null);
 
-  const alertasQuery = useApiQuery(() => monitoreoApi.listarAlertas(token), [token]);
-
-  const simularRonda = async () => {
-    setEnvioStatus({ status: "loading", error: null });
-    const nuevas = {};
-    try {
-      for (const vital of VITAL_TYPES) {
-        const valor = randomInRange(vital.rango);
-        // eslint-disable-next-line no-await-in-loop
-        await monitoreoApi.enviarLecturaBiometrica(
-          { pacienteId: user?.id, tipo: vital.tipo, valor },
-          token
-        );
-        nuevas[vital.tipo] = { valor, timestamp: new Date().toISOString() };
-      }
-      setLecturas((prev) => ({ ...prev, ...nuevas }));
-      setEnvioStatus({ status: "success", error: null });
-    } catch (err) {
-      setLecturas((prev) => ({ ...prev, ...nuevas }));
-      setEnvioStatus({ status: "error", error: err });
-    }
+  const showToast = (message, icon = "info") => {
+    setToast({ message, icon });
+    setTimeout(() => setToast(null), 3000);
   };
 
   return (
     <>
-      <Topbar title="Monitoreo biometrico" subtitle="Simulador IoT (POST /biometrics) y alertas activas (M3)" />
-
-      <div className="card" style={{ marginBottom: 20 }}>
-        <div
-          className="card-title"
-          style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-        >
-          <span>Simulador de dispositivo IoT</span>
-          <button className="btn btn-primary btn-sm" onClick={simularRonda} disabled={envioStatus.status === "loading"}>
-            {envioStatus.status === "loading" ? "Enviando..." : "Generar lectura ahora"}
-          </button>
+      
+      {/* Alert Banner */}
+      <div className="alert-banner animate-fade-in">
+        <div className="alert-banner-left">
+          <div className="ic"><Icon name="alert-triangle" size={18} /></div>
+          <div className="txt">
+            <div className="t1">Alerta predictiva Med-Gemini — posible taquicardia</div>
+            <div className="t2">Detectada hoy a las 14:32 - Patrón anómalo en frecuencia cardíaca sostenida</div>
+          </div>
         </div>
-        <p className="helper" style={{ marginTop: -6, marginBottom: 14 }}>
-          M3 aun no expone un endpoint de lectura en vivo, solo ingesta (<code>POST /biometrics</code>).
-          Este boton genera valores plausibles y los envia de verdad al Gateway; las tarjetas
-          abajo muestran lo ultimo que se envio, no un GET del backend.
-        </p>
-        {envioStatus.status === "error" && (
-          <div className="banner banner-error">{envioStatus.error.message}</div>
-        )}
+        <div className="alert-actions">
+          <button className="btn" onClick={() => showToast("Cargando detalles de la alerta...", "activity")}>Ver detalle</button>
+          <button className="btn btn-primary-alert" onClick={() => showToast("Notificación enviada al médico de turno.", "check")}>Notificar médico</button>
+        </div>
+      </div>
 
-        <div className="vitals-grid" style={{ marginBottom: 0 }}>
-          {VITAL_TYPES.map((vital) => {
-            const lectura = lecturas[vital.tipo];
-            return (
-              <div className="card vital-card" key={vital.tipo}>
-                <div className="top-row">
-                  <div className="ic">
-                    {vital.icon ? <Icon name={vital.icon} size={14} /> : vital.iconText}
-                  </div>
-                  <span className={`pill ${lectura ? "pill-ok" : "pill-info"}`}>
-                    {lectura ? "Enviado" : "Sin datos"}
-                  </span>
-                </div>
-                <div className="num">
-                  {lectura ? lectura.valor : "--"}{" "}
-                  <span style={{ fontSize: 12, color: "#7096A6", fontWeight: 600 }}>
-                    {vital.unidad}
-                  </span>
-                </div>
-                <div className="lbl">{vital.label}</div>
+      {/* Vitals Grid */}
+      <div className="vitals-grid">
+        {VITALS.map((vital, i) => (
+          <div className={`card vital-card animate-fade-in delay-${i % 2 === 0 ? '1' : '2'}`} key={vital.tipo}>
+            <div className="top-row">
+              <div className="ic">
+                {vital.icon ? <Icon name={vital.icon} size={15} /> : <span style={{fontWeight: 700}}>{vital.iconText}</span>}
               </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="card">
-        <div
-          className="card-title"
-          style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-        >
-          <span>Alertas activas</span>
-          <button className="btn btn-outline btn-sm" onClick={alertasQuery.refetch}>
-            Actualizar
-          </button>
-        </div>
-
-        {alertasQuery.status === "loading" && <LoadingState text="Consultando GET /alerts..." />}
-        {alertasQuery.status === "error" && (
-          <ErrorState
-            title="M3 - Monitoreo aun no respondio"
-            detail={alertasQuery.error.message}
-            onRetry={alertasQuery.refetch}
-          />
-        )}
-        {alertasQuery.status === "success" &&
-          (Array.isArray(alertasQuery.data) && alertasQuery.data.length > 0 ? (
-            <div className="timeline">
-              {alertasQuery.data.map((alerta) => (
-                <div className="tl-item" key={alerta.id}>
-                  <span className="tl-time">
-                    {alerta.timestamp ? new Date(alerta.timestamp).toLocaleTimeString() : "--"}
-                  </span>
-                  <span className="tl-dot" style={{ background: "#C98A1E" }} />
-                  <span className="tl-text">
-                    <b>{alerta.tipo}</b> - valor {alerta.valor}
-                  </span>
-                </div>
-              ))}
+              <span className={`pill ${vital.pillClass}`}>
+                {vital.status === "Atención" && <span className="live-dot" style={{width: 6, height: 6, marginRight: 4}}></span>}
+                {vital.status}
+              </span>
             </div>
-          ) : (
-            <EmptyState title="No hay alertas activas" detail="M3 respondio una lista vacia." />
-          ))}
+            <div className="num">
+              {vital.valor}{" "}
+              <span style={{ fontSize: 13, color: "#8fa9ad", fontWeight: 600 }}>
+                {vital.unidad}
+              </span>
+            </div>
+            <div className="lbl">{vital.label}</div>
+            <div className="vital-sparkline">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={vital.sparkData}>
+                  <Line type="monotone" dataKey="v" stroke={vital.color} strokeWidth={2} dot={false} isAnimationActive={true} animationDuration={1500} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        ))}
       </div>
+
+      {/* Main Grid: Chart and Sidebar */}
+      <div className="biometric-grid">
+        
+        {/* Left: Main Chart */}
+        <div className="card chart-card animate-fade-in delay-1">
+          <div className="chart-header">
+            <div className="chart-title">
+              <span className="live-dot"></span>
+              Frecuencia cardíaca · últimas 24 h
+            </div>
+            <div className="chart-legend">
+              <div className="chart-legend-item">
+                <div className="chart-dot" style={{ background: "#0284c7" }} /> Real
+              </div>
+              <div className="chart-legend-item">
+                <div className="chart-dot" style={{ background: "#f59e0b" }} /> Umbral alerta
+              </div>
+            </div>
+          </div>
+          <div style={{ flex: 1, minHeight: 250, marginTop: 10 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={mainChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <ReferenceLine y={100} stroke="#f59e0b" strokeDasharray="5 5" strokeWidth={1.5} />
+                <Line type="monotone" dataKey="real" stroke="#0284c7" strokeWidth={2.5} dot={{ r: 0 }} activeDot={{ r: 6, fill: "#f59e0b", stroke: "#fff", strokeWidth: 2 }} isAnimationActive={true} animationDuration={2000} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Right Sidebar: Devices and Timeline */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          
+          <div className="card animate-fade-in delay-2">
+            <div className="card-title" style={{ fontSize: 14, marginBottom: 4 }}>
+              <Icon name="radio" size={14} style={{ marginRight: 6, verticalAlign: "-2px" }} /> Dispositivos IoT vinculados
+            </div>
+            <div className="device-row">
+              <div className="dic"><Icon name="watch" size={16} /></div>
+              <div>
+                <div className="dn">Smartwatch SAMR X2</div>
+                <div className="ds">• Conectado</div>
+              </div>
+              <div className="batt" style={{ color: "#059669" }}>
+                <Icon name="battery" size={13} style={{ marginRight: 4, verticalAlign: "-2px" }} /> 82%
+              </div>
+            </div>
+            <div className="device-row">
+              <div className="dic"><Icon name="activity" size={16} style={{ color: "#be123c" }} /></div>
+              <div>
+                <div className="dn">Banda de presión</div>
+                <div className="ds">• Conectado</div>
+              </div>
+              <div className="batt" style={{ color: "#059669" }}>
+                <Icon name="battery" size={13} style={{ marginRight: 4, verticalAlign: "-2px" }} /> 65%
+              </div>
+            </div>
+          </div>
+
+          <div className="card animate-fade-in delay-2">
+            <div className="card-title" style={{ fontSize: 14, marginBottom: 8 }}>
+              <Icon name="clock" size={14} style={{ marginRight: 6, verticalAlign: "-2px" }} /> Línea de tiempo
+            </div>
+            <div className="timeline">
+              <div className="tl-item">
+                <div className="tl-time">14:32</div>
+                <div className="tl-dot" style={{ background: "#d97706" }} />
+                <div className="tl-text">
+                  <b>Alerta predictiva</b> — taquicardia sostenida
+                </div>
+              </div>
+              <div className="tl-item">
+                <div className="tl-time">13:10</div>
+                <div className="tl-dot" style={{ background: "#059669" }} />
+                <div className="tl-text">Lectura SpO₂ dentro de rango normal</div>
+              </div>
+              <div className="tl-item">
+                <div className="tl-time">11:45</div>
+                <div className="tl-dot" style={{ background: "#0ea5e9" }} />
+                <div className="tl-text">Sincronización de smartwatch completada</div>
+              </div>
+              <div className="tl-item">
+                <div className="tl-time">09:00</div>
+                <div className="tl-dot" style={{ background: "#0ea5e9" }} />
+                <div className="tl-text">Inicio de monitoreo diario</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      
+      {toast && (
+        <div className="toast-container">
+          <div className="toast">
+            <Icon name={toast.icon} size={16} />
+            {toast.message}
+          </div>
+        </div>
+      )}
     </>
   );
 }
+

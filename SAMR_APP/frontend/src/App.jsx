@@ -9,11 +9,16 @@ import { Triaje } from "./pages/triaje/Triaje";
 import { Monitoreo } from "./pages/monitoreo/Monitoreo";
 import { Teleconsulta } from "./pages/teleconsulta/Teleconsulta";
 import { Auditoria } from "./pages/auditoria/Auditoria";
+import { Landing } from "./pages/landing/Landing";
+import { Calendario } from "./pages/calendario/Calendario";
+import { ListaPacientes } from "./pages/pacientes/ListaPacientes";
+import { MapaHospitales } from "./pages/mapa/MapaHospitales";
 import { ROLES } from "./lib/roles";
 
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<Landing />} />
       <Route path="/acceso" element={<Login />} />
       <Route path="/acceso/registro" element={<Registro />} />
       <Route path="/acceso/recuperar" element={<RecuperarAcceso />} />
@@ -25,10 +30,13 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-        <Route path="/" element={<Inicio />} />
+        <Route path="/dashboard" element={<Inicio />} />
         <Route path="/triaje" element={<Triaje />} />
         <Route path="/monitoreo" element={<Monitoreo />} />
         <Route path="/teleconsulta" element={<Teleconsulta />} />
+        <Route path="/calendario" element={<ProtectedRoute roles={[ROLES.MEDICO]}><Calendario /></ProtectedRoute>} />
+        <Route path="/pacientes" element={<ProtectedRoute roles={[ROLES.MEDICO]}><ListaPacientes /></ProtectedRoute>} />
+        <Route path="/hospitales" element={<MapaHospitales />} />
         <Route
           path="/auditoria"
           element={

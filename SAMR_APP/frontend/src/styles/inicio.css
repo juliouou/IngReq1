@@ -1,0 +1,108 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+.welcome-banner {
+  background: linear-gradient(135deg, #0e5b65 0%, #093c43 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.welcome-banner::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  right: -50px;
+  top: -100px;
+}
+.welcome-banner h1 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  position: relative;
+  z-index: 2;
+}
+.welcome-banner p {
+  color: #a6dde6;
+  font-size: 14px;
+  margin: 0 0 20px 0;
+  max-width: 80%;
+  position: relative;
+  z-index: 2;
+}
+.welcome-btn {
+  background: #f1d08c;
+  color: #7a550c;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #f0fafc;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--c-ink);
+  transition: transform 0.15s ease;
+  border: 1px solid #eef6f7;
+}
+.action-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-color: #a6dde6;
+}
+.action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+.action-text h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.action-text p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

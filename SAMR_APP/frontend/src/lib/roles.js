@@ -19,7 +19,7 @@ export const ROLE_LABELS = {
 export const NAV_ITEMS = [
   {
     to: "/triaje",
-    label: "Triaje",
+    label: "Evaluación Médica",
     icon: "chat",
     roles: [ROLES.PACIENTE, ROLES.MEDICO, ROLES.ADMINISTRATIVO],
   },

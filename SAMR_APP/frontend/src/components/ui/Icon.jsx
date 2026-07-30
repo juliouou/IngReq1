@@ -19,6 +19,10 @@ const PATHS = {
   activity: "M3 12h4l2 8 4-16 2 8h6",
   thermometer:
     "M12 3a2 2 0 0 0-2 2v9.5a4 4 0 1 0 4 0V5a2 2 0 0 0-2-2Z M12 14v3",
+  user: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
+  "file-text": "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8",
+  "alert-triangle": "M12 2l9.7 17H2.3L12 2Z M12 9v4 M12 17h.01",
+  check: "M20 6L9 17l-5-5",
 };
 
 export function Icon({ name, size = 16, strokeWidth = 2, style, ...rest }) {

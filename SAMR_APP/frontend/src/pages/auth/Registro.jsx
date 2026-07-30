@@ -14,6 +14,7 @@ const initialForm = {
   afiliacionIess: "",
   dispositivoIot: "vincular_luego",
   consiente: false,
+  codigoMedico: "",
 };
 
 export function Registro() {
@@ -38,7 +39,11 @@ export function Registro() {
       return;
     }
     if (!form.consiente) {
-      setError("Debes aceptar la Politica de Privacidad (LOPDP) para continuar.");
+      setError("Debes aceptar la Política de Privacidad (LOPDP) para continuar.");
+      return;
+    }
+    if (form.rol === ROLES.MEDICO && form.codigoMedico !== "SAMR-MED-2026") {
+      setError("Código de validación médico inválido. Por favor contacta a administración.");
       return;
     }
 
@@ -119,6 +124,24 @@ export function Registro() {
           </div>
         </div>
 
+        {form.rol === ROLES.MEDICO && (
+          <div className="field-row">
+            <div className="field" style={{ width: '100%' }}>
+              <label htmlFor="codigoMedico">Código de Validación Institucional</label>
+              <input
+                id="codigoMedico"
+                name="codigoMedico"
+                required
+                type="password"
+                placeholder="Código otorgado por SAMR"
+                value={form.codigoMedico}
+                onChange={onChange}
+                style={{ borderColor: 'var(--c-primary)' }}
+              />
+            </div>
+          </div>
+        )}
+
         <div className="field-row">
           <div className="field">
             <label htmlFor="reg-email">Correo electronico</label>
@@ -180,8 +203,8 @@ export function Registro() {
             <option value="vincular_luego">Vincular mas tarde</option>
           </select>
           <div className="helper">
-            El emparejamiento real de dispositivos lo hace M3 (Monitoreo) una vez tengas
-            sesion iniciada; aqui solo guardamos tu preferencia inicial.
+            El emparejamiento real de dispositivos se gestionará una vez tengas
+            acceso al sistema completo; aqui solo guardamos tu preferencia inicial.
           </div>
         </div>
 
