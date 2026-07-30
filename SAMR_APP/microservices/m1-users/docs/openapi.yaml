@@ -1,0 +1,35 @@
+openapi: 3.0.0
+info:
+  title: M1 - Usuarios y Acceso
+  version: 1.0.0
+paths:
+  /auth/register:
+    post:
+      summary: Registro de usuario con consentimiento LOPDP
+      responses:
+        '200':
+          description: Usuario registrado
+  /auth/login:
+    post:
+      summary: Login con emision de JWT
+      responses:
+        '200':
+          description: JWT emitido
+  /auth/mfa/verify:
+    post:
+      summary: Verificacion de segundo factor (MFA)
+      responses:
+        '200':
+          description: MFA verificado
+  /auth/iess/verify:
+    post:
+      summary: Verificacion de cobertura IESS (mock HL7/FHIR)
+      responses:
+        '200':
+          description: Elegibilidad verificada o pendiente
+  /consent:
+    post:
+      summary: Registrar consentimiento LOPDP
+      responses:
+        '200':
+          description: Consentimiento registrado

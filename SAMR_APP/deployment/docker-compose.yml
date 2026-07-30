@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: samr
+      POSTGRES_DB: samr_clinico
+    ports: ["5434:5432"]
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_PASSWORD: samr
+      POSTGRES_DB: samr_iot
+    ports: ["5433:5432"]
+
+  gateway:
+    build: ../backend/gateway
+    ports: ["3000:3000"]
+    depends_on: [m1, m2, m3, m4, m5]
+
+  m1:
+    build: ../microservices/m1-users
+    ports: ["3001:3000"]
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: samr
+      DB_NAME: samr_clinico
+      JWT_SECRET: samr_dev_secret_2026
+    depends_on: [postgres]
+
+  m2:
+    build: ../microservices/m2-triage
+    ports: ["3002:3000"]
+    depends_on: [redis]
+
+  m3:
+    build: ../microservices/m3-monitoring
+    ports: ["3003:3000"]
+    depends_on: [timescaledb, redis]
+
+  m4:
+    build: ../microservices/m4-telemedicine
+    ports: ["3004:3000"]
+    depends_on: [postgres]
+
+  m5:
+    build: ../microservices/m5-audit
+    ports: ["3005:3000"]
+    depends_on: [postgres, redis]
