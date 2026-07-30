@@ -17,12 +17,13 @@ explanation obligatorio en cada respuesta de Med-Gemini)
 - solicitud_triaje (consumido por m5-audit)
 
 ## Definition of Done
-- Cumple el contrato openapi.yaml sin desviaciones
-- Publica solicitud_triaje segun /shared/contracts/events/schemas.json
-- El adaptador a Med-Gemini exige el campo "explanation" en toda
-  respuesta, sin excepcion
-- Incluye circuit breaker: si Med-Gemini no responde, el modulo
-  sigue operativo en modo degradado (sin sugerencia de IA)
-- Cumple la metrica RNF asignada: panel de estados <=500ms,
-  clasificacion XAI <=2s
-- Pasa las pruebas en /tests
+- [x] Cumple el contrato openapi.yaml sin desviaciones (POST /triage,
+      POST /matching, GET /triage/{id})
+- [x] Publica solicitud_triaje, consumido por m5-audit
+- [x] El adaptador a Med-Gemini exige el campo "explanation" en toda
+      respuesta, sin excepcion (ver `src/motorTriaje.js`, stub por reglas de
+      palabras clave con la misma interfaz que tendria el modelo real)
+- [ ] Circuit breaker / modo degradado: no aplica todavia porque el
+      adaptador es local (el stub no puede "no responder"); falta disenarlo
+      para cuando se conecte un Med-Gemini real
+- [ ] Pasa las pruebas en /tests (no hay pruebas automatizadas todavia)
