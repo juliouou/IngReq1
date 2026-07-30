@@ -21,6 +21,8 @@ services:
   gateway:
     build: ../backend/gateway
     ports: ["3000:3000"]
+    environment:
+      JWT_SECRET: samr_dev_secret_2026
     depends_on: [m1, m2, m3, m4, m5]
 
   m1:
@@ -33,24 +35,64 @@ services:
       DB_PASSWORD: samr
       DB_NAME: samr_clinico
       JWT_SECRET: samr_dev_secret_2026
-    depends_on: [postgres]
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on: [postgres, redis]
 
   m2:
     build: ../microservices/m2-triage
     ports: ["3002:3000"]
-    depends_on: [redis]
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: samr
+      DB_NAME: samr_clinico
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on: [postgres, redis]
 
   m3:
     build: ../microservices/m3-monitoring
     ports: ["3003:3000"]
-    depends_on: [timescaledb, redis]
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: samr
+      DB_NAME: samr_clinico
+      TIMESCALE_HOST: timescaledb
+      TIMESCALE_PORT: 5432
+      TIMESCALE_USER: postgres
+      TIMESCALE_PASSWORD: samr
+      TIMESCALE_NAME: samr_iot
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on: [postgres, timescaledb, redis]
 
   m4:
     build: ../microservices/m4-telemedicine
     ports: ["3004:3000"]
-    depends_on: [postgres]
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: samr
+      DB_NAME: samr_clinico
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: samr_dev_secret_2026
+    depends_on: [postgres, redis]
 
   m5:
     build: ../microservices/m5-audit
     ports: ["3005:3000"]
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: samr
+      DB_NAME: samr_clinico
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     depends_on: [postgres, redis]
