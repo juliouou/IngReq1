@@ -12,8 +12,8 @@ export const verifyToken = (token) => apiFetch("/auth/verify", { method: "GET", 
 export const verifyMfa = ({ email, codigo }) =>
   apiFetch("/auth/mfa/verify", { method: "POST", body: { email, codigo } });
 
-export const verifyIess = ({ afiliacionIess }) =>
-  apiFetch("/auth/iess/verify", { method: "POST", body: { afiliacionIess } });
+export const verifyIess = ({ pacienteId, afiliacionIess }) =>
+  apiFetch("/auth/iess/verify", { method: "POST", body: { pacienteId, afiliacionIess } });
 
 export const registerConsent = ({ pacienteId, estado }) =>
   apiFetch("/consent", { method: "POST", body: { pacienteId, estado } });

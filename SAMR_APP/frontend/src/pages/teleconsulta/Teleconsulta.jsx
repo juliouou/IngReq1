@@ -4,6 +4,25 @@ import { useAuth } from "../../context/AuthContext";
 import * as teleApi from "../../lib/api/teleconsulta";
 import { ROLES } from "../../lib/roles";
 import { Icon } from "../../components/ui/Icon";
+import { useWebRtcCall } from "../../lib/useWebRtcCall";
+
+function RemoteVideo({ stream }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current) ref.current.srcObject = stream || null;
+  }, [stream]);
+  if (!stream) return null;
+  return <video ref={ref} autoPlay playsInline className="remote-video" />;
+}
+
+const CONNECTION_LABELS = {
+  idle: "Sin iniciar",
+  signaling: "Conectando senalizacion...",
+  connecting: "Estableciendo video...",
+  connected: "Conexion estable",
+  disconnected: "Conexion perdida",
+  failed: "No se pudo conectar (sin TURN server, puede fallar en redes con NAT restrictivo)",
+};
 
 export function Teleconsulta() {
   const { user, token } = useAuth();
@@ -19,7 +38,15 @@ export function Teleconsulta() {
   const [sesionStatus, setSesionStatus] = useState({ status: "idle", error: null });
   const [micOn, setMicOn] = useState(true);
   const [camOn, setCamOn] = useState(true);
-  const [localVideoActive, setLocalVideoActive] = useState(false);
+  const [localStream, setLocalStream] = useState(null);
+
+  const { remoteStream, connectionState } = useWebRtcCall({
+    roomId: sesion?.id,
+    token,
+    localStream,
+    isCaller: esMedico,
+    enabled: Boolean(sesion?.id && localStream),
+  });
 
   const [diagnostico, setDiagnostico] = useState({
     sugerenciaMedGemini: "",
@@ -51,9 +78,9 @@ export function Teleconsulta() {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         streamRef.current = stream;
         if (videoRef.current) videoRef.current.srcObject = stream;
-        setLocalVideoActive(true);
+        setLocalStream(stream);
       } catch {
-        setLocalVideoActive(false);
+        setLocalStream(null);
       }
     } catch (err) {
       setSesionStatus({ status: "error", error: err });
@@ -71,7 +98,7 @@ export function Teleconsulta() {
   const finalizarLlamada = () => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
-    setLocalVideoActive(false);
+    setLocalStream(null);
     setSesion(null);
     setSesionStatus({ status: "idle", error: null });
   };
@@ -143,6 +170,10 @@ export function Teleconsulta() {
               {sesionStatus.status === "loading" ? "Conectando..." : "Iniciar teleconsulta"}
             </button>
           </form>
+          <p className="helper" style={{ marginTop: 14 }}>
+            Comparte el mismo ID de consulta con la otra parte (medico/paciente) para probar la
+            videollamada real entre dos pestanas o dispositivos distintos.
+          </p>
         </div>
       </>
     );
@@ -150,15 +181,24 @@ export function Teleconsulta() {
 
   return (
     <>
-      <Topbar title="Teleconsulta en curso" subtitle={`Consulta ${sesion.id || "(pendiente de M4)"}`} />
+      <Topbar
+        title="Teleconsulta en curso"
+        subtitle={`Consulta ${sesion.id || "(pendiente de M4)"} - ${CONNECTION_LABELS[connectionState] || connectionState}`}
+      />
 
       <div className="tele-grid">
         <div className="video-card">
           <div className="video-main">
-            <div className="doc-avatar">{esMedico ? "TU" : "MD"}</div>
-            <div className="video-label">
-              {esMedico ? "Vista del medico" : "Esperando a que el medico se conecte"}
-            </div>
+            {remoteStream ? (
+              <RemoteVideo stream={remoteStream} />
+            ) : (
+              <>
+                <div className="doc-avatar">{esMedico ? "PA" : "MD"}</div>
+                <div className="video-label">
+                  {CONNECTION_LABELS[connectionState] || "Esperando a la otra parte..."}
+                </div>
+              </>
+            )}
             <div className="vitals-overlay">
               <div>
                 <div className="v">--</div>
@@ -170,11 +210,7 @@ export function Teleconsulta() {
               </div>
             </div>
             <div className="pip">
-              {localVideoActive ? (
-                <video ref={videoRef} autoPlay muted playsInline />
-              ) : (
-                "Tu camara"
-              )}
+              {localStream ? <video ref={videoRef} autoPlay muted playsInline /> : "Tu camara"}
             </div>
           </div>
           <div className="video-controls">

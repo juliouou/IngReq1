@@ -59,7 +59,7 @@ export function Registro() {
       }
       if (form.afiliacionIess) {
         try {
-          await authApi.verifyIess({ afiliacionIess: form.afiliacionIess });
+          await authApi.verifyIess({ pacienteId: usuario?.id, afiliacionIess: form.afiliacionIess });
         } catch (err) {
           pendientes.push(`Verificacion IESS: ${err.message}`);
         }

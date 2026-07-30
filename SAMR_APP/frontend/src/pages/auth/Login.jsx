@@ -1,36 +1,149 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
 import { useAuth } from "../../context/AuthContext";
 import { ApiError } from "../../lib/apiClient";
+import * as authApi from "../../lib/api/auth";
+
+function OtpInput({ digits, setDigits, disabled }) {
+  const refs = useRef([]);
+  const onDigitChange = (i, value) => {
+    const clean = value.replace(/\D/g, "").slice(-1);
+    const next = [...digits];
+    next[i] = clean;
+    setDigits(next);
+    if (clean && i < 5) refs.current[i + 1]?.focus();
+  };
+  const onKeyDown = (i, e) => {
+    if (e.key === "Backspace" && !digits[i] && i > 0) refs.current[i - 1]?.focus();
+  };
+
+  return (
+    <div className="otp">
+      {digits.map((d, i) => (
+        <input
+          key={i}
+          ref={(el) => (refs.current[i] = el)}
+          value={d}
+          onChange={(e) => onDigitChange(i, e.target.value)}
+          onKeyDown={(e) => onKeyDown(i, e)}
+          disabled={disabled}
+          inputMode="numeric"
+          maxLength={1}
+          aria-label={`Digito ${i + 1} del codigo`}
+        />
+      ))}
+    </div>
+  );
+}
 
 export function Login() {
-  const { login } = useAuth();
+  const { login, verifyMfaAndLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [form, setForm] = useState({ email: "", password: "" });
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
 
+  const [mfa, setMfa] = useState(null); // { email, codigoDebug } | null
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [mfaStatus, setMfaStatus] = useState("idle");
+  const [mfaError, setMfaError] = useState(null);
+
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+  const goToApp = () => {
+    const redirectTo = location.state?.from?.pathname || "/";
+    navigate(redirectTo, { replace: true });
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
     setError(null);
     try {
-      await login(form.email, form.password);
-      const redirectTo = location.state?.from?.pathname || "/";
-      navigate(redirectTo, { replace: true });
+      const result = await login(form.email, form.password);
+      if (result.requiereMfa) {
+        setMfa({ email: result.email, codigoDebug: result.codigoDebug });
+        setStatus("idle");
+      } else {
+        goToApp();
+      }
     } catch (err) {
       setStatus("error");
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "No se pudo iniciar sesion. Intenta de nuevo."
-      );
+      setError(err instanceof ApiError ? err.message : "No se pudo iniciar sesion. Intenta de nuevo.");
     }
   };
+
+  const onVerifyMfa = async (e) => {
+    e.preventDefault();
+    setMfaStatus("loading");
+    setMfaError(null);
+    try {
+      await verifyMfaAndLogin(mfa.email, otp.join(""));
+      goToApp();
+    } catch (err) {
+      setMfaStatus("error");
+      setMfaError(err instanceof ApiError ? err.message : "No se pudo verificar el codigo.");
+    }
+  };
+
+  const reenviarCodigo = async () => {
+    setMfaError(null);
+    try {
+      const result = await authApi.login({ email: form.email, password: form.password });
+      if (result?.requiereMfa) setMfa({ email: result.email, codigoDebug: result.codigoDebug });
+    } catch (err) {
+      setMfaError(err instanceof ApiError ? err.message : "No se pudo reenviar el codigo.");
+    }
+  };
+
+  if (mfa) {
+    return (
+      <AuthLayout
+        title="Verificacion en dos pasos"
+        description="Ingresa el codigo de 6 digitos que enviamos a tu dispositivo para confirmar tu identidad."
+      >
+        <form onSubmit={onVerifyMfa} noValidate>
+          {mfaError && (
+            <div className="banner banner-error" role="alert">
+              {mfaError}
+            </div>
+          )}
+          <div className="mfa-card">
+            <span className="step">Paso 2 - Verificacion en dos pasos</span>
+            <p>
+              Enviamos un codigo de 6 digitos a la cuenta <b>{mfa.email}</b>.
+              {mfa.codigoDebug && (
+                <>
+                  {" "}
+                  No hay un proveedor de SMS conectado todavia; en modo desarrollo el codigo es{" "}
+                  <b>{mfa.codigoDebug}</b>.
+                </>
+              )}
+            </p>
+            <OtpInput digits={otp} setDigits={setOtp} disabled={mfaStatus === "loading"} />
+            <div className="mfa-links">
+              <button type="button" onClick={reenviarCodigo}>
+                Reenviar codigo
+              </button>
+              <button type="button" onClick={() => setMfa(null)}>
+                Volver
+              </button>
+            </div>
+          </div>
+          <button
+            className="btn btn-primary btn-block"
+            type="submit"
+            style={{ marginTop: 18 }}
+            disabled={mfaStatus === "loading" || otp.some((d) => !d)}
+          >
+            {mfaStatus === "loading" ? "Verificando..." : "Verificar identidad"}
+          </button>
+        </form>
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout
@@ -88,12 +201,6 @@ export function Login() {
         <button className="btn btn-primary btn-block" type="submit" disabled={status === "loading"}>
           {status === "loading" ? "Verificando..." : "Continuar"}
         </button>
-
-        <p className="helper" style={{ marginTop: 16 }}>
-          Este formulario llama a <code>POST /auth/login</code> en el API Gateway. Si el
-          Gateway o M1 aun no estan corriendo localmente, veras el error de conexion arriba
-          en vez de un acceso simulado.
-        </p>
       </form>
     </AuthLayout>
   );
