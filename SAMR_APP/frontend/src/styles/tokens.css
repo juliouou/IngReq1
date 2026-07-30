@@ -1,9 +1,9 @@
 :root {
-  --c-bg: #f5f8fa;
-  --c-soft: #e3f2fd;
-  --c-primary: #00b4d8;
-  --c-deep: #0077b6;
-  --c-ink: #02203c;
+  --c-bg: #F8FAFC;
+  --c-soft: #E0F2FE;
+  --c-primary: #2563EB;
+  --c-deep: #1E3A8A;
+  --c-ink: #0F172A;
   --white: #ffffff;
   --danger: #ef476f;
   --danger-bg: #ffeef2;
@@ -11,9 +11,9 @@
   --warn-bg: #fff6e8;
   --ok: #06d6a0;
   --ok-bg: #e5fbf5;
-  --muted: #748c9e;
-  --border: #e2eaf0;
-  --sidebar-gradient: linear-gradient(170deg, #02203c 0%, #0077b6 100%);
+  --muted: #64748B;
+  --border: #E2E8F0;
+  --sidebar-gradient: linear-gradient(170deg, #0F172A 0%, #1E3A8A 100%);
   --radius-lg: 20px;
   --radius-md: 14px;
   --radius-sm: 9px;
