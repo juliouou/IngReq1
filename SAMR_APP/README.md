@@ -14,27 +14,6 @@ SAMR_APP/
 └── README.md       Este archivo
 ```
 
-## Qué cambió técnicamente al reorganizar (no solo mover carpetas)
-
-Mover `core/` a `shared/` como carpeta **hermana** de `backend/` (en vez de
-estar adentro) rompía los imports (`from core.xxx import yyy`) en las ~40
-archivos que los usaban, porque Python solo agrega automáticamente al
-`sys.path` la carpeta donde vive `manage.py` (`backend/`), no su carpeta
-padre. Para que siguiera funcionando, hice dos cosas:
-
-1. Reemplacé todos los `from core.` por `from shared.` en todo `backend/`
-   (y dentro del propio `shared/`, que también se importaba a sí mismo).
-2. Agregué esta línea al inicio de `manage.py`, `config/wsgi.py`,
-   `config/asgi.py` y `config/celery.py`:
-   ```python
-   sys.path.insert(0, str(Path(__file__).resolve().parent.parent[.parent]))
-   ```
-   Esto le dice a Python "también busca módulos en la carpeta `SAMR_APP/`",
-   que es donde vive `shared/` ahora.
-
-Sin este paso, el proyecto habría fallado con `ModuleNotFoundError: No
-module named 'shared'` al primer `python manage.py runserver`.
-
 ## Cómo correrlo
 
 ```bash
