@@ -2,6 +2,7 @@ CREATE TABLE usuarios (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   nombre VARCHAR(150) NOT NULL,
   email VARCHAR(150) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
   rol VARCHAR(30) NOT NULL,
   mfa_activo BOOLEAN DEFAULT false
 );
