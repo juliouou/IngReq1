@@ -2,6 +2,18 @@
 
 Sistema de Atencion Medica Remota distribuido en microservicios, con un API Gateway como punto unico de entrada, persistencia separada por dominio y una capa compartida de modelos de negocio.
 
+## Nota de arquitectura (leer primero)
+
+Este repositorio tuvo dos intentos de backend en paralelo: un backend Django
+monolitico (`SAMR_APP/backend/apps/*`, `config/`, `manage.py`) y los
+microservicios Node.js descritos en este README (`backend/gateway/` +
+`microservices/`). Se prioriza la version de **microservicios Node** porque
+es la que esta funcionando de punta a punta (frontend real conectado a
+Gateway, M1-M5, Postgres, TimescaleDB y Redis, probado end-to-end). El
+codigo Django sigue en el repositorio pero **no se ejecuta ni se mantiene**;
+se dejo sin borrar para no perder ese trabajo hasta que el equipo decida
+formalmente que hacer con el (portar algo util, o eliminarlo).
+
 ## Arquitectura general
 
 ```mermaid
@@ -30,18 +42,21 @@ flowchart LR
 
 ### Capas del sistema
 
-- `frontend/`: cliente web aun no materializado en el repositorio.
+- `frontend/`: cliente web (React + Vite) que consume el Gateway; ver `frontend/README.md`.
 - `backend/gateway/`: entrada unica del sistema, responsable de ruteo y validacion del JWT.
-- `microservices/`: dominios funcionales separados por responsabilidad.
-- `database/`: scripts y migraciones de base de datos.
-- `deployment/`: orquestacion local con Docker Compose.
-- `shared/models/`: contratos de dominio comunes entre modulos.
+- `backend/apps/`, `backend/config/`, `backend/manage.py`: backend Django anterior, **no usado** (ver nota de arquitectura arriba).
+- `microservices/`: dominios funcionales separados por responsabilidad (M1-M5).
+- `database/`: esquemas de PostgreSQL y TimescaleDB que usan los microservicios.
+- `deployment/`: orquestacion local con Docker Compose (Gateway + M1-M5 + Postgres + TimescaleDB + Redis).
+- `shared/models/`: contratos de dominio comunes entre modulos (TypeScript, solo como referencia de forma de datos).
+
+Ver `COMO_EJECUTAR.md` para el paso a paso de como levantar todo.
 
 ## Componentes y responsabilidad
 
 ### API Gateway
 
-Punto de entrada unico. Debe validar el JWT emitido por M1 y enrutar peticiones a M1-M5 sin contener logica de negocio.
+Punto de entrada unico. Valida el JWT emitido por M1, enruta peticiones a M1-M5 y aplica autorizacion por rol. Ninguna logica de negocio vive aqui.
 
 ### M1 - Usuarios y Acceso
 
@@ -79,14 +94,29 @@ El `docker-compose.yml` define estos servicios:
 
 ## Estado real del repositorio
 
-Hoy el proyecto esta en una fase inicial de esqueleto funcional:
+El flujo de extremo a extremo funciona: autenticacion en M1 (con MFA e IESS),
+enrutamiento y autorizacion por rol en el Gateway, triaje con matching en M2,
+ingesta y alertas en M3, teleconsulta con WebRTC real y receta en M4, y
+consumo de eventos con hash SHA-256 mas exportacion PDF en M5. El frontend
+consume todo esto sin simular respuestas.
 
-- El Gateway solo expone `health` y aun no enruta peticiones.
-- M1 implementa `register`, `login` y `verify`, pero no integra los flujos completos de consentimiento, MFA ni verificacion IESS.
-- M2, M3, M4 y M5 solo exponen `health`.
-- No existen pruebas automatizadas en los directorios `tests/`.
-- Los contratos OpenAPI estan definidos por modulo, pero la implementacion no cubre la mayoria de esos endpoints.
-- `shared/models/` contiene los tipos de dominio, pero falta la capa compartida de contratos/eventos que el diseno menciona.
+Lo que todavia falta, para ser honestos sobre el alcance:
+
+- No hay pruebas automatizadas en los directorios `tests/` de cada modulo.
+- No hay TURN server para WebRTC: en redes con NAT restrictivo la
+  videollamada puede no conectar (solo hay STUN publico).
+- No hay TLS configurado en el canal de entrada del Gateway (asumido fuera
+  de alcance para desarrollo local; en despliegue real lo terminaria un
+  proxy/load balancer).
+- `JWT_SECRET` y las credenciales de base de datos siguen en
+  `docker-compose.yml` en texto plano, no en un `.env` ignorado por git.
+- M2 no tiene circuit breaker ni modo degradado si Med-Gemini (o su stub)
+  no responde.
+- `shared/contracts/` (eventos BullMQ y adaptador Med-Gemini) no se formalizo
+  como archivos; los payloads de los eventos quedaron documentados como
+  comentarios en el codigo de cada productor/consumidor.
+- Las migraciones de base de datos son un solo `schema.sql`, no archivos
+  numerados por migracion; no hay script de backup.
 
 ## Roles y responsables
 
@@ -185,49 +215,41 @@ Debe dejar lista la experiencia antes de que el frontend se cierre. Su orden rec
 
 ### Gateway
 
-- Enrutamiento real a los cinco microservicios.
-- Validacion JWT completa.
-- Middleware de logging y errores.
-- Configuracion de seguridad en entrada, incluyendo TLS.
+- TLS en el canal de entrada.
+- Mover `JWT_SECRET` y credenciales a `.env` (hoy en `docker-compose.yml`).
+- Middleware de logging estructurado (hoy es un `console.log` por peticion).
 
 ### M1
 
-- Endpoints de MFA, IESS y consentimiento.
-- Validaciones de negocio del registro.
-- Integracion formal con eventos de auditoria.
 - Pruebas automatizadas.
+- Proveedor real de SMS/correo para MFA (hoy el codigo se ve en la respuesta
+  en modo desarrollo, no hay envio real).
+- Integracion HL7/FHIR real con el IESS (hoy es una validacion de formato).
 
 ### M2
 
-- API real de triaje, matching y consulta de estado.
-- Cola de procesamiento con Redis/BullMQ.
-- Adaptador a Med-Gemini con campo `explanation` obligatorio.
-- Circuit breaker y modo degradado.
+- Circuit breaker y modo degradado si Med-Gemini no responde.
+- Adaptador a un modelo Med-Gemini real (hoy es un motor de reglas por
+  palabras clave, con la misma interfaz que tendria la integracion real).
 - Pruebas automatizadas.
 
 ### M3
 
-- Ingesta IoT real.
-- Persistencia en TimescaleDB.
-- Deteccion de anomalias y distribucion simultanea de alertas.
-- Integracion con Med-Gemini.
+- Integracion con un modelo predictivo real (hoy la deteccion de anomalias
+  es por umbral fijo, mismo patron que M2).
 - Pruebas automatizadas.
 
 ### M4
 
-- Flujo WebRTC completo.
-- Registro de decisiones medicas y receta digital.
-- Persistencia del historial clinico.
-- Integracion XAI sin afectar el stream de video.
+- TURN server para WebRTC en redes con NAT restrictivo (hoy solo hay STUN).
+- Persistencia de historial clinico en formato FHIR.
 - Pruebas automatizadas.
 
 ### M5
 
-- Consumo real de eventos de M1, M2, M3 y M4.
-- Hash SHA-256 e inmutabilidad de logs.
-- Endpoints de auditoria y exportacion.
-- Persistencia y cola de procesamiento.
 - Pruebas automatizadas.
+- `shared/contracts/events/schemas.json` formal (hoy los payloads de cada
+  evento estan documentados como comentarios en el productor/consumidor).
 
 ## Siguiente paso recomendado
 

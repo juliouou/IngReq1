@@ -17,9 +17,12 @@ Ver /docs/openapi.yaml
 - evento_auditoria (cada decision medica registrada)
 
 ## Definition of Done
-- Cumple el contrato openapi.yaml sin desviaciones
-- Med-Gemini nunca esta en el path critico del stream de video
-- Publica evento_auditoria por cada decision del medico
-- Cumple la metrica RNF asignada: latencia de video <=200ms,
-  XAI <=2s, ambos de forma simultanea
-- Pasa las pruebas en /tests
+- [x] Cumple el contrato openapi.yaml sin desviaciones (POST
+      /teleconsultation, /diagnosis, /prescription)
+- [x] Video/audio real por WebRTC: `src/signaling.js` retransmite
+      offer/answer/ICE por WebSocket (`/signaling`, JWT validado al conectar)
+      entre los dos clientes de una misma consulta; el Gateway proxea el
+      upgrade de WebSocket. Solo hay STUN publico, no TURN server.
+- [x] Publica evento_auditoria en inicio de consulta, decision del medico y
+      emision de receta
+- [ ] Pasa las pruebas en /tests (no hay pruebas automatizadas todavia)

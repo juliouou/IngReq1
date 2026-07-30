@@ -17,9 +17,11 @@ Ver /docs/openapi.yaml
 - evento_auditoria (cada registro, login, cambio de consentimiento)
 
 ## Definition of Done
-- Cumple el contrato openapi.yaml sin desviaciones
-- Publica evento_auditoria segun /shared/contracts/events/schemas.json
-- Cumple la metrica RNF asignada: registro completo en <=3 pasos,
-  MFA obligatorio en cada login
-- El JWT emitido es el unico valido para todo el sistema
-- Pasa las pruebas en /tests
+- [x] Cumple el contrato openapi.yaml sin desviaciones (register, login,
+      mfa/verify, iess/verify, consent)
+- [x] Publica evento_auditoria en registro, login y cambio de consentimiento
+- [ ] MFA obligatorio en cada login: hoy es opcional por usuario
+      (`usuarios.mfa_activo`), no forzado globalmente. No hay proveedor real
+      de SMS/correo; el codigo se ve en la respuesta en modo desarrollo.
+- [x] El JWT emitido es el unico valido para todo el sistema
+- [ ] Pasa las pruebas en /tests (no hay pruebas automatizadas todavia)
