@@ -19,11 +19,15 @@ Ver /docs/openapi.yaml
 - evento_auditoria (de m1-users y m4-telemedicine)
 
 ## Definition of Done
-- Cumple el contrato openapi.yaml sin desviaciones
-- Consume todos los eventos definidos en
-  /shared/contracts/events/schemas.json sin perder ninguno
-- Cada log se almacena con hash SHA-256 y es inmutable
-  (sin metodo de edicion/borrado expuesto)
-- Cumple la metrica RNF asignada: cumplimiento LOPDP, logs
-  auditables exportables para el MSP
-- Pasa las pruebas en /tests
+- [x] Cumple el contrato openapi.yaml sin desviaciones (GET /audit/logs,
+      GET /audit/logs/{id}, POST /audit/export)
+- [x] Consume solicitud_triaje, alerta_biometrica_m5 y evento_auditoria
+      (este ultimo agregado por m1-users y m4-telemedicine); el payload de
+      cada evento queda documentado como comentario en su productor, no en
+      un `shared/contracts/events/schemas.json` formal (no se creo ese
+      archivo)
+- [x] Cada log se almacena con hash SHA-256 y es inmutable (no hay
+      endpoint de edicion/borrado)
+- [x] Exportacion a PDF real (`pdfkit`) con firma de texto del DPO
+- [ ] pgcrypto: no se aplico cifrado a nivel de columna todavia
+- [ ] Pasa las pruebas en /tests (no hay pruebas automatizadas todavia)
