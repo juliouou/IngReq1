@@ -1,0 +1,196 @@
+.tele-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.video-card {
+  background: var(--c-ink);
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+.video-main {
+  flex: 1;
+  background: linear-gradient(160deg, #284852, #1b3138);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.doc-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--c-primary);
+  color: var(--c-ink);
+  font-weight: 800;
+  font-size: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-label {
+  position: absolute;
+  bottom: 16px;
+  left: 18px;
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+.vitals-overlay {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  gap: 16px;
+}
+.vitals-overlay div {
+  text-align: center;
+}
+.vitals-overlay .v {
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 800;
+}
+.vitals-overlay .l {
+  color: #b9dae0;
+  font-size: 9.5px;
+  font-weight: 700;
+}
+.pip {
+  position: absolute;
+  bottom: 70px;
+  right: 18px;
+  width: 118px;
+  height: 84px;
+  border-radius: 12px;
+  background: #3b5d66;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cde7eb;
+  font-size: 11px;
+  font-weight: 700;
+  overflow: hidden;
+}
+.pip video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.video-controls {
+  height: 78px;
+  background: #152a30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.vctrl {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+.vctrl.on {
+  background: rgba(99, 201, 214, 0.35);
+}
+.vctrl.end {
+  background: var(--danger);
+  width: 60px;
+}
+
+.assist-msg {
+  background: #f0fafc;
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-size: 12px;
+  color: #2b5157;
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.assist-msg b {
+  color: var(--c-deep);
+}
+.diag-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 6px;
+}
+.diag-chip {
+  background: var(--c-soft);
+  color: var(--c-deep);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+.diag-chip.sel {
+  background: var(--c-deep);
+  color: var(--white);
+}
+
+.rx-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eef6f7;
+  font-size: 12px;
+  gap: 10px;
+}
+.rx-row:last-of-type {
+  border-bottom: none;
+}
+.rx-name {
+  font-weight: 700;
+}
+.rx-dose {
+  color: var(--muted);
+  font-size: 11px;
+}
+.sign-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1100px) {
+  .tele-grid {
+    grid-template-columns: 1fr;
+  }
+  .video-card {
+    height: 460px;
+  }
+}
