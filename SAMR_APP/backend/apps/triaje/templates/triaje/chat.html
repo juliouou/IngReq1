@@ -1,0 +1,106 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Asistente de Emergencia — SAMR{% endblock %}
+{% block contenido %}
+<div class="max-w-2xl w-full flex flex-col h-[75vh] bg-white rounded-2xl border border-surface-200 shadow-md overflow-hidden">
+  <!-- Header del Chat -->
+  <div class="bg-surface-900 text-white p-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold shadow">
+        🤖
+      </div>
+      <div>
+        <h2 class="font-bold text-lg">Asistente de Emergencia</h2>
+      {% if solicitud %}
+        <p class="text-xs text-surface-300">Solicitud #{{ solicitud.codigo }}</p>
+      {% else %}
+        <p class="text-xs text-surface-300">Nueva evaluación</p>
+      {% endif %}
+    </div>
+    </div>
+    {% if solicitud.evaluacion %}
+      <span class="text-xs font-semibold px-3 py-1 rounded-full bg-brand-500 text-white shadow-sm">
+        Clasificado — {{ solicitud.evaluacion.get_nivel_urgencia_display|default:solicitud.evaluacion.nivel_urgencia }}
+      </span>
+    {% endif %}
+  </div>
+
+  <!-- Contenedor de mensajes -->
+  <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-surface-50">
+    {% for msg in mensajes %}
+      {% if msg.autor == 'PACIENTE' %}
+        <div class="flex justify-end">
+          <div class="bg-brand-600 text-white rounded-l-2xl rounded-tr-2xl px-4 py-3 max-w-[85%] shadow-sm">
+            <p class="text-sm whitespace-pre-wrap">{{ msg.texto }}</p>
+          </div>
+        </div>
+      {% else %}
+        <div class="flex justify-start">
+          <div class="bg-white border border-surface-200 text-surface-900 rounded-r-2xl rounded-tl-2xl px-4 py-3 max-w-[85%] shadow-sm">
+            <p class="text-sm whitespace-pre-wrap leading-relaxed">{{ msg.texto }}</p>
+          </div>
+        </div>
+      {% endif %}
+    {% empty %}
+      <div class="flex justify-start">
+        <div class="bg-white border border-surface-200 text-surface-900 rounded-r-2xl rounded-tl-2xl px-4 py-3 max-w-[85%] shadow-sm">
+          <p class="text-sm leading-relaxed">Hola. Por favor descríbeme detalladamente qué síntomas presentas para poder ayudarte.</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Input -->
+  {% if not solicitud.evaluacion %}
+  <div class="p-3 bg-white border-t border-surface-200">
+    <form method="POST" action="" class="flex gap-2">
+      {% csrf_token %}
+      <input type="text" name="texto" required autofocus placeholder="Escribe tu mensaje aquí..." class="flex-1 border border-surface-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+      <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 font-semibold shadow-samr transition">Enviar</button>
+    </form>
+  </div>
+  {% else %}
+  <div class="p-4 bg-surface-100 border-t border-surface-200 text-center">
+    <p class="text-sm text-surface-500 font-medium">La evaluación de la solicitud ha concluido. Ya no puedes enviar más mensajes.</p>
+  </div>
+  {% endif %}
+</div>
+
+<div class="max-w-2xl w-full mt-4 pl-1">
+  <a href="{% url 'triaje:lista' %}" class="bg-white border border-surface-300 text-surface-700 hover:bg-surface-50 rounded-lg px-4 py-2 font-medium transition inline-block mb-4">← Volver</a>
+</div>
+
+<script>
+  // Auto-scroll al final del contenedor de mensajes
+  const chatContainer = document.getElementById('chat-messages');
+  if(chatContainer) {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
+
+  const chatForm = document.querySelector('form');
+  const submitBtn = chatForm ? chatForm.querySelector('button[type="submit"]') : null;
+  if(chatForm && submitBtn) {
+    chatForm.addEventListener('submit', function(e) {
+      // Disable button
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Enviando...';
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+      // Add indicator
+      const indicator = document.createElement('div');
+      indicator.className = 'flex justify-start mt-4';
+      indicator.innerHTML = `
+        <div class="bg-white border border-surface-200 text-surface-900 rounded-r-2xl rounded-tl-2xl px-4 py-3 max-w-[85%] shadow-sm flex items-center gap-1">
+          <span class="text-sm italic text-surface-500">El asistente está escribiendo</span>
+          <span class="flex gap-1 items-center ml-2">
+            <span class="w-1.5 h-1.5 bg-surface-400 rounded-full animate-bounce" style="animation-delay: 0ms;"></span>
+            <span class="w-1.5 h-1.5 bg-surface-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></span>
+            <span class="w-1.5 h-1.5 bg-surface-400 rounded-full animate-bounce" style="animation-delay: 300ms;"></span>
+          </span>
+        </div>
+      `;
+      chatContainer.appendChild(indicator);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    });
+  }
+</script>
+{% endblock %}

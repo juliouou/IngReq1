@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block titulo %}SAMR{% endblock %}</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            /* Verde pino profundo -- identidad clinica calida, no el teal
+               generico de dashboard SaaS. Reservado para acciones primarias
+               y marca; NO se usa para estados de urgencia (esos tienen su
+               propia escala semantica, ver estilos de nivel-urgencia). */
+            brand: { 50: '#eef4f1', 100: '#d7e6df', 200: '#b0cdc0', 300: '#84af9c', 400: '#5c917d', 500: '#3d6b5c', 600: '#2f544a', 700: '#25423b', 800: '#1c332e', 900: '#142621', 950: '#0c1815' },
+            /* Papel calido en vez de gris-azulado esteril */
+            surface: { 50: '#f7f5f0', 100: '#efece3', 200: '#dfdacb', 300: '#c3bda6', 400: '#948c74', 500: '#6b6353', 600: '#4f4a3d', 700: '#3a362d', 800: '#28251f', 900: '#1b2a3a', 950: '#0f1823' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Fraunces', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          boxShadow: {
+            'samr': '0 10px 25px -5px rgba(61, 107, 92, 0.10), 0 4px 10px -5px rgba(61, 107, 92, 0.05)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Firma visual: linea de pulso (EKG) -- referencia directa al
+       monitoreo biometrico, el corazon del producto. Un solo elemento
+       memorable, usado con moderacion (logo + separador de tarjetas
+       destacadas), no decorando todo. */
+    .pulso-divisor {
+      height: 3px;
+      width: 100%;
+      background-image: linear-gradient(90deg, transparent 0%, transparent 42%, currentColor 42%, currentColor 44%, transparent 44%, transparent 47%, currentColor 47%, currentColor 58%, transparent 58%, transparent 61%, currentColor 61%, currentColor 63%, transparent 63%, transparent 100%);
+      background-size: 64px 3px;
+      background-repeat: repeat-x;
+    }
+    .font-display { font-family: 'Fraunces', serif; font-optical-sizing: auto; }
+  </style>
+</head>
+<body class="bg-surface-50 font-sans min-h-screen text-surface-900 flex flex-col md:flex-row pb-[60px] md:pb-0">
+
+  {% url 'triaje:lista' as url_triaje %}
+  {% url 'biometria:dashboard' as url_biometria %}
+  {% url 'teleconsulta:lista' as url_teleconsulta %}
+  {% url 'auditoria:panel' as url_auditoria %}
+  {% url 'portal:dashboard' as url_dashboard %}
+  {% url 'portal:login' as url_login %}
+  
+  {% if user.is_authenticated %}
+    <!-- Sidebar Authenticated -->
+    <aside class="fixed bottom-0 md:top-0 left-0 w-full md:w-[220px] h-[60px] md:h-screen bg-surface-900 text-white z-50 flex md:flex-col items-center md:items-start justify-around md:justify-start md:p-4 shadow-xl">
+      <!-- Logo -->
+      <div class="hidden md:flex items-center gap-3 w-full mb-8">
+        <div class="w-10 h-10 rounded-2xl bg-brand-500 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h4l2-7 4 14 3-9 2 4h5"></path></svg>
+        </div>
+        <span class="font-display font-semibold text-xl tracking-tight">SAMR</span>
+      </div>
+
+      <!-- Nav items -->
+      <nav class="flex md:flex-col gap-2 w-full justify-around md:justify-start h-full md:h-auto items-center md:items-stretch px-2 md:px-0">
+        <a href="{{ url_dashboard }}" title="Dashboard" class="flex flex-col md:flex-row items-center gap-3 p-3 rounded-xl transition {% if request.path == url_dashboard %}bg-white/10{% else %}hover:bg-white/5{% endif %}">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          <span class="text-xs md:text-sm font-medium hidden md:block">Acceso</span>
+        </a>
+        {% if user.rol == 'PACIENTE' %}
+        <a href="{{ url_triaje }}" title="Solicitudes" class="flex flex-col md:flex-row items-center gap-3 p-3 rounded-xl transition {% if request.path == url_triaje %}bg-white/10{% else %}hover:bg-white/5{% endif %}">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+          <span class="text-xs md:text-sm font-medium hidden md:block">Solicitudes</span>
+        </a>
+        <a href="{{ url_biometria }}" title="Biometría" class="flex flex-col md:flex-row items-center gap-3 p-3 rounded-xl transition {% if request.path == url_biometria %}bg-white/10{% else %}hover:bg-white/5{% endif %}">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+          <span class="text-xs md:text-sm font-medium hidden md:block">Biometría</span>
+        </a>
+        {% endif %}
+        <a href="{{ url_teleconsulta }}" title="Teleconsulta" class="flex flex-col md:flex-row items-center gap-3 p-3 rounded-xl transition relative {% if request.path == url_teleconsulta %}bg-white/10{% else %}hover:bg-white/5{% endif %}">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+          <span class="text-xs md:text-sm font-medium hidden md:block">Teleconsulta</span>
+          {% if tiene_recetas_nuevas %}
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse absolute top-2 right-2" title="¡Tienes recetas médicas sin leer!"></span>
+          {% endif %}
+        </a>
+        {% if user.es_admin %}
+        <a href="{{ url_auditoria }}" title="Auditoría" class="flex flex-col md:flex-row items-center gap-3 p-3 rounded-xl transition {% if request.path == url_auditoria %}bg-white/10{% else %}hover:bg-white/5{% endif %}">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <span class="text-xs md:text-sm font-medium hidden md:block">Auditoría</span>
+        </a>
+        {% endif %}
+      </nav>
+
+      <!-- User Profile -->
+      <div class="hidden md:flex flex-col mt-auto w-full pt-4 border-t border-surface-700/50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center font-bold shrink-0">
+            {{ user.nombre_completo|slice:":1" }}
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-sm font-medium truncate">{{ user.nombre_completo }}</p>
+            <p class="text-xs text-surface-400 truncate">{{ user.get_rol_display|default:user.rol }}</p>
+          </div>
+        </div>
+        <form method="post" action="{% url 'portal:logout' %}" class="mt-4">
+          {% csrf_token %}
+          <button class="flex items-center gap-2 text-surface-400 hover:text-white transition text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            Cerrar sesión
+          </button>
+        </form>
+      </div>
+    </aside>
+  {% else %}
+    <!-- Sidebar Unauthenticated -->
+    <aside class="fixed bottom-0 md:top-0 left-0 w-full md:w-[70px] h-[60px] md:h-screen bg-surface-900 text-white z-50 flex md:flex-col items-center justify-around md:justify-start md:py-6 shadow-xl">
+      <div class="hidden md:flex w-12 h-12 rounded-2xl bg-brand-500 items-center justify-center mb-8 shrink-0">
+        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h4l2-7 4 14 3-9 2 4h5"></path></svg>
+      </div>
+      <a href="{% url 'portal:login' %}" class="p-3 rounded-xl bg-white/10" title="Acceso">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+      </a>
+    </aside>
+  {% endif %}
+
+  <main class="flex-1 {% if user.is_authenticated %}md:ml-[220px]{% else %}md:ml-[70px]{% endif %} flex flex-col min-h-[calc(100vh-60px)] md:min-h-screen">
+    {% if messages %}
+      <div id="system-messages" class="w-full max-w-3xl mx-auto p-4 z-40 transition-opacity duration-500">
+        {% for message in messages %}
+          <div class="rounded-xl px-4 py-3 text-sm flex items-center shadow-sm mb-2
+            {% if message.tags == 'error' %} bg-red-50 text-red-700 border border-red-200
+            {% elif message.tags == 'success' %} bg-brand-50 text-brand-700 border border-brand-200
+            {% else %} bg-blue-50 text-blue-700 border border-blue-200 {% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="flex-1 w-full p-4 md:p-8 flex justify-center">
+      {% block contenido %}{% endblock %}
+    </div>
+  </main>
+
+  <script>
+    const sysMessages = document.getElementById('system-messages');
+    if(sysMessages) {
+      setTimeout(() => {
+        sysMessages.style.opacity = '0';
+        setTimeout(() => sysMessages.remove(), 500);
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
