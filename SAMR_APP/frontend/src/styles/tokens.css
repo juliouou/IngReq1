@@ -1,0 +1,20 @@
+:root {
+  --c-bg: #eaf7fb;
+  --c-soft: #bfeaf2;
+  --c-primary: #63c9d6;
+  --c-deep: #1e7f8c;
+  --c-ink: #20343a;
+  --white: #ffffff;
+  --danger: #d9534f;
+  --danger-bg: #fceaea;
+  --warn: #c98a1e;
+  --warn-bg: #fcf3e1;
+  --ok: #2e9e6c;
+  --ok-bg: #e4f7ee;
+  --muted: #7096a6;
+  --border: #dceef1;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 9px;
+  --shadow: 0 10px 30px rgba(32, 52, 58, 0.1);
+}

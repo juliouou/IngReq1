@@ -30,7 +30,7 @@ flowchart LR
 
 ### Capas del sistema
 
-- `frontend/`: cliente web aun no materializado en el repositorio.
+- `frontend/`: cliente web (React + Vite) que consume el Gateway; ver `frontend/README.md`.
 - `backend/gateway/`: entrada unica del sistema, responsable de ruteo y validacion del JWT.
 - `microservices/`: dominios funcionales separados por responsabilidad.
 - `database/`: scripts y migraciones de base de datos.

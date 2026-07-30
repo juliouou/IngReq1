@@ -1,0 +1,42 @@
+.audit-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.audit-table th {
+  text-align: left;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  font-weight: 800;
+  padding: 10px 12px;
+  border-bottom: 1.5px solid var(--border);
+}
+.audit-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eef6f7;
+  vertical-align: top;
+}
+.audit-table tr:last-child td {
+  border-bottom: none;
+}
+.audit-hash {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+  color: var(--c-deep);
+  background: #f0fafc;
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+.audit-table-wrap {
+  overflow-x: auto;
+}
