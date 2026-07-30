@@ -35,7 +35,8 @@ export function Topbar() {
         { to: "/triaje", label: "Evaluación Médica", icon: "clipboard" },
         { to: "/teleconsulta", label: "Teleconsulta", icon: "video" },
         { to: "/monitoreo", label: "Monitoreo", icon: "activity" },
-        { to: "/hospitales", label: "Clínicas Cercanas", icon: "map-pin" }
+        { to: "/hospitales", label: "Clínicas Cercanas", icon: "map-pin" },
+        { to: "/recetas", label: "Mis Recetas", icon: "file-text" }
       ];
     }
   };

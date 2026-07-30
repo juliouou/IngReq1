@@ -13,6 +13,7 @@ import { Landing } from "./pages/landing/Landing";
 import { Calendario } from "./pages/calendario/Calendario";
 import { ListaPacientes } from "./pages/pacientes/ListaPacientes";
 import { MapaHospitales } from "./pages/mapa/MapaHospitales";
+import { Recetas } from "./pages/recetas/Recetas";
 import { ROLES } from "./lib/roles";
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/calendario" element={<ProtectedRoute roles={[ROLES.MEDICO]}><Calendario /></ProtectedRoute>} />
         <Route path="/pacientes" element={<ProtectedRoute roles={[ROLES.MEDICO]}><ListaPacientes /></ProtectedRoute>} />
         <Route path="/hospitales" element={<MapaHospitales />} />
+        <Route path="/recetas" element={<Recetas />} />
         <Route
           path="/auditoria"
           element={
